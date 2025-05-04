@@ -11,15 +11,17 @@ export default function Home() {
     <div>
       <section className="mb-8">
         <h1 className="font-black-ops-one text-[35px]">Welcome to the Jam Room</h1>
-        <p>Contact: President A, President B</p>
+        <p>Contact: Max Conine (<a href="mailto:mconine@hmc.edu" className="text-red-500">mconine@hmc.edu</a>) and Max Buchanan (<a href="mailto:mabuchanan@hmc.edu" className="text-red-500">mabuchanan@hmc.edu</a>)</p>
         <div className="flex space-x-4 mt-4">
           <div>
             <h2 className="font-semibold">Location</h2>
-            <p>123 Music Ave</p>
+            <p>Basement of Platt east of the Facilities and Maintenance Office</p>
+            <p>340 Foothill Blvd, Claremont, CA 91711</p>
           </div>
           <div>
             <h2 className="font-semibold">Hours</h2>
-            <p>Mon-Fri 9am-9pm</p>
+            <p>After 5:00 pm Monday-Friday</p>
+            <p>All day Saturday-Sunday</p>
           </div>
         </div>
       </section>
