@@ -10,6 +10,7 @@ export default function EquipmentTable() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const { isAuthenticated, isAdmin } = useAuth();
   const schoolId = localStorage.getItem('schoolId');
 
@@ -44,6 +45,13 @@ export default function EquipmentTable() {
     setSelectedIds(prev =>
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
+  };
+
+  const toggleDescription = (id: string) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   const handleCheckout = async () => {
@@ -117,30 +125,57 @@ export default function EquipmentTable() {
             <th className="p-2">Type</th>
             <th className="p-2">Location</th>
             <th className="p-2">Status</th>
+            <th className="w-8 p-2"></th>
           </tr>
         </thead>
         <tbody>
           {filtered.map(eq => (
-            <tr key={eq.id} className="border-b border-gray-200">
-              <td className="p-2">
-                <input
-                  type="checkbox"
-                  checked={selectedIds.includes(eq.id!)}
-                  onChange={() => toggleSelect(eq.id!)}
-                  disabled={!eq.available}
-                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-                />
-              </td>
-              <td className="p-2">{eq.name}</td>
-              <td className="p-2">{eq.type}</td>
-              <td className="p-2">{eq.location}</td>
-              <td className="p-2">
-                <span className={`px-2 py-1 rounded-full text-sm ${eq.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
-                  {eq.available ? 'Available' : 'Checked Out'}
-                </span>
-              </td>
-            </tr>
+            <>
+              <tr key={eq.id} className="border-b border-gray-200">
+                <td className="p-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(eq.id!)}
+                    onChange={() => toggleSelect(eq.id!)}
+                    disabled={!eq.available}
+                    className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
+                  />
+                </td>
+                <td className="p-2">{eq.name}</td>
+                <td className="p-2">{eq.type}</td>
+                <td className="p-2">{eq.location}</td>
+                <td className="p-2">
+                  <span className={`px-2 py-1 rounded-full text-sm ${eq.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                    {eq.available ? 'Available' : 'Checked Out'}
+                  </span>
+                </td>
+                <td className="p-2">
+                  <button
+                    onClick={() => toggleDescription(eq.id!)}
+                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    <svg
+                      className={`w-5 h-5 transform transition-transform ${expandedDescriptions[eq.id!] ? 'rotate-90' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              {expandedDescriptions[eq.id!] && (
+                <tr className="border-b border-gray-200">
+                  <td colSpan={6} className="p-4 bg-gray-50">
+                    <div className="text-sm text-gray-700">
+                      {eq.description || 'No description available'}
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </>
           ))}
         </tbody>
       </table>

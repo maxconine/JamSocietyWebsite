@@ -12,6 +12,7 @@ export interface Equipment {
     available: boolean;
     lastCheckedOut?: string;
     checkedOutBy?: string;
+    description?: string;
 }
 
 export const addEquipment = async (equipment: Omit<Equipment, 'id'>) => {
