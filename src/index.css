@@ -3,3 +3,8 @@
 
 /* import Tailwind via its v4 plugin */
 @import "tailwindcss";
+
+/* Ensure Black Ops One is applied */
+.font-black-ops-one {
+  font-family: 'Black Ops One', cursive;
+}

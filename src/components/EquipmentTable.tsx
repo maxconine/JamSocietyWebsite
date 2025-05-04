@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getEquipment, updateEquipment, Equipment } from '../firebase/db';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function EquipmentTable() {
   const [search, setSearch] = useState('');
@@ -9,9 +10,10 @@ export default function EquipmentTable() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated, isAdmin } = useAuth();
+  const schoolId = localStorage.getItem('schoolId');
 
   useEffect(() => {
-    // Set up real-time listener for equipment collection
     const unsubscribe = onSnapshot(
       collection(db, 'equipment'),
       (snapshot) => {
@@ -30,7 +32,6 @@ export default function EquipmentTable() {
       }
     );
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
@@ -46,14 +47,17 @@ export default function EquipmentTable() {
   };
 
   const handleCheckout = async () => {
+    if (!isAuthenticated || !schoolId) {
+      alert('Please log in to check out equipment.');
+      return;
+    }
+
     try {
-      // Update each selected item's status in the database
       await Promise.all(selectedIds.map(id =>
         updateEquipment(id, {
           available: false,
           lastCheckedOut: new Date().toISOString(),
-          // TODO: Add actual user ID here when authentication is implemented
-          checkedOutBy: 'current-user'
+          checkedOutBy: schoolId
         })
       ));
       setSelectedIds([]);
@@ -64,7 +68,11 @@ export default function EquipmentTable() {
   };
 
   const handleReserve = async () => {
-    // TODO: Implement reservation logic with the database
+    if (!isAuthenticated || !schoolId) {
+      alert('Please log in to reserve equipment.');
+      return;
+    }
+    // TODO: Implement reservation logic
     console.log('Reserving:', selectedIds);
   };
 
@@ -83,40 +91,52 @@ export default function EquipmentTable() {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search equipment..."
-        className="p-2 mb-4 w-full bg-gray-800 text-gray-200 rounded"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
+      <div className="mb-4 flex justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search equipment..."
+          className="p-2 w-64 bg-gray-100 text-gray-800 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        {isAdmin && (
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={() => {/* TODO: Add admin actions */ }}
+          >
+            Admin Actions
+          </button>
+        )}
+      </div>
 
       <table className="w-full table-auto">
         <thead>
-          <tr className="text-left">
-            <th className="w-8"></th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Location</th>
-            <th>Status</th>
+          <tr className="text-left bg-gray-100">
+            <th className="w-8 p-2"></th>
+            <th className="p-2">Name</th>
+            <th className="p-2">Type</th>
+            <th className="p-2">Location</th>
+            <th className="p-2">Status</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map(eq => (
-            <tr key={eq.id} className="border-b border-gray-700">
-              <td className="px-2">
+            <tr key={eq.id} className="border-b border-gray-200">
+              <td className="p-2">
                 <input
                   type="checkbox"
                   checked={selectedIds.includes(eq.id!)}
                   onChange={() => toggleSelect(eq.id!)}
                   disabled={!eq.available}
+                  className="rounded border-gray-300 text-blue-500 focus:ring-blue-500"
                 />
               </td>
-              <td className="px-2 py-1">{eq.name}</td>
-              <td className="px-2 py-1">{eq.type}</td>
-              <td className="px-2 py-1">{eq.location}</td>
-              <td className="px-2 py-1">
-                <span className={`px-2 py-1 rounded ${eq.available ? 'bg-green-500' : 'bg-red-500'}`}>
+              <td className="p-2">{eq.name}</td>
+              <td className="p-2">{eq.type}</td>
+              <td className="p-2">{eq.location}</td>
+              <td className="p-2">
+                <span className={`px-2 py-1 rounded-full text-sm ${eq.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
                   {eq.available ? 'Available' : 'Checked Out'}
                 </span>
               </td>
@@ -125,22 +145,24 @@ export default function EquipmentTable() {
         </tbody>
       </table>
 
-      <div className="mt-4 flex space-x-4">
-        <button
-          className="bg-green-500 hover:bg-green-600 text-black font-semibold px-4 py-2 rounded disabled:opacity-50"
-          onClick={handleCheckout}
-          disabled={selectedIds.length === 0}
-        >
-          Check Out
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-600 text-black font-semibold px-4 py-2 rounded disabled:opacity-50"
-          onClick={handleReserve}
-          disabled={selectedIds.length === 0}
-        >
-          Reserve
-        </button>
-      </div>
+      {selectedIds.length > 0 && (
+        <div className="mt-4 flex space-x-4">
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded disabled:opacity-50"
+            onClick={handleCheckout}
+            disabled={!isAuthenticated}
+          >
+            Check Out
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded disabled:opacity-50"
+            onClick={handleReserve}
+            disabled={!isAuthenticated}
+          >
+            Reserve
+          </button>
+        </div>
+      )}
     </div>
   );
 }

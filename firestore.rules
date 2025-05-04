@@ -28,7 +28,7 @@ service cloud.firestore {
     
     // User rules
     match /users/{userId} {
-      allow read: if isAuthenticated();
+      allow read: if true;  // Allow reading user documents for login
       allow create: if true;  // Allow new user registration
       allow update: if isAdmin() || request.auth.uid == userId;
       allow delete: if isAdmin();

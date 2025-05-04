@@ -7,10 +7,10 @@ import EquipmentPage from './pages/Equipment';
 import CheckoutReturn from './pages/CheckoutReturn';
 import Reserve from './pages/Reserve';
 import Footer from './components/Footer';
-import Inventory from './pages/Inventory';
 import Admin from './pages/Admin';
 import { getApp } from 'firebase/app';
 import ErrorBoundary from './components/ErrorBoundary';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   const [isFirebaseInitialized, setIsFirebaseInitialized] = useState(false);
@@ -58,23 +58,24 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <div className="min-h-screen flex flex-col">
-          <NavBar />
-          <main className="flex-grow container mx-auto px-4 py-8">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/artists" element={<Artists />} />
-              <Route path="/equipment" element={<EquipmentPage />} />
-              <Route path="/checkout-return" element={<CheckoutReturn />} />
-              <Route path="/reserve" element={<Reserve />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/admin" element={<Admin />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen flex flex-col">
+            <NavBar />
+            <main className="flex-grow container mx-auto px-4 py-8">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/artists" element={<Artists />} />
+                <Route path="/equipment" element={<EquipmentPage />} />
+                <Route path="/checkout-return" element={<CheckoutReturn />} />
+                <Route path="/reserve" element={<Reserve />} />
+                <Route path="/admin" element={<Admin />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

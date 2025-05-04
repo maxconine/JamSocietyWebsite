@@ -1,33 +1,37 @@
-import { Link, NavLink } from 'react-router-dom';
-export default function NavBar() {
-  const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Artists', path: '/artists' },
-    { name: 'Equipment', path: '/equipment' },
-    { name: 'Checkout/Return', path: '/checkout-return' },
-    { name: 'Reserve', path: '/reserve' },
-  ];
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import LoginButton from './LoginButton';
+
+const NavBar: React.FC = () => {
+  const { isAuthenticated, logout } = useAuth();
+
   return (
-    <nav className="bg-black text-gray-100">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="font-black-ops-one text-[40px] text-red-500">
-          JAM SOCIETY
+    <nav className="bg-gray-800 text-white p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/" className="text-2xl font-black-ops-one">
+          JamSociety
         </Link>
-        <ul className="flex space-x-6">
-          {navItems.map(item => (
-            <li key={item.name}>
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  `hover:text-red-500 ${isActive ? 'text-red-500' : ''}`
-                }
-              >
-                {item.name}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+        <div className="flex items-center space-x-4">
+          <Link to="/" className="hover:text-gray-300">Home</Link>
+          <Link to="/artists" className="hover:text-gray-300">Artists</Link>
+          <Link to="/equipment" className="hover:text-gray-300">Equipment</Link>
+          <Link to="/checkout-return" className="hover:text-gray-300">Checkout/Return</Link>
+          <Link to="/reserve" className="hover:text-gray-300">Reserve</Link>
+          {!isAuthenticated ? (
+            <LoginButton />
+          ) : (
+            <button
+              onClick={logout}
+              className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
+            >
+              Logout
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
-}
+};
+
+export default NavBar;
