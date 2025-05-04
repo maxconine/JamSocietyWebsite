@@ -7,6 +7,7 @@ export const equipmentCollection = collection(db, 'equipment');
 export interface Equipment {
     id?: string;
     name: string;
+    code: string;
     type: string;
     location: string;
     available: boolean;
@@ -27,6 +28,11 @@ export const getEquipment = async () => {
 export const updateEquipment = async (id: string, data: Partial<Equipment>) => {
     const equipmentDoc = doc(db, 'equipment', id);
     return await updateDoc(equipmentDoc, data);
+};
+
+export const deleteEquipment = async (id: string) => {
+    const equipmentDoc = doc(db, 'equipment', id);
+    return await deleteDoc(equipmentDoc);
 };
 
 // Reservations Collection
