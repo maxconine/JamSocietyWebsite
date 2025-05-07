@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -13,11 +13,10 @@ const firebaseConfig = {
     projectId: "jamsoc-2473e",
     storageBucket: "jamsoc-2473e.firebasestorage.app",
     messagingSenderId: "122646849215",
-    appId: "1:122646849215:web:31f0896174eb8931fec80a",
-    measurementId: "G-42XB69XEFB"
+    appId: "1:122646849215:web:31f0896174eb8931fec80a"
 };
 
 // Initialize Firebase only if it hasn't been initialized yet
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-export const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);

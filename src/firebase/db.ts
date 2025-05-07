@@ -1,9 +1,17 @@
 import { db } from './config';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    getDocs,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    onSnapshot,
+    query,
+    where
+} from 'firebase/firestore';
 
-// Equipment Collection
-export const equipmentCollection = collection(db, 'equipment');
-
+// Types
 export interface Equipment {
     id?: string;
     name: string;
@@ -11,32 +19,14 @@ export interface Equipment {
     type: string;
     location: string;
     available: boolean;
+    hasLabel: boolean;
+    labelType?: string;
+    condition?: 'excellent' | 'good' | 'fair' | 'poor' | 'broken';
+    price?: number;
+    description?: string;
     lastCheckedOut?: string;
     checkedOutBy?: string;
-    description?: string;
 }
-
-export const addEquipment = async (equipment: Omit<Equipment, 'id'>) => {
-    return await addDoc(equipmentCollection, equipment);
-};
-
-export const getEquipment = async () => {
-    const snapshot = await getDocs(equipmentCollection);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Equipment[];
-};
-
-export const updateEquipment = async (id: string, data: Partial<Equipment>) => {
-    const equipmentDoc = doc(db, 'equipment', id);
-    return await updateDoc(equipmentDoc, data);
-};
-
-export const deleteEquipment = async (id: string) => {
-    const equipmentDoc = doc(db, 'equipment', id);
-    return await deleteDoc(equipmentDoc);
-};
-
-// Reservations Collection
-export const reservationsCollection = collection(db, 'reservations');
 
 export interface Reservation {
     id?: string;
@@ -47,18 +37,6 @@ export interface Reservation {
     status: 'pending' | 'approved' | 'rejected';
 }
 
-export const createReservation = async (reservation: Omit<Reservation, 'id'>) => {
-    return await addDoc(reservationsCollection, reservation);
-};
-
-export const getReservations = async () => {
-    const snapshot = await getDocs(reservationsCollection);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Reservation[];
-};
-
-// Users Collection
-export const usersCollection = collection(db, 'users');
-
 export interface User {
     id?: string;
     schoolId: string;
@@ -67,12 +45,154 @@ export interface User {
     isAdmin: boolean;
 }
 
-export const createUser = async (user: Omit<User, 'id'>) => {
-    return await addDoc(usersCollection, user);
+// Collection References
+const equipmentCollection = collection(db, 'equipment');
+const reservationsCollection = collection(db, 'reservations');
+const usersCollection = collection(db, 'users');
+
+// Equipment Operations
+export const getEquipment = async (): Promise<Equipment[]> => {
+    const querySnapshot = await getDocs(equipmentCollection);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Equipment[];
 };
 
-export const getUserBySchoolId = async (schoolId: string) => {
-    const q = query(usersCollection, where('schoolId', '==', schoolId));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))[0] as User | undefined;
+export const subscribeToEquipment = (callback: (data: Equipment[]) => void) => {
+    return onSnapshot(equipmentCollection, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Equipment[];
+        callback(data);
+    });
+};
+
+export const addEquipment = async (equipment: Omit<Equipment, 'id'>): Promise<string> => {
+    const docRef = await addDoc(equipmentCollection, equipment);
+    return docRef.id;
+};
+
+export const updateEquipment = async (id: string, updates: Partial<Equipment>): Promise<void> => {
+    const docRef = doc(db, 'equipment', id);
+    await updateDoc(docRef, updates);
+};
+
+export const deleteEquipment = async (id: string): Promise<void> => {
+    const docRef = doc(db, 'equipment', id);
+    await deleteDoc(docRef);
+};
+
+export const getEquipmentByType = async (type: string): Promise<Equipment[]> => {
+    const q = query(equipmentCollection, where('type', '==', type));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Equipment[];
+};
+
+export const getAvailableEquipment = async (): Promise<Equipment[]> => {
+    const q = query(equipmentCollection, where('available', '==', true));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Equipment[];
+};
+
+export const getCheckedOutEquipment = async (userId: string): Promise<Equipment[]> => {
+    const q = query(equipmentCollection, where('checkedOutBy', '==', userId));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Equipment[];
+};
+
+// Reservation Operations
+export const createReservation = async (reservation: Omit<Reservation, 'id'>): Promise<string> => {
+    const docRef = await addDoc(reservationsCollection, reservation);
+    return docRef.id;
+};
+
+export const getReservations = async (): Promise<Reservation[]> => {
+    const snapshot = await getDocs(reservationsCollection);
+    return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Reservation[];
+};
+
+// User Operations
+export const createUser = async (user: Omit<User, 'id'>): Promise<string> => {
+    const docRef = await addDoc(usersCollection, user);
+    return docRef.id;
+};
+
+export const getUserBySchoolId = async (schoolId: string): Promise<User | undefined> => {
+    const snapshot = await getDocs(query(usersCollection, where('schoolId', '==', schoolId)));
+    const userDoc = snapshot.docs[0];
+    return userDoc ? { id: userDoc.id, ...userDoc.data() } as User : undefined;
+};
+
+// Test function to add sample equipment
+export const addSampleEquipment = async () => {
+    const sampleEquipment = [
+        {
+            id: 'guitar1',
+            name: 'Fender Stratocaster',
+            code: 'GTR001',
+            type: 'guitar',
+            location: 'Music Room A',
+            available: true,
+            hasLabel: true,
+            labelType: 'QR',
+            condition: 'excellent' as const,
+            price: 799.99,
+            description: 'Electric guitar, sunburst finish'
+        },
+        {
+            id: 'drum1',
+            name: 'Pearl Export Kit',
+            code: 'DRM001',
+            type: 'drums',
+            location: 'Storage Room B',
+            available: true,
+            hasLabel: true,
+            labelType: 'QR',
+            condition: 'good' as const,
+            price: 1299.99,
+            description: '5-piece drum kit with cymbals'
+        },
+        {
+            id: 'mic1',
+            name: 'Shure SM58',
+            code: 'MIC001',
+            type: 'microphone',
+            location: 'Music Room A',
+            available: false,
+            hasLabel: true,
+            labelType: 'QR',
+            condition: 'good' as const,
+            price: 99.99,
+            description: 'Dynamic vocal microphone',
+            lastCheckedOut: '2024-03-20',
+            checkedOutBy: 'user123'
+        }
+    ];
+
+    try {
+        for (const equipment of sampleEquipment) {
+            const { id, ...equipmentData } = equipment;
+            await addEquipment(equipmentData as Omit<Equipment, 'id'>);
+            console.log(`Added equipment: ${equipment.name}`);
+        }
+        console.log('All sample equipment added successfully');
+        return true;
+    } catch (error) {
+        console.error('Error adding sample equipment:', error);
+        return false;
+    }
 }; 

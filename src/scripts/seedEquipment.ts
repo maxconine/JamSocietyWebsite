@@ -1,7 +1,22 @@
-import { addEquipment } from '../firebase/db';
+const admin = require('firebase-admin');
+const serviceAccount = require('../../serviceAccountKey.json'); // Update this path if needed
 
-const seedEquipment = async () => {
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore();
+
+async function seedEquipment() {
     const equipment = [
+        {
+            code: 'DRM01',
+            name: 'Sonar Force 3003 22" Kick',
+            type: 'Drum',
+            location: 'Underneath keyboard north side',
+            description: 'Green kick drum',
+            available: true
+        },
         {
             name: 'Electric Guitar',
             type: 'String',
@@ -34,15 +49,11 @@ const seedEquipment = async () => {
         }
     ];
 
-    try {
-        for (const item of equipment) {
-            await addEquipment(item);
-            console.log(`Added ${item.name}`);
-        }
-        console.log('Seeding complete!');
-    } catch (error) {
-        console.error('Error seeding equipment:', error);
+    for (const item of equipment) {
+        await db.collection('equipment').add(item);
+        console.log(`Added equipment: ${item.code ? item.code : item.name}`);
     }
-};
+    console.log('Seeding complete!');
+}
 
-seedEquipment(); 
+seedEquipment().catch(console.error); 
