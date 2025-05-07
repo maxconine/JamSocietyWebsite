@@ -8,41 +8,27 @@ import CheckoutReturn from './pages/CheckoutReturn';
 import Reserve from './pages/Reserve';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
-import { getApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from './firebase/config';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
+import LoadingScreen from './components/LoadingScreen';
 
 function App() {
   const [isFirebaseInitialized, setIsFirebaseInitialized] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const app = getApp();
-      console.log('Firebase initialized successfully:', app.name);
-      setIsFirebaseInitialized(true);
-    } catch (err) {
-      console.error('Firebase initialization error:', err);
-      setError('Failed to initialize application. Please try again later.');
-    }
-  }, []);
+    const initializeFirebase = async () => {
+      try {
+        await initializeApp(firebaseConfig);
+        setIsFirebaseInitialized(true);
+      } catch (error) {
+        console.error('Error initializing Firebase:', error);
+      }
+    };
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-          <h1 className="text-2xl font-bold text-red-500 mb-2">Error</h1>
-          <p className="text-gray-600">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
+    initializeFirebase();
+  }, []);
 
   if (!isFirebaseInitialized) {
     return (
@@ -60,6 +46,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <Router>
+          <LoadingScreen />
           <div className="min-h-screen flex flex-col">
             <NavBar />
             <main className="flex-grow container mx-auto px-4 py-8">

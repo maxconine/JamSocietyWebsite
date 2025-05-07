@@ -8,3 +8,7 @@
 .font-black-ops-one {
   font-family: 'Black Ops One', cursive;
 }
+
+html, body {
+  background: #000 !important;
+}
