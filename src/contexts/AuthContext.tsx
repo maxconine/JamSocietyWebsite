@@ -22,6 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const db = getFirestore();
 
     const ADMIN_IDS = ['40226906'];
@@ -86,13 +87,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     useEffect(() => {
-        const storedSchoolId = localStorage.getItem('schoolId');
-        if (storedSchoolId) {
-            login(storedSchoolId).catch(() => {
-                localStorage.removeItem('schoolId');
-            });
+        const schoolId = localStorage.getItem('schoolId');
+        if (schoolId) {
+            checkAuth(schoolId);
+        } else {
+            setIsLoading(false);
         }
     }, []);
+
+    const checkAuth = async (schoolId: string) => {
+        try {
+            const user = await getUserBySchoolId(schoolId);
+            if (user) {
+                setIsAuthenticated(true);
+                setIsAdmin(user.isAdmin);
+            }
+        } catch (error) {
+            console.error('Error checking auth:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, registerNewUser, logout }}>

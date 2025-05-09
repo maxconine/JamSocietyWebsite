@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import shureSM58Image from '../assets/images/equipment/shureSM58.jpeg';
 import howToUseAMicImage from '../assets/images/equipment/HowToUseAMic.png';
 
 interface EquipmentItem {

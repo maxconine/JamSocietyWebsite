@@ -1,70 +1,55 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('../../serviceAccountKey.json'); // Update this path if needed
+import { db } from '../firebase/config';
+import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
-
-function generateCode(type, existingCodes) {
-    const typeMap = {
-        microphone: 'MIC',
-        mic: 'MIC',
-        power: 'PWR',
-        stand: 'STN',
-        instrument: 'INS',
-        drum: 'DRM',
-        cable: 'CBL',
-        audio: 'AUD',
-        amp: 'AMP'
-    };
-
-    let prefix = 'GEN';
-    for (const [key, value] of Object.entries(typeMap)) {
-        if (type && type.toLowerCase().includes(key)) {
-            prefix = value;
-            break;
-        }
-    }
-
-    let maxNum = 0;
-    existingCodes.forEach(code => {
-        if (code.startsWith(prefix)) {
-            const num = parseInt(code.slice(prefix.length), 10);
-            if (!isNaN(num) && num > maxNum) maxNum = num;
-        }
-    });
-
-    const nextNum = String(maxNum + 1).padStart(2, '0');
-    return `${prefix}${nextNum}`;
+interface Equipment {
+    id: string;
+    type: string;
+    code?: string;
 }
 
-async function addCodesToEquipment() {
-    const snapshot = await db.collection('equipment').get();
-    const allDocs = [];
-    const existingCodes = [];
+const generateCode = (type: string, existingCodes: string[]): string => {
+    const prefix = type.substring(0, 3).toUpperCase();
+    let code: string;
+    let counter = 1;
 
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        allDocs.push({ id: doc.id, ...data });
-        if (data.code) existingCodes.push(data.code);
-    });
+    do {
+        code = `${prefix}${counter.toString().padStart(3, '0')}`;
+        counter++;
+    } while (existingCodes.includes(code));
 
-    const updates = [];
-    for (const doc of allDocs) {
-        if (!doc.code) {
-            const code = generateCode(doc.type || '', existingCodes);
-            existingCodes.push(code);
-            updates.push(
-                db.collection('equipment').doc(doc.id).update({ code })
-            );
-            console.log(`Assigning code ${code} to ${doc.name}`);
+    return code;
+};
+
+const updateEquipmentCodes = async () => {
+    try {
+        const equipmentCollection = collection(db, 'equipment');
+        const snapshot = await getDocs(equipmentCollection);
+        const allDocs: Equipment[] = [];
+
+        // First pass: collect all existing codes
+        snapshot.forEach((docSnapshot) => {
+            const data = docSnapshot.data() as Equipment;
+            allDocs.push({ id: docSnapshot.id, type: data.type, code: data.code });
+        });
+
+        // Second pass: update documents without codes
+        for (const equipment of allDocs) {
+            if (!equipment.code) {
+                const existingCodes = allDocs
+                    .filter((d) => d.code)
+                    .map((d) => d.code as string);
+
+                const newCode = generateCode(equipment.type, existingCodes);
+                const docRef = doc(db, 'equipment', equipment.id);
+                await updateDoc(docRef, { code: newCode });
+                console.log(`Updated ${equipment.id} with code ${newCode}`);
+            }
         }
+
+        console.log('Equipment codes updated successfully');
+    } catch (error) {
+        console.error('Error updating equipment codes:', error);
     }
+};
 
-    await Promise.all(updates);
-    console.log('Custom codes assigned to all equipment!');
-}
-
-addCodesToEquipment().catch(console.error); 
+updateEquipmentCodes(); 

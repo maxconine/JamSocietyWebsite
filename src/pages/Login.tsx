@@ -11,7 +11,7 @@ const Login: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showRegistration, setShowRegistration] = useState(false);
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
@@ -20,68 +20,50 @@ const Login: React.FC = () => {
             await login(schoolId);
             navigate('/');
         } catch (err) {
-            if (err instanceof Error) {
-                if (err.message === 'NEW_USER') {
-                    setShowRegistration(true);
-                } else {
-                    setError(err.message);
-                }
-            } else {
-                setError('Failed to login. Please try again.');
-            }
+            setError('Invalid school ID. Please try again or register.');
+            setShowRegistration(true);
         } finally {
             setIsLoading(false);
         }
     };
 
     if (showRegistration) {
-        return <RegistrationForm />;
+        return (
+            <RegistrationForm
+                schoolId={schoolId}
+                onCancel={() => setShowRegistration(false)}
+            />
+        );
     }
 
     return (
-        <div className="bg-white min-h-screen flex items-center justify-center">
-            <div className="max-w-md w-full space-y-8">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-black-ops-one">
-                        Login to JamSoc
-                    </h2>
-                </div>
-                <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="schoolId" className="sr-only">
-                                School ID
-                            </label>
-                            <input
-                                id="schoolId"
-                                name="schoolId"
-                                type="text"
-                                required
-                                pattern="\d{8}"
-                                title="School ID must be exactly 8 digits"
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                placeholder="Enter your 8-digit School ID"
-                                value={schoolId}
-                                onChange={(e) => setSchoolId(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    {error && (
-                        <div className="text-red-500 text-sm text-center">
-                            {error}
-                        </div>
-                    )}
-
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+                <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                        >
-                            {isLoading ? 'Logging in...' : 'Login'}
-                        </button>
+                        <label htmlFor="schoolId" className="block text-sm font-medium text-gray-700">
+                            School ID
+                        </label>
+                        <input
+                            type="text"
+                            id="schoolId"
+                            value={schoolId}
+                            onChange={(e) => setSchoolId(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            required
+                        />
                     </div>
+                    {error && (
+                        <p className="text-red-500 text-sm">{error}</p>
+                    )}
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                    >
+                        {isLoading ? 'Logging in...' : 'Login'}
+                    </button>
                 </form>
             </div>
         </div>

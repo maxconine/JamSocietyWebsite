@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getEquipment, updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToEquipment } from '../firebase/db';
+import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToEquipment } from '../firebase/db';
 import { useAuth } from '../contexts/AuthContext';
-import CheckoutPopup from './CheckoutPopup';
 import React from 'react';
 
 interface AddFormData {
@@ -20,7 +19,6 @@ export default function EquipmentTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
-  const [showCheckoutPopup, setShowCheckoutPopup] = useState(false);
   const { isAuthenticated, isAdmin } = useAuth();
   const schoolId = localStorage.getItem('schoolId');
   const [showAddModal, setShowAddModal] = useState(false);

@@ -26,6 +26,8 @@ export interface Equipment {
     description?: string;
     lastCheckedOut?: string;
     checkedOutBy?: string;
+    expectedReturn?: string;
+    reason?: string;
 }
 
 export interface Reservation {
