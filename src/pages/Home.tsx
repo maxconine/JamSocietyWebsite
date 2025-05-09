@@ -7,90 +7,85 @@ const images = [
 
 const description = `Jam Society seeks to serve the musicians of Harvey Mudd college by providing a soundproof "jam room" with instruments, music equipment, and recording equipment, thus giving students the space and means to pursue their musical passions. We also aim to serve Harvey Mudd college as a whole by lending this equipment for campus events such as concerts and student performances.`;
 
+function isMobile() {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(max-width: 768px)').matches || /Mobi|Android/i.test(navigator.userAgent);
+}
+
 export default function Home() {
   const headerRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
   const [descStyle, setDescStyle] = useState({ opacity: 0, transform: 'translateY(40px)' });
-  const [scrollLocked, setScrollLocked] = useState(true);
+  const [scrollLocked, setScrollLocked] = useState(!isMobile());
   const [currentSection, setCurrentSection] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollThreshold = 400;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEnlarged, setIsEnlarged] = useState(false);
 
-  // Handle scroll snapping and animations
+  // Remove scroll lock on mobile
   useEffect(() => {
+    if (isMobile()) {
+      setScrollLocked(false);
+    }
+  }, []);
+
+  // Handle scroll snapping and animations (desktop only)
+  useEffect(() => {
+    if (isMobile()) return;
     let isScrolling = false;
     let scrollTimeout: number;
     let accumulatedDelta = 0;
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-
       if (isScrolling) return;
-
-      // Reduce scroll sensitivity
       accumulatedDelta += e.deltaY * 0.5;
-
-      // Calculate progress percentage based on current section and scroll direction
       let progress;
       if (currentSection === 0) {
-        // First section: progress from 0 to 100
         progress = Math.min(Math.max((accumulatedDelta / scrollThreshold) * 100, 0), 100);
       } else {
-        // Second section: progress from 100 to 0
         progress = Math.min(Math.max(100 + (accumulatedDelta / scrollThreshold) * 100, 0), 100);
       }
-
-      // Update description style based on scroll progress
       setDescStyle({
         opacity: progress / 100,
         transform: `translateY(${40 * (1 - progress / 100)}px)`
       });
-
-      // Only trigger section change when threshold is reached
       if (Math.abs(accumulatedDelta) >= scrollThreshold) {
         const direction = accumulatedDelta > 0 ? 1 : -1;
         const nextSection = Math.max(0, Math.min(1, currentSection + direction));
-
         if (nextSection !== currentSection) {
           isScrolling = true;
           setCurrentSection(nextSection);
           accumulatedDelta = 0;
-
           window.scrollTo({
             top: nextSection * window.innerHeight,
             behavior: 'smooth'
           });
-
-          // Unlock scroll after reaching second section
           if (nextSection === 1) {
             setScrollLocked(false);
           } else {
             setScrollLocked(true);
           }
-
-          // Reset scrolling flag after animation
           scrollTimeout = window.setTimeout(() => {
             isScrolling = false;
           }, 1500);
         }
       }
     };
-
     if (scrollLocked) {
       window.addEventListener('wheel', handleWheel, { passive: false });
     }
-
     return () => {
       window.removeEventListener('wheel', handleWheel);
       clearTimeout(scrollTimeout);
     };
   }, [currentSection, scrollLocked]);
 
-  // Lock/unlock body scroll based on scrollLocked
+  // Lock/unlock body scroll based on scrollLocked (desktop only)
   useEffect(() => {
+    if (isMobile()) return;
     if (scrollLocked) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -139,8 +134,8 @@ export default function Home() {
       ref={containerRef}
       className="w-full bg-black flex flex-col items-center justify-start pt-0 pb-0"
       style={{
-        height: scrollLocked ? '200vh' : 'auto',
-        scrollSnapType: scrollLocked ? 'y mandatory' : 'none'
+        height: !isMobile() && scrollLocked ? '200vh' : 'auto',
+        scrollSnapType: !isMobile() && scrollLocked ? 'y mandatory' : 'none'
       }}
     >
       {/* Hero section: fills first viewport */}
@@ -148,8 +143,8 @@ export default function Home() {
         className="relative flex flex-col items-center justify-center w-full"
         style={{
           minHeight: '93vh',
-          scrollSnapAlign: 'start',
-          scrollSnapStop: 'always',
+          scrollSnapAlign: !isMobile() ? 'start' : undefined,
+          scrollSnapStop: !isMobile() ? 'always' : undefined,
           backgroundColor: 'black',
           width: '150%',
           margin: -33,
@@ -158,23 +153,23 @@ export default function Home() {
       >
         <h1
           ref={headerRef}
-          className="font-black-ops-one text-white text-5xl md:text-7xl text-center mb-8 transition-opacity duration-1000 ease-out opacity-100"
+          className="font-black-ops-one text-white text-3xl sm:text-5xl md:text-7xl text-center mb-6 md:mb-8 transition-opacity duration-1000 ease-out opacity-100"
         >
           Welcome to Jam Society
         </h1>
         <div
           ref={descRef}
-          className="max-w-2xl w-full text-center text-white text-lg md:text-2xl font-roboto font-semibold drop-shadow-lg bg-black/60 rounded-xl px-6 py-4 border border-white/10"
+          className="max-w-full sm:max-w-2xl w-full text-center text-white text-base sm:text-lg md:text-2xl font-roboto font-semibold drop-shadow-lg bg-black/60 rounded-xl px-3 sm:px-6 py-4 border border-white/10"
           style={{
             ...descStyle,
-            marginTop: '2rem',
+            marginTop: '1.5rem',
             transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
             letterSpacing: '0.01em',
           }}
         >
           {description}
         </div>
-        {scrollLocked && currentSection === 0 && (
+        {!isMobile() && scrollLocked && currentSection === 0 && (
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
             <div className="text-white text-sm mb-2">Scroll to reveal</div>
             <svg
@@ -196,35 +191,35 @@ export default function Home() {
       <section
         style={{
           minHeight: '100vh',
-          scrollSnapAlign: 'start',
-          scrollSnapStop: 'always',
+          scrollSnapAlign: !isMobile() ? 'start' : undefined,
+          scrollSnapStop: !isMobile() ? 'always' : undefined,
           backgroundColor: 'white',
           width: '100vw',
-          padding: '4rem 0'
+          padding: isMobile() ? '2rem 0' : '4rem 0'
         }}
       >
-        <div className="max-w-6xl mx-auto px-4">
-          {/* New info row section */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 bg-gray-100 rounded-2xl shadow-lg py-10 px-6 mb-16">
+        <div className="max-w-6xl mx-auto px-2 sm:px-4">
+          {/* Info row section */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8 bg-gray-100 rounded-2xl shadow-lg py-6 md:py-10 px-3 md:px-6 mb-10 md:mb-16">
             {/* Left: Pin and location */}
-            <div className="flex items-center gap-4 w-full md:w-1/3 justify-start">
-              <img src="/pin.svg" alt="Location Pin" className="w-10 h-10 bg-transparent" />
+            <div className="flex items-center gap-3 md:gap-4 w-full md:w-1/3 justify-start">
+              <img src="/pin.svg" alt="Location Pin" className="w-8 h-8 md:w-10 md:h-10 bg-transparent" />
               <div className="text-center">
-                <div className="font-roboto font-semibold text-lg text-gray-900 mb-1">Location</div>
-                <div className="text-gray-700 text-sm">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
+                <div className="font-roboto font-semibold text-base md:text-lg text-gray-900 mb-1">Location</div>
+                <div className="text-gray-700 text-xs md:text-sm">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
               </div>
             </div>
             {/* Center: Hours */}
             <div className="flex flex-col items-center w-full md:w-1/3">
-              <div className="font-roboto font-semibold text-lg text-gray-900 mb-2">Hours</div>
-              <div className="text-gray-700 text-center text-base">
+              <div className="font-roboto font-semibold text-base md:text-lg text-gray-900 mb-2">Hours</div>
+              <div className="text-gray-700 text-center text-xs md:text-base">
                 After 5:00 pm Monday-Friday<br />All day Saturday-Sunday
               </div>
             </div>
             {/* Right: Who can use the room? */}
             <div className="flex flex-col items-center w-full md:w-1/3">
-              <div className="font-roboto font-semibold text-lg text-gray-900 mb-1 text-center">Who can use the room?</div>
-              <div className="text-gray-700 text-sm text-center">
+              <div className="font-roboto font-semibold text-base md:text-lg text-gray-900 mb-1 text-center">Who can use the room?</div>
+              <div className="text-gray-700 text-xs md:text-sm text-center">
                 You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than respecting the equipment in the room. We have over 400 active members!
               </div>
             </div>
@@ -255,36 +250,36 @@ export default function Home() {
           </div>
 
           {/* New Section with Black Background */}
-          <div className="mt-10 bg-white text-black py-12 px-6 rounded-2xl">
+          <div className="mt-8 md:mt-10 bg-white text-black py-8 md:py-12 px-3 md:px-6 rounded-2xl">
             <div className="max-w-4xl mx-auto">
-              <h2 className="font-roboto font-semibold text-2xl mb-4">Need to check out equipment for an event?</h2>
-              <p className="text-black-300 mb-8">We have an equipment checkout system. Please only check out items for a maximum of 3 days. Sign in, then go to the equipment page to select what items you are checking out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Need to check out equipment for an event?</h2>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have an equipment checkout system. Please only check out items for a maximum of 3 days. Sign in, then go to the equipment page to select what items you are checking out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
 
-              <h2 className="font-roboto font-semibold text-2xl mb-4">Want to reserve the room?</h2>
-              <p className="text-black-300 mb-8">You can! Now you don't have to worry about other bands practicing while you want to practice. Just go to the reserve tab for more info.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Want to reserve the room?</h2>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">You can! Now you don't have to worry about other bands practicing while you want to practice. Just go to the reserve tab for more info.</p>
 
-              <h2 className="font-roboto font-semibold text-2xl mb-4">Equipment damaged or want to request new equipment?</h2>
-              <p className="text-black-300">Go to the equipment page.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment damaged or want to request new equipment?</h2>
+              <p className="text-black-300 text-sm md:text-base">Go to the equipment page.</p>
             </div>
           </div>
 
           {/* Final Section with Contact Information */}
-          <div className="mt-10 bg-white py-12 px-6 rounded-2xl">
+          <div className="mt-8 md:mt-10 bg-white py-8 md:py-12 px-3 md:px-6 rounded-2xl">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-roboto font-semibold text-3xl mb-10">Meet your Jam Society Presidents</h2>
-              <div className="flex justify-center gap-8">
+              <h2 className="font-roboto font-semibold text-2xl md:text-3xl mb-6 md:mb-10">Meet your Jam Society Presidents</h2>
+              <div className="flex flex-col sm:flex-row justify-center gap-6 md:gap-8">
                 <div>
-                  <img src="/MaxC.jpeg" alt="Max Conine" className="w-90 h-130 object-cover rounded-lg mb-2" />
-                  <div className="font-roboto font-semibold text-lg">Max Conine</div>
-                  <div className="text-gray-700">mconine@hmc.edu</div>
+                  <img src="/MaxC.jpeg" alt="Max Conine" className="w-32 h-44 md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
+                  <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
+                  <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
                 </div>
                 <div>
-                  <img src="/MaxB.jpeg" alt="Max Buchanan" className="w-90 h-130 object-cover rounded-lg mb-2" />
-                  <div className="font-roboto font-semibold text-lg">Max Buchanan</div>
-                  <div className="text-gray-700">mabuchanan@hmc.edu</div>
+                  <img src="/MaxB.jpeg" alt="Max Buchanan" className="w-32 h-44 md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
+                  <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
+                  <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
                 </div>
               </div>
-              <p className="text-gray-700 mt-6">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan.</p>
+              <p className="text-gray-700 mt-4 md:mt-6 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan.</p>
             </div>
           </div>
         </div>
