@@ -2,11 +2,8 @@ import VirtualTour from '../components/VirtualTour';
 import { useRef, useEffect, useState } from 'react';
 
 const images = [
-  { src: '/images/room1.jpg', alt: 'Recording Booth' },
-  { src: '/images/room2.jpg', alt: 'Mixing Console' },
-  { src: '/images/room3.jpg', alt: 'Guitar Area' },
-  { src: '/images/room4.jpg', alt: 'Drum Kit' },
-  { src: '/images/room5.jpg', alt: 'Lounge Space' },
+  { src: '/src/assets/roomPhoto.jpeg', alt: 'Room Photo 1' },
+  { src: '/src/assets/roomPhoto2.jpeg', alt: 'Room Photo 2' },
 ];
 
 const description = `Jam Society seeks to serve the musicians of Harvey Mudd college by providing a soundproof "jam room" with instruments, music equipment, and recording equipment, thus giving students the space and means to pursue their musical passions. We also aim to serve Harvey Mudd college as a whole by lending this equipment for campus events such as concerts and student performances.`;
@@ -26,6 +23,8 @@ export default function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollThreshold = 400; // Increased from 200 to make it require more scrolling
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isEnlarged, setIsEnlarged] = useState(false);
 
   // Handle scroll snapping and animations
   useEffect(() => {
@@ -129,6 +128,27 @@ export default function Home() {
     };
   }, []);
 
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (isEnlarged) {
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'Escape') setIsEnlarged(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isEnlarged]);
+
   return (
     <div
       ref={containerRef}
@@ -142,9 +162,13 @@ export default function Home() {
       <section
         className="relative flex flex-col items-center justify-center w-full"
         style={{
-          minHeight: '100vh',
+          minHeight: '93vh',
           scrollSnapAlign: 'start',
-          scrollSnapStop: 'always'
+          scrollSnapStop: 'always',
+          backgroundColor: 'black',
+          width: '150%',
+          margin: -33,
+          padding: 0
         }}
       >
         <h1
@@ -155,11 +179,12 @@ export default function Home() {
         </h1>
         <div
           ref={descRef}
-          className="max-w-2xl w-full text-center text-gray-300 text-lg md:text-2xl font-roboto"
+          className="max-w-2xl w-full text-center text-white text-lg md:text-2xl font-roboto font-semibold drop-shadow-lg bg-black/60 rounded-xl px-6 py-4 border border-white/10"
           style={{
             ...descStyle,
             marginTop: '2rem',
-            transition: 'opacity 0.8s ease-out, transform 0.8s ease-out'
+            transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
+            letterSpacing: '0.01em',
           }}
         >
           {description}
@@ -189,12 +214,62 @@ export default function Home() {
           scrollSnapAlign: 'start',
           scrollSnapStop: 'always',
           backgroundColor: 'white',
-          width: '150%',
+          width: '100vw',
           padding: '4rem 0'
         }}
       >
         <div className="max-w-6xl mx-auto px-4">
-          {/* More info section */}
+          {/* New info row section */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8 bg-gray-100 rounded-2xl shadow-lg py-10 px-6 mb-16">
+            {/* Left: Pin and location */}
+            <div className="flex items-center gap-4 w-full md:w-1/3 justify-start">
+              <img src="/src/assets/pin.svg" alt="Location Pin" className="w-10 h-10 bg-transparent" />
+              <div className="text-center">
+                <div className="font-roboto font-semibold text-lg text-gray-900 mb-1">Location</div>
+                <div className="text-gray-700 text-sm">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
+              </div>
+            </div>
+            {/* Center: Hours */}
+            <div className="flex flex-col items-center w-full md:w-1/3">
+              <div className="font-roboto font-semibold text-lg text-gray-900 mb-2">Hours</div>
+              <div className="text-gray-700 text-center text-base">
+                After 5:00 pm Monday-Friday<br />All day Saturday-Sunday
+              </div>
+            </div>
+            {/* Right: Who can use the room? */}
+            <div className="flex flex-col items-center w-full md:w-1/3">
+              <div className="font-roboto font-semibold text-lg text-gray-900 mb-1 text-center">Who can use the room?</div>
+              <div className="text-gray-700 text-sm text-center">
+                You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than respecting the equipment in the room. We have over 400 active members!
+              </div>
+            </div>
+          </div>
+
+          {/* Photo Gallery Section */}
+          <div className="mt-16">
+            <h2 className="font-roboto font-semibold text-2xl text-gray-900 mb-6 text-center"></h2>
+            <div className="relative">
+              <img
+                src={images[currentImageIndex].src}
+                alt={images[currentImageIndex].alt}
+                className="w-full h-auto rounded-lg shadow-lg cursor-pointer"
+                onClick={() => setIsEnlarged(true)}
+              />
+              <button onClick={prevImage} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">←</button>
+              <button onClick={nextImage} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">→</button>
+            </div>
+            {isEnlarged && (
+              <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setIsEnlarged(false)}>
+                <img
+                  src={images[currentImageIndex].src}
+                  alt={images[currentImageIndex].alt}
+                  className="max-w-full max-h-full"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* More info section
           <div
             ref={moreRef}
             className={`max-w-2xl w-full text-center text-gray-800 text-base md:text-lg font-roboto transition-opacity duration-1000 ease-out mx-auto ${moreVisible ? 'opacity-100' : 'opacity-0'}`}
@@ -202,54 +277,41 @@ export default function Home() {
           >
             <h2 className="text-2xl font-black-ops-one text-red-600 mb-4">More Information</h2>
             <pre className="whitespace-pre-line text-gray-700 text-left md:text-center mx-auto" style={{ fontFamily: 'Roboto, sans-serif', background: 'transparent' }}>{moreInfo}</pre>
+          </div> */}
+
+          {/* New Section with Black Background */}
+          <div className="mt-10 bg-white text-black py-12 px-6 rounded-2xl">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="font-roboto font-semibold text-2xl mb-4">Need to check out equipment for an event?</h2>
+              <p className="text-black-300 mb-8">We have an equipment checkout system. Please only check out items for a maximum of 3 days. Sign in, then go to the equipment page to select what items you are checking out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
+
+              <h2 className="font-roboto font-semibold text-2xl mb-4">Want to reserve the room?</h2>
+              <p className="text-black-300 mb-8">You can! Now you don't have to worry about other bands practicing while you want to practice. Just go to the reserve tab for more info.</p>
+
+              <h2 className="font-roboto font-semibold text-2xl mb-4">Equipment damaged or want to request new equipment?</h2>
+              <p className="text-black-300">Go to the equipment page.</p>
+            </div>
           </div>
 
-          {/* Rest of the content */}
-          <section className="mb-12">
-            <h1 className="font-black-ops-one text-[35px] text-gray-900">Welcome to the Jam Room</h1>
-            <p className="text-gray-700">Contact: Max Conine (<a href="mailto:mconine@hmc.edu" className="text-red-600">mconine@hmc.edu</a>) and Max Buchanan (<a href="mailto:mabuchanan@hmc.edu" className="text-red-600">mabuchanan@hmc.edu</a>)</p>
-            <div className="flex space-x-8 mt-6">
-              <div>
-                <h2 className="font-semibold text-gray-900">Location</h2>
-                <p className="text-gray-700">Basement of Platt east of the Facilities and Maintenance Office</p>
-                <p className="text-gray-700">340 Foothill Blvd, Claremont, CA 91711</p>
+          {/* Final Section with Contact Information */}
+          <div className="mt-10 bg-white py-12 px-6 rounded-2xl">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-roboto font-semibold text-3xl mb-10">Meet your Jam Society Presidents</h2>
+              <div className="flex justify-center gap-8">
+                <div>
+                  <img src="/src/assets/MaxC.jpeg" alt="Max Conine" className="w-90 h-130 object-cover rounded-lg mb-2" />
+                  <div className="font-roboto font-semibold text-lg">Max Conine</div>
+                  <div className="text-gray-700">mconine@hmc.edu</div>
+                </div>
+                <div>
+                  <img src="/src/assets/MaxB.jpeg" alt="Max Buchanan" className="w-90 h-130 object-cover rounded-lg mb-2" />
+                  <div className="font-roboto font-semibold text-lg">Max Buchanan</div>
+                  <div className="text-gray-700">mabuchanan@hmc.edu</div>
+                </div>
               </div>
-              <div>
-                <h2 className="font-semibold text-gray-900">Hours</h2>
-                <p className="text-gray-700">After 5:00 pm Monday-Friday</p>
-                <p className="text-gray-700">All day Saturday-Sunday</p>
-              </div>
+              <p className="text-gray-700 mt-6">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan.</p>
             </div>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Overview</h2>
-            <ul className="list-disc pl-5 text-gray-700">
-              <li>Home: general info</li>
-              <li>Artists: current artists</li>
-              <li>Equipment: inventory & checkout</li>
-              <li>Checkout/Return: procedures</li>
-              <li>Reserve: calendar & reservations</li>
-            </ul>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Join</h2>
-            <p className="text-gray-700">Fill out this guide & quiz to join.</p>
-            <a href="/quiz" className="text-red-600 underline">Take the quiz →</a>
-          </section>
-
-          <section className="mb-12">
-            <VirtualTour images={images} />
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-gray-900">Featured Artists</h2>
-            <a href="/artists" className="text-red-600 underline">View Artists →</a>
-            <div className="mt-4">
-              <a href="https://forms.gle/submitBand" className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">Submit Your Band</a>
-            </div>
-          </section>
+          </div>
         </div>
       </section>
     </div>

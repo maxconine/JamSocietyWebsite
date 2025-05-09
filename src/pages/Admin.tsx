@@ -35,7 +35,7 @@ export default function Admin() {
     };
 
     return (
-        <div className="p-4">
+        <div className="bg-white min-h-screen p-4">
             <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>

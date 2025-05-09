@@ -16,7 +16,7 @@ const NavBar: React.FC = () => {
           <Link to="/" className="hover:text-gray-300">Home</Link>
           <Link to="/artists" className="hover:text-gray-300">Artists</Link>
           <Link to="/equipment" className="hover:text-gray-300">Equipment</Link>
-          <Link to="/checkout-return" className="hover:text-gray-300">Checkout/Return</Link>
+          <Link to="/equipment-guides" className="hover:text-gray-300">Equipment Guides</Link>
           <Link to="/reserve" className="hover:text-gray-300">Reserve</Link>
           {!isAuthenticated ? (
             <LoginButton />

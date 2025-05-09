@@ -4,7 +4,7 @@ import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Artists from './pages/Artists';
 import EquipmentPage from './pages/Equipment';
-import CheckoutReturn from './pages/CheckoutReturn';
+import EquipmentGuides from './pages/EquipmentGuides';
 import Reserve from './pages/Reserve';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
@@ -54,7 +54,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/artists" element={<Artists />} />
                 <Route path="/equipment" element={<EquipmentPage />} />
-                <Route path="/checkout-return" element={<CheckoutReturn />} />
+                <Route path="/equipment-guides" element={<EquipmentGuides />} />
                 <Route path="/reserve" element={<Reserve />} />
                 <Route path="/admin" element={<Admin />} />
               </Routes>

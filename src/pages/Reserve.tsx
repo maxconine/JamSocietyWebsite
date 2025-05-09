@@ -1,7 +1,7 @@
 // src/pages/Reserve.tsx
 export default function Reserve() {
   return (
-    <div>
+    <div className="bg-white min-h-screen">
       <h1 className="font-black-ops-one text-[35px] mb-4">Reserve Room/Equipment</h1>
       <p className="mb-4">
         The Jam Room operates on a first-come, first-served basis unless reserved.<br />

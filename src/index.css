@@ -9,6 +9,20 @@
   font-family: 'Black Ops One', cursive;
 }
 
-html, body {
-  background: #000 !important;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  background-color: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+html {
+  background-color: white;
 }
