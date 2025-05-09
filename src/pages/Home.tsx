@@ -7,19 +7,13 @@ const images = [
 
 const description = `Jam Society seeks to serve the musicians of Harvey Mudd college by providing a soundproof "jam room" with instruments, music equipment, and recording equipment, thus giving students the space and means to pursue their musical passions. We also aim to serve Harvey Mudd college as a whole by lending this equipment for campus events such as concerts and student performances.`;
 
-const moreInfo = `\
-- Location: Basement of Platt, east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711\n- Hours: After 5:00 pm Monday-Friday, All day Saturday-Sunday\n- Contact: Max Conine (mconine@hmc.edu) and Max Buchanan (mabuchanan@hmc.edu)\n- Equipment: Instruments, music gear, and recording equipment available for checkout\n- Events: Lending for campus concerts and student performances\n`;
-
 export default function Home() {
   const headerRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
-  const [headerVisible, setHeaderVisible] = useState(true);
   const [descStyle, setDescStyle] = useState({ opacity: 0, transform: 'translateY(40px)' });
-  const [moreVisible, setMoreVisible] = useState(false);
   const [scrollLocked, setScrollLocked] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollThreshold = 400;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -110,7 +104,7 @@ export default function Home() {
   // Fade in more info after description is visible
   useEffect(() => {
     const moreObserver = new window.IntersectionObserver(
-      ([entry]) => setMoreVisible(entry.isIntersecting),
+      () => { },
       { threshold: 0.5 }
     );
     if (moreRef.current) moreObserver.observe(moreRef.current);
@@ -164,7 +158,7 @@ export default function Home() {
       >
         <h1
           ref={headerRef}
-          className={`font-black-ops-one text-white text-5xl md:text-7xl text-center mb-8 transition-opacity duration-1000 ease-out ${headerVisible ? 'opacity-100' : 'opacity-0'}`}
+          className="font-black-ops-one text-white text-5xl md:text-7xl text-center mb-8 transition-opacity duration-1000 ease-out opacity-100"
         >
           Welcome to Jam Society
         </h1>
@@ -259,16 +253,6 @@ export default function Home() {
               </div>
             )}
           </div>
-
-          {/* More info section
-          <div
-            ref={moreRef}
-            className={`max-w-2xl w-full text-center text-gray-800 text-base md:text-lg font-roboto transition-opacity duration-1000 ease-out mx-auto ${moreVisible ? 'opacity-100' : 'opacity-0'}`}
-            style={{ margin: '0 auto 4rem auto' }}
-          >
-            <h2 className="text-2xl font-black-ops-one text-red-600 mb-4">More Information</h2>
-            <pre className="whitespace-pre-line text-gray-700 text-left md:text-center mx-auto" style={{ fontFamily: 'Roboto, sans-serif', background: 'transparent' }}>{moreInfo}</pre>
-          </div> */}
 
           {/* New Section with Black Background */}
           <div className="mt-10 bg-white text-black py-12 px-6 rounded-2xl">
