@@ -1,8 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
 
 const images = [
-  { src: '/src/assets/roomPhoto.jpeg', alt: 'Room Photo 1' },
-  { src: '/src/assets/roomPhoto2.jpeg', alt: 'Room Photo 2' },
+  { src: '/roomPhoto.jpeg', alt: 'Room Photo 1' },
+  { src: '/roomPhoto2.jpeg', alt: 'Room Photo 2' },
 ];
 
 const description = `Jam Society seeks to serve the musicians of Harvey Mudd college by providing a soundproof "jam room" with instruments, music equipment, and recording equipment, thus giving students the space and means to pursue their musical passions. We also aim to serve Harvey Mudd college as a whole by lending this equipment for campus events such as concerts and student performances.`;
@@ -208,7 +208,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 bg-gray-100 rounded-2xl shadow-lg py-10 px-6 mb-16">
             {/* Left: Pin and location */}
             <div className="flex items-center gap-4 w-full md:w-1/3 justify-start">
-              <img src="/src/assets/pin.svg" alt="Location Pin" className="w-10 h-10 bg-transparent" />
+              <img src="/pin.svg" alt="Location Pin" className="w-10 h-10 bg-transparent" />
               <div className="text-center">
                 <div className="font-roboto font-semibold text-lg text-gray-900 mb-1">Location</div>
                 <div className="text-gray-700 text-sm">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
@@ -274,12 +274,12 @@ export default function Home() {
               <h2 className="font-roboto font-semibold text-3xl mb-10">Meet your Jam Society Presidents</h2>
               <div className="flex justify-center gap-8">
                 <div>
-                  <img src="/src/assets/MaxC.jpeg" alt="Max Conine" className="w-90 h-130 object-cover rounded-lg mb-2" />
+                  <img src="/MaxC.jpeg" alt="Max Conine" className="w-90 h-130 object-cover rounded-lg mb-2" />
                   <div className="font-roboto font-semibold text-lg">Max Conine</div>
                   <div className="text-gray-700">mconine@hmc.edu</div>
                 </div>
                 <div>
-                  <img src="/src/assets/MaxB.jpeg" alt="Max Buchanan" className="w-90 h-130 object-cover rounded-lg mb-2" />
+                  <img src="/MaxB.jpeg" alt="Max Buchanan" className="w-90 h-130 object-cover rounded-lg mb-2" />
                   <div className="font-roboto font-semibold text-lg">Max Buchanan</div>
                   <div className="text-gray-700">mabuchanan@hmc.edu</div>
                 </div>
