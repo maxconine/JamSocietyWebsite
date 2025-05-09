@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getUserBySchoolId } from '../firebase/db';
 
 interface UserData {
     firstName?: string;
@@ -22,7 +23,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     const db = getFirestore();
 
     const ADMIN_IDS = ['40226906'];
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const registerNewUser = async (userData: Omit<UserData, 'isAdmin' | 'createdAt'> & { schoolId: string }) => {
         try {
             validateSchoolId(userData.schoolId);
-            validateEmail(userData.email);
+            validateEmail(userData.email || '');
             const isAdminUser = ADMIN_IDS.includes(userData.schoolId);
             await setDoc(doc(db, 'users', userData.schoolId), {
                 ...userData,
@@ -90,8 +90,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const schoolId = localStorage.getItem('schoolId');
         if (schoolId) {
             checkAuth(schoolId);
-        } else {
-            setIsLoading(false);
         }
     }, []);
 
@@ -104,8 +102,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         } catch (error) {
             console.error('Error checking auth:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 

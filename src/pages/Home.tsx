@@ -1,4 +1,3 @@
-import VirtualTour from '../components/VirtualTour';
 import { useRef, useEffect, useState } from 'react';
 
 const images = [
@@ -22,7 +21,7 @@ export default function Home() {
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollThreshold = 400; // Increased from 200 to make it require more scrolling
+  const scrollThreshold = 400;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEnlarged, setIsEnlarged] = useState(false);
 
@@ -49,7 +48,6 @@ export default function Home() {
         // Second section: progress from 100 to 0
         progress = Math.min(Math.max(100 + (accumulatedDelta / scrollThreshold) * 100, 0), 100);
       }
-      setScrollProgress(progress);
 
       // Update description style based on scroll progress
       setDescStyle({
@@ -67,13 +65,6 @@ export default function Home() {
           setCurrentSection(nextSection);
           accumulatedDelta = 0;
 
-          // Set initial progress for the new section
-          if (nextSection === 0) {
-            setScrollProgress(0);
-          } else {
-            setScrollProgress(100);
-          }
-
           window.scrollTo({
             top: nextSection * window.innerHeight,
             behavior: 'smooth'
@@ -89,7 +80,7 @@ export default function Home() {
           // Reset scrolling flag after animation
           scrollTimeout = window.setTimeout(() => {
             isScrolling = false;
-          }, 1500); // Increased from 1000 to 1500ms
+          }, 1500);
         }
       }
     };
