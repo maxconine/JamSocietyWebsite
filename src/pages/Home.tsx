@@ -5,7 +5,7 @@ const images = [
   { src: '/roomPhoto2.jpeg', alt: 'Room Photo 2' },
 ];
 
-const description = `Jam Society seeks to serve the musicians of Harvey Mudd college by providing a soundproof "jam room" with instruments, music equipment, and recording equipment, thus giving students the space and means to pursue their musical passions. We also aim to serve Harvey Mudd college as a whole by lending this equipment for campus events such as concerts and student performances.`;
+const description = `Providing a "jam room" with instruments, music equipment, stage equipment, and recording equipment. Maintained by students, for students.`;
 
 function isMobile() {
   if (typeof window === 'undefined') return false;
@@ -155,7 +155,7 @@ export default function Home() {
           ref={headerRef}
           className="font-black-ops-one text-white text-3xl sm:text-5xl md:text-7xl text-center mb-6 md:mb-8 transition-opacity duration-1000 ease-out opacity-100"
         >
-          Welcome to Jam Society
+          Jam Society
         </h1>
         <div
           ref={descRef}
@@ -199,27 +199,27 @@ export default function Home() {
         }}
       >
         <div className="max-w-6xl mx-auto px-2 sm:px-4">
-          {/* Info row section */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8 bg-gray-100 rounded-2xl shadow-lg py-6 md:py-10 px-3 md:px-6 mb-10 md:mb-16">
-            {/* Left: Pin and location */}
-            <div className="flex items-center gap-3 md:gap-4 w-full md:w-1/3 justify-start">
-              <img src="/pin.svg" alt="Location Pin" className="w-8 h-8 md:w-10 md:h-10 bg-transparent" />
-              <div className="text-center">
-                <div className="font-roboto font-semibold text-base md:text-lg text-gray-900 mb-1">Location</div>
-                <div className="text-gray-700 text-xs md:text-sm">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
+          {/* Info row section - 3 sharper, square, side-by-side blocks */}
+          <div className="w-screen max-w-none flex flex-col md:flex-row gap-8 mb-16 md:mb-24 mx-[-50vw] left-[50vw] right-[50vw] relative" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
+            {/* Location Block */}
+            <div className="flex flex-col md:flex-1 items-center bg-gray-100 shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-none">
+              <img src="/pin.svg" alt="Location Pin" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" />
+              <div className="text-center w-full">
+                <div className="font-roboto font-extrabold text-3xl md:text-5xl text-gray-900 mb-4">Location</div>
+                <div className="text-gray-700 text-xl md:text-2xl font-medium">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
               </div>
             </div>
-            {/* Center: Hours */}
-            <div className="flex flex-col items-center w-full md:w-1/3">
-              <div className="font-roboto font-semibold text-base md:text-lg text-gray-900 mb-2">Hours</div>
-              <div className="text-gray-700 text-center text-xs md:text-base">
+            {/* Hours Block */}
+            <div className="flex flex-col md:flex-1 items-center bg-gray-100 shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-none">
+              <div className="font-roboto font-extrabold text-3xl md:text-5xl text-gray-900 mb-4">Hours</div>
+              <div className="text-gray-700 text-center text-xl md:text-2xl font-medium">
                 After 5:00 pm Monday-Friday<br />All day Saturday-Sunday
               </div>
             </div>
-            {/* Right: Who can use the room? */}
-            <div className="flex flex-col items-center w-full md:w-1/3">
-              <div className="font-roboto font-semibold text-base md:text-lg text-gray-900 mb-1 text-center">Who can use the room?</div>
-              <div className="text-gray-700 text-xs md:text-sm text-center">
+            {/* Who can use the room Block */}
+            <div className="flex flex-col md:flex-1 items-center bg-gray-100 shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-none">
+              <div className="font-roboto font-extrabold text-3xl md:text-5xl text-gray-900 mb-4 text-center">Who can use the room?</div>
+              <div className="text-gray-700 text-xl md:text-2xl font-medium text-center">
                 You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than respecting the equipment in the room. We have over 400 active members!
               </div>
             </div>

@@ -11,7 +11,11 @@ interface EquipmentItem {
     videoUrl?: string;
 }
 
-const equipmentItems: EquipmentItem[] = [
+interface MixerEquipmentItem extends EquipmentItem {
+    extraVideoUrl?: string;
+}
+
+const equipmentItems: (EquipmentItem | MixerEquipmentItem)[] = [
     {
         id: 'mic1',
         name: 'How To use a Microphone',
@@ -27,17 +31,23 @@ const equipmentItems: EquipmentItem[] = [
         detailImage: '/images/equipment/mg10xu.jpg',
         manualUrl: 'https://docs.google.com/document/d/your-doc-id-2',
         description: '10-channel mixer with USB interface and effects',
-        videoUrl: 'https://youtu.be/3nhk0CD_NKg?feature=shared'
+        videoUrl: 'https://youtu.be/3nhk0CD_NKg?feature=shared',
+        extraVideoUrl: 'https://www.youtube.com/watch?v=d__3qrr3USI'
     },
     // Add more equipment items here
 ];
 
 const EquipmentGuides: React.FC = () => {
-    const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+    const [selectedVideos, setSelectedVideos] = useState<string[] | null>(null);
 
-    const handleCardClick = (item: EquipmentItem) => {
-        if (item.videoUrl) {
-            setSelectedVideo(item.videoUrl);
+    const handleCardClick = (item: EquipmentItem | MixerEquipmentItem) => {
+        if (item.id === 'mixer1' && (item as MixerEquipmentItem).extraVideoUrl) {
+            setSelectedVideos([
+                (item as MixerEquipmentItem).videoUrl!,
+                (item as MixerEquipmentItem).extraVideoUrl!
+            ]);
+        } else if (item.videoUrl) {
+            setSelectedVideos([item.videoUrl]);
         }
     };
 
@@ -55,7 +65,7 @@ const EquipmentGuides: React.FC = () => {
                     <div
                         key={item.id}
                         className="bg-gray-800 rounded-xl overflow-hidden shadow-lg cursor-pointer"
-                        onClick={() => handleCardClick(item)}
+                        onClick={() => handleCardClick(item as EquipmentItem | MixerEquipmentItem)}
                     >
                         <div className="flex flex-col md:flex-row">
                             {/* Image Section */}
@@ -89,26 +99,28 @@ const EquipmentGuides: React.FC = () => {
             </div>
 
             {/* Video Modal */}
-            {selectedVideo && (
+            {selectedVideos && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
-                    onClick={() => setSelectedVideo(null)}
+                    onClick={() => setSelectedVideos(null)}
                 >
                     <div
                         className="bg-gray-800 rounded-xl p-4 max-w-4xl w-full"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="relative pb-[56.25%] h-0">
-                            <iframe
-                                className="absolute top-0 left-0 w-full h-full rounded-lg"
-                                src={selectedVideo.replace('youtu.be', 'youtube.com/embed')}
-                                title="YouTube video player"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
+                        {selectedVideos.map((video, idx) => (
+                            <div className="relative pb-[56.25%] h-0 mb-6" key={idx}>
+                                <iframe
+                                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                                    src={video.replace('youtu.be', 'youtube.com/embed').replace('watch?v=', 'embed/')}
+                                    title={`YouTube video player ${idx + 1}`}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        ))}
                         <button
-                            onClick={() => setSelectedVideo(null)}
+                            onClick={() => setSelectedVideos(null)}
                             className="mt-4 w-full bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
                         >
                             Close Video
