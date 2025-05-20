@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
 
 const images = [
   { src: '/roomPhoto.jpeg', alt: 'Room Photo 1' },
@@ -23,6 +24,13 @@ export default function Home() {
   const scrollThreshold = 400;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEnlarged, setIsEnlarged] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading for demonstration (remove or adjust as needed)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000); // 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
 
   // Remove scroll lock on mobile
   useEffect(() => {
@@ -129,6 +137,18 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isEnlarged]);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-24 w-24 border-b-4 border-yellow-400 mb-8"></div>
+          <h1 className="text-5xl md:text-7xl font-black-ops-one text-yellow-400 mb-4">Loading Jam Society...</h1>
+          <p className="text-white text-xl md:text-2xl">Please wait while we load your experience.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -140,37 +160,45 @@ export default function Home() {
     >
       {/* Hero section: fills first viewport */}
       <section
-        className="relative flex flex-col items-center justify-center w-full"
+        className="relative flex flex-col items-center justify-center w-full overflow-hidden"
         style={{
           minHeight: '93vh',
           scrollSnapAlign: !isMobile() ? 'start' : undefined,
           scrollSnapStop: !isMobile() ? 'always' : undefined,
-          backgroundColor: 'black',
+          backgroundImage: 'url(/mamakStage.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
           width: '150%',
           margin: -33,
           padding: 0
         }}
       >
-        <h1
-          ref={headerRef}
-          className="font-black-ops-one text-white text-3xl sm:text-5xl md:text-7xl text-center mb-6 md:mb-8 transition-opacity duration-1000 ease-out opacity-100"
-        >
-          Jam Society
-        </h1>
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-black/70 z-0 pointer-events-none" />
+        <img
+          src={JamSocLogo}
+          alt="Jam Society Logo"
+          className="w-[min(98vw,900px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10"
+          style={{ maxWidth: '900px' }}
+        />
         <div
           ref={descRef}
-          className="max-w-full sm:max-w-2xl w-full text-center text-white text-base sm:text-lg md:text-2xl font-roboto font-semibold drop-shadow-lg bg-black/60 rounded-xl px-3 sm:px-6 py-4 border border-white/10"
+          className="max-w-full sm:max-w-2xl w-full text-center text-white text-base sm:text-lg md:text-2xl font-roboto italic drop-shadow-lg px-3 sm:px-6 py-4 z-10"
           style={{
             ...descStyle,
             marginTop: '1.5rem',
             transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
             letterSpacing: '0.01em',
+            fontWeight: 400,
+            fontStyle: 'italic',
           }}
         >
           {description}
         </div>
         {!isMobile() && scrollLocked && currentSection === 0 && (
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
             <div className="text-white text-sm mb-2">Scroll to reveal</div>
             <svg
               className="w-6 h-6 text-white"
@@ -200,26 +228,34 @@ export default function Home() {
       >
         <div className="max-w-6xl mx-auto px-2 sm:px-4">
           {/* Info row section - 3 sharper, square, side-by-side blocks */}
-          <div className="w-screen max-w-none flex flex-col md:flex-row gap-8 mb-16 md:mb-24 mx-[-50vw] left-[50vw] right-[50vw] relative" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
+          <div className="w-screen max-w-none flex flex-col md:flex-row gap-4 mb-16 md:mb-24 px-4 md:px-12 mx-[-50vw] left-[50vw] right-[50vw] relative" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
             {/* Location Block */}
-            <div className="flex flex-col md:flex-1 items-center bg-gray-100 shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-none">
-              <img src="/pin.svg" alt="Location Pin" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" />
-              <div className="text-center w-full">
-                <div className="font-roboto font-extrabold text-3xl md:text-5xl text-gray-900 mb-4">Location</div>
-                <div className="text-gray-700 text-xl md:text-2xl font-medium">Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711</div>
+            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
+              <img src="/pin.svg" alt="Location Pin" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
+              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#fff' }}>
+                Location
+              </div>
+              <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
+                Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711
               </div>
             </div>
             {/* Hours Block */}
-            <div className="flex flex-col md:flex-1 items-center bg-gray-100 shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-none">
-              <div className="font-roboto font-extrabold text-3xl md:text-5xl text-gray-900 mb-4">Hours</div>
-              <div className="text-gray-700 text-center text-xl md:text-2xl font-medium">
+            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
+              <img src="/clock.svg" alt="Clock Icon" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
+              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#fff' }}>
+                Hours
+              </div>
+              <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
                 After 5:00 pm Monday-Friday<br />All day Saturday-Sunday
               </div>
             </div>
             {/* Who can use the room Block */}
-            <div className="flex flex-col md:flex-1 items-center bg-gray-100 shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-none">
-              <div className="font-roboto font-extrabold text-3xl md:text-5xl text-gray-900 mb-4 text-center">Who can use the room?</div>
-              <div className="text-gray-700 text-xl md:text-2xl font-medium text-center">
+            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
+              <img src="/door.svg" alt="Door Icon" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
+              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4 text-center" style={{ fontWeight: 500, color: '#fff' }}>
+                Who can use the room?
+              </div>
+              <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
                 You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than respecting the equipment in the room. We have over 400 active members!
               </div>
             </div>
