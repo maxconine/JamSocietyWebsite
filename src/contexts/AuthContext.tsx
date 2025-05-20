@@ -73,12 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             validateEmail(userData.email || '');
             const isAdminUser = ADMIN_IDS.includes(userData.schoolId);
             
-            // Create a Firebase Auth user using the school ID as the password
-            const userCredential = await createUserWithEmailAndPassword(auth, userData.email!, userData.schoolId);
-            // Send verification email
-            await sendEmailVerification(userCredential.user);
-            
-            // Store user profile in Firestore
+            // Store user profile in Firestore without creating a Firebase Auth user
             await setDoc(doc(db, 'users', userData.schoolId), {
                 schoolId: userData.schoolId,
                 firstName: userData.firstName,
