@@ -52,18 +52,37 @@ export default function Artists() {
   return (
     <div className="min-h-screen font-roboto">
       {/* Hero Section */}
-      <div 
-        className="relative h-[400px] bg-cover bg-center bg-no-repeat"
-        style={{ 
-          backgroundImage: 'url(/Artists.mamak.jpg)',
+      <section
+        style={{
+          width: '100vw',
+          height: '400px',
+          backgroundImage: 'url(/discoverNewArtists.jpeg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative',
+          zIndex: 1,
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          marginTop: -32,
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <h1 className="font-medium text-5xl text-white">Discover Student Artists</h1>
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            zIndex: 2,
+          }}
+        >
+          <h1 style={{ color: 'white', fontSize: 40 }}>Discover Student Artists</h1>
         </div>
-      </div>
+      </section>
 
       {/* Main Content */}
       <section className="p-16">
@@ -78,7 +97,7 @@ export default function Artists() {
             {isAuthenticated ? (
               <button
                 onClick={() => setIsAddArtistModalOpen(true)}
-                className="px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors font-medium"
+                className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors font-medium"
               >
                 Add an Artist
               </button>

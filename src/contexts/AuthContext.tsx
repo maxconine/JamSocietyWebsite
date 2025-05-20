@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getUserBySchoolId } from '../firebase/db';
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword } from 'firebase/auth';
 
 interface UserData {
     firstName?: string;
@@ -12,6 +12,7 @@ interface UserData {
     isAdmin: boolean;
     createdAt: string;
     emailVerified: boolean;
+    verificationCode?: string;
 }
 
 interface AuthContextType {
@@ -21,6 +22,7 @@ interface AuthContextType {
     registerNewUser: (userData: Omit<UserData, 'isAdmin' | 'createdAt'> & { schoolId: string; password?: string }) => Promise<void>;
     logout: () => void;
     setQuizPassed: (schoolId: string) => Promise<void>;
+    verifyEmail: (schoolId: string, code: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +33,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const db = getFirestore();
 
     const ADMIN_IDS = ['40226906', '40225571'];
+
+    const generateVerificationCode = () => {
+        return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    };
 
     const validateSchoolId = (schoolId: string) => {
         if (!/^\d{8}$/.test(schoolId)) {
@@ -49,14 +55,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             validateSchoolId(schoolId);
             const userDoc = await getDoc(doc(db, 'users', schoolId));
-            if (userDoc.exists()) {
-                const userData = userDoc.data() as UserData;
-                setIsAuthenticated(true);
-                setIsAdmin(userData.isAdmin || ADMIN_IDS.includes(schoolId));
-                localStorage.setItem('schoolId', schoolId);
-            } else {
+            if (!userDoc.exists()) {
                 throw new Error('NEW_USER');
             }
+            const userData = userDoc.data() as UserData;
+            const email = userData.email;
+            if (!email) {
+                throw new Error('No email found for this user.');
+            }
+            const auth = getAuth();
+            // Try to sign in with schoolId as password (since that's how you register)
+            await signInWithEmailAndPassword(auth, email, schoolId);
+            const isAuthVerified = auth.currentUser?.emailVerified;
+            if (isAuthVerified && !userData.emailVerified) {
+                // Sync Firestore if needed
+                await setDoc(doc(db, 'users', schoolId), { emailVerified: true }, { merge: true });
+            }
+            if (!isAuthVerified && !userData.emailVerified) {
+                throw new Error('Please verify your email before logging in');
+            }
+            setIsAuthenticated(true);
+            setIsAdmin(userData.isAdmin || ADMIN_IDS.includes(schoolId));
+            localStorage.setItem('schoolId', schoolId);
         } catch (error) {
             if (error instanceof Error && error.message === 'NEW_USER') {
                 throw error;
@@ -72,14 +92,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             validateEmail(userData.email || '');
             const isAdminUser = ADMIN_IDS.includes(userData.schoolId);
             const auth = getAuth();
-            // Use schoolId as password if not provided
             const password = userData.password || userData.schoolId;
+            const verificationCode = generateVerificationCode();
+
             // Create Firebase Auth user
             const userCredential = await createUserWithEmailAndPassword(auth, userData.email!, password);
-            // Send verification email
-            await sendEmailVerification(userCredential.user);
-            // Sign out the user after registration
-            await signOut(auth);
+            
             // Store user profile in Firestore
             await setDoc(doc(db, 'users', userData.schoolId), {
                 schoolId: userData.schoolId,
@@ -90,9 +108,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 quizPassed: false,
                 isAdmin: isAdminUser,
                 createdAt: new Date().toISOString(),
-                emailVerified: false
+                emailVerified: false,
+                verificationCode: verificationCode
             });
-            setIsAuthenticated(false); // Not authenticated until email is verified and quiz is passed
+
+            // Send verification email with code
+            // TODO: Implement email sending functionality here
+            console.log('Verification code:', verificationCode); // For testing purposes
+
+            // Sign out the user after registration
+            await signOut(auth);
+            setIsAuthenticated(false);
             setIsAdmin(isAdminUser);
             localStorage.setItem('schoolId', userData.schoolId);
         } catch (error: any) {
@@ -106,6 +132,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 throw new Error('Password is too weak.');
             }
             console.error('Registration error:', error);
+            throw error;
+        }
+    };
+
+    const verifyEmail = async (schoolId: string, code: string): Promise<boolean> => {
+        try {
+            const userDoc = await getDoc(doc(db, 'users', schoolId));
+            if (!userDoc.exists()) {
+                throw new Error('User not found');
+            }
+
+            const userData = userDoc.data() as UserData;
+            if (userData.verificationCode === code) {
+                await setDoc(doc(db, 'users', schoolId), {
+                    emailVerified: true,
+                    verificationCode: null // Clear the code after successful verification
+                }, { merge: true });
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Verification error:', error);
             throw error;
         }
     };
@@ -145,7 +193,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, registerNewUser, logout, setQuizPassed }}>
+        <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, registerNewUser, logout, setQuizPassed, verifyEmail }}>
             {children}
         </AuthContext.Provider>
     );

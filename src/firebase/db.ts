@@ -55,6 +55,8 @@ export interface Artist {
     contact: string;
     createdBy: string; // School ID of the creator
     photoUrl?: string | null;
+    socialMedia?: string;
+    music?: string;
 }
 
 // Collection References

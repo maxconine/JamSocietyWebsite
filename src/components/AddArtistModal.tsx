@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 interface AddArtistModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { name: string; bio: string; contact: string; photoUrl?: string }) => void;
+  onSubmit: (data: { name: string; bio: string; contact: string; photoUrl?: string; socialMedia?: string; music?: string }) => void;
 }
 
 // Maximum file size: 2MB
@@ -126,7 +126,9 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
         name: formData.get('name') as string,
         bio: formData.get('bio') as string,
         contact: formData.get('contact') as string,
-        photoUrl
+        photoUrl,
+        socialMedia: formData.get('socialMedia') as string,
+        music: formData.get('music') as string
       });
       
       console.log('Artist data submitted successfully');
@@ -193,6 +195,9 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
                     <Dialog.Title as="h3" className="text-2xl font-medium leading-6 text-gray-900 mb-4">
                       Add New Artist
                     </Dialog.Title>
+                    <p className="text-gray-600 mb-6 font-normal">
+                      We want to know you and your music! Please add youself if you are an artist at Harvey Mudd. Let others find you easily and contact you by having yourself on our website.
+                    </p>
                     {error && (
                       <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded font-normal">
                         {error}
@@ -232,6 +237,30 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
                           name="contact"
                           id="contact"
                           required
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm font-normal"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="socialMedia" className="block text-sm font-medium text-gray-700">
+                          Social Media (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          name="socialMedia"
+                          id="socialMedia"
+                          placeholder="Instagram, SoundCloud, etc."
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm font-normal"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="music" className="block text-sm font-medium text-gray-700">
+                          Music Links (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          name="music"
+                          id="music"
+                          placeholder="Spotify, YouTube, etc."
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm font-normal"
                         />
                       </div>

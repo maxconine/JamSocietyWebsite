@@ -13,16 +13,22 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
   const [editForm, setEditForm] = useState({
     name: '',
     bio: '',
-    contact: ''
+    contact: '',
+    socialMedia: '',
+    music: ''
   });
   const [error, setError] = useState<string | null>(null);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
 
   const handleEdit = (artist: Artist) => {
     setSelectedArtist(artist);
     setEditForm({
       name: artist.name || '',
       bio: artist.bio || '',
-      contact: artist.contact || ''
+      contact: artist.contact || '',
+      socialMedia: artist.socialMedia || '',
+      music: artist.music || ''
     });
     setIsEditing(true);
     setError(null);
@@ -36,7 +42,9 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
         name: editForm.name || '',
         bio: editForm.bio || '',
         contact: editForm.contact || '',
-        photoUrl: selectedArtist.photoUrl || ''
+        photoUrl: selectedArtist.photoUrl || '',
+        socialMedia: editForm.socialMedia || '',
+        music: editForm.music || ''
       });
       setSelectedArtist({ ...selectedArtist, ...editForm });
       setIsEditing(false);
@@ -125,6 +133,28 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 font-normal"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Social Media
+                </label>
+                <input
+                  type="text"
+                  value={editForm.socialMedia}
+                  onChange={(e) => setEditForm({ ...editForm, socialMedia: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 font-normal"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Music Links
+                </label>
+                <input
+                  type="text"
+                  value={editForm.music}
+                  onChange={(e) => setEditForm({ ...editForm, music: e.target.value })}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 font-normal"
+                />
+              </div>
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={() => setIsEditing(false)}
@@ -147,7 +177,11 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
                   <img
                     src={selectedArtist.photoUrl}
                     alt={selectedArtist.name}
-                    className="w-32 h-32 object-cover rounded-md"
+                    className="w-32 h-32 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
+                    onClick={() => {
+                      setModalImageUrl(selectedArtist.photoUrl || null);
+                      setShowImageModal(true);
+                    }}
                   />
                 )}
                 <div className="flex-1">
@@ -156,6 +190,16 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
                   <p className="text-gray-600 font-normal mt-2">
                     <span className="font-medium">Contact:</span> {selectedArtist.contact}
                   </p>
+                  {selectedArtist.socialMedia && (
+                    <p className="text-gray-600 font-normal mt-2">
+                      <span className="font-medium">Social Media:</span> {selectedArtist.socialMedia}
+                    </p>
+                  )}
+                  {selectedArtist.music && (
+                    <p className="text-gray-600 font-normal mt-2">
+                      <span className="font-medium">Music:</span> {selectedArtist.music}
+                    </p>
+                  )}
                 </div>
               </div>
               {canEdit(selectedArtist) && (
@@ -178,6 +222,28 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Image Modal */}
+      {showImageModal && modalImageUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
+          onClick={() => setShowImageModal(false)}
+        >
+          <img
+            src={modalImageUrl}
+            alt="Artist Fullscreen"
+            className="max-w-full max-h-full rounded shadow-lg"
+            onClick={e => e.stopPropagation()}
+          />
+          <button
+            className="absolute top-4 right-4 text-white text-3xl font-bold bg-black bg-opacity-60 rounded-full px-3 py-1 hover:bg-opacity-90 focus:outline-none"
+            onClick={() => setShowImageModal(false)}
+            aria-label="Close"
+          >
+            &times;
+          </button>
         </div>
       )}
     </div>
