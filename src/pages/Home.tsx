@@ -24,12 +24,22 @@ export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
-  // Simulate loading for demonstration (remove or adjust as needed)
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000); // 2 seconds
-    return () => clearTimeout(timer);
-  }, []);
+    // Set mounted to true after initial render
+    setMounted(true);
+    // Only show loading on initial page load
+    if (!mounted) {
+      setLoading(true);
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false);
+    }
+  }, [mounted]);
 
   // Remove scroll lock on mobile
   useEffect(() => {
@@ -136,7 +146,7 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isEnlarged]);
 
-  if (loading) {
+  if (loading && !mounted) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-black">
         <div className="flex flex-col items-center">

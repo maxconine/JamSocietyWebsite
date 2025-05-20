@@ -47,10 +47,21 @@ export interface User {
     isAdmin: boolean;
 }
 
+export interface Artist {
+    id?: string;
+    name: string;
+    bio: string;
+    image?: string;
+    contact: string;
+    createdBy: string; // School ID of the creator
+    photoUrl?: string;
+}
+
 // Collection References
 const equipmentCollection = collection(db, 'equipment');
 const reservationsCollection = collection(db, 'reservations');
 const usersCollection = collection(db, 'users');
+const artistsCollection = collection(db, 'artists');
 
 // Equipment Operations
 export const getEquipment = async (): Promise<Equipment[]> => {
@@ -137,6 +148,48 @@ export const getUserBySchoolId = async (schoolId: string): Promise<User | undefi
     const snapshot = await getDocs(query(usersCollection, where('schoolId', '==', schoolId)));
     const userDoc = snapshot.docs[0];
     return userDoc ? { id: userDoc.id, ...userDoc.data() } as User : undefined;
+};
+
+// Artist Operations
+export const getArtists = async (): Promise<Artist[]> => {
+    const querySnapshot = await getDocs(artistsCollection);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Artist[];
+};
+
+export const subscribeToArtists = (callback: (data: Artist[]) => void) => {
+    return onSnapshot(artistsCollection, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Artist[];
+        callback(data);
+    });
+};
+
+export const addArtist = async (artist: Omit<Artist, 'id'>): Promise<string> => {
+    // Check for existing artist with the same name
+    const q = query(artistsCollection, where('name', '==', artist.name));
+    const querySnapshot = await getDocs(q);
+    
+    if (!querySnapshot.empty) {
+        throw new Error('An artist with this name already exists');
+    }
+
+    const docRef = await addDoc(artistsCollection, artist);
+    return docRef.id;
+};
+
+export const updateArtist = async (id: string, updates: Partial<Artist>): Promise<void> => {
+    const docRef = doc(db, 'artists', id);
+    await updateDoc(docRef, updates);
+};
+
+export const deleteArtist = async (id: string): Promise<void> => {
+    const docRef = doc(db, 'artists', id);
+    await deleteDoc(docRef);
 };
 
 // Test function to add sample equipment
