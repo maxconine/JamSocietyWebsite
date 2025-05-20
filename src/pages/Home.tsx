@@ -25,6 +25,8 @@ export default function Home() {
   const [isEnlarged, setIsEnlarged] = useState(false);
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [isPresidentEnlarged, setIsPresidentEnlarged] = useState(false);
+  const [enlargedPresidentSrc, setEnlargedPresidentSrc] = useState<string | null>(null);
 
   useEffect(() => {
     // Set mounted to true after initial render
@@ -328,8 +330,9 @@ export default function Home() {
                   <img
                     src="/MaxC.jpeg"
                     alt="Max Conine"
-                    className="object-cover rounded-lg mb-2 mx-auto"
-                    style={{ width: isMobile() ? 90 : 42, height: isMobile() ? 120 : 57 }}
+                    className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
+                    style={{ width: isMobile() ? 90 : 378, height: isMobile() ? 120 : 513 }}
+                    onClick={() => { setEnlargedPresidentSrc('/MaxC.jpeg'); setIsPresidentEnlarged(true); }}
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
                   <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
@@ -339,14 +342,32 @@ export default function Home() {
                   <img
                     src="/MaxB.jpeg"
                     alt="Max Buchanan"
-                    className="object-cover rounded-lg mb-2 mx-auto"
-                    style={{ width: isMobile() ? 90 : 42, height: isMobile() ? 120 : 57 }}
+                    className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
+                    style={{ width: isMobile() ? 90 : 378, height: isMobile() ? 120 : 513 }}
+                    onClick={() => { setEnlargedPresidentSrc('/MaxB.jpeg'); setIsPresidentEnlarged(true); }}
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
                   <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
                   <div className="text-gray-700 text-sm md:text-base">(626) 238-5252</div>
                 </div>
               </div>
+              {isPresidentEnlarged && enlargedPresidentSrc && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setIsPresidentEnlarged(false)}>
+                  <img
+                    src={enlargedPresidentSrc}
+                    alt="President Fullscreen"
+                    className="max-w-full max-h-full rounded shadow-lg"
+                    onClick={e => e.stopPropagation()}
+                  />
+                  <button
+                    className="absolute top-4 right-4 text-white text-3xl font-bold bg-black bg-opacity-60 rounded-full px-3 py-1 hover:bg-opacity-90 focus:outline-none"
+                    onClick={() => setIsPresidentEnlarged(false)}
+                    aria-label="Close"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
               <p className="text-black-300 py-4 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan. Please don't hesitate to reach out!</p>
               
               {/* Instagram Section */}
