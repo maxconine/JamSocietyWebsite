@@ -14,7 +14,6 @@ function isMobile() {
 }
 
 export default function Home() {
-  const headerRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
   const moreRef = useRef<HTMLDivElement>(null);
   const [descStyle, setDescStyle] = useState({ opacity: 0, transform: 'translateY(40px)' });
