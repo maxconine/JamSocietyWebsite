@@ -4,11 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 interface RegistrationFormProps {
-    schoolId: string;
     onCancel: () => void;
 }
 
-const RegistrationForm: React.FC<RegistrationFormProps> = ({ schoolId, onCancel }) => {
+const RegistrationForm: React.FC<RegistrationFormProps> = ({ onCancel }) => {
     const { registerNewUser } = useAuth();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -63,7 +62,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ schoolId, onCancel 
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 classYear: formData.classYear,
-                email: formData.email
+                email: formData.email,
+                emailVerified: false
             });
             setFormData({ schoolId: '', firstName: '', lastName: '', classYear: '', email: '' });
             setSuccess('Registration successful! A verification email has been sent to your email address.');
