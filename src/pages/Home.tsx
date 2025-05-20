@@ -169,31 +169,39 @@ export default function Home() {
           backgroundPosition: 'center',
           backgroundAttachment: isMobile() ? 'scroll' : 'fixed',
           backgroundRepeat: 'no-repeat',
-          width: '100%',
-          padding: 0
+          width: '100vw',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          marginTop: '-2rem',
+          padding: 0,
+          position: 'relative',
+          top: 0
         }}
       >
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-black/70 z-0 pointer-events-none" />
-        <img
-          src={JamSocLogo}
-          alt="Jam Society Logo"
-          className="w-[min(90vw,600px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10"
-          style={{ maxWidth: isMobile() ? '90vw' : '900px' }}
-        />
-        <div
-          ref={descRef}
-          className="max-w-full sm:max-w-2xl w-full text-center text-white text-base sm:text-lg md:text-2xl font-roboto italic drop-shadow-lg px-3 sm:px-6 py-4 z-10"
-          style={{
-            ...descStyle,
-            marginTop: '1.5rem',
-            transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-            letterSpacing: '0.01em',
-            fontWeight: 400,
-            fontStyle: 'italic',
-          }}
-        >
-          {description}
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+          <img
+            src={JamSocLogo}
+            alt="Jam Society Logo"
+            className="w-[min(90vw,900px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10 mx-auto"
+            style={{ maxWidth: isMobile() ? '90vw' : '900px' }}
+          />
+          <div
+            ref={descRef}
+            className="max-w-full sm:max-w-2xl w-full text-center text-white text-base sm:text-lg md:text-2xl font-roboto italic drop-shadow-lg px-3 sm:px-6 py-4 z-10 mx-auto"
+            style={{
+              opacity: isMobile() ? 1 : descStyle.opacity,
+              transform: isMobile() ? 'none' : descStyle.transform,
+              marginTop: '1.5rem',
+              transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
+              letterSpacing: '0.01em',
+              fontWeight: 400,
+              fontStyle: 'italic',
+            }}
+          >
+            {description}
+          </div>
         </div>
         {!isMobile() && scrollLocked && currentSection === 0 && (
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">

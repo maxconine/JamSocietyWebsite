@@ -25,7 +25,7 @@ const LoadingScreen: React.FC = () => {
         <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
             <div className="relative" key={key}>
                 {/* Logo container */}
-                <div className="relative w-[50rem] h-[50rem]">
+                <div className="relative w-[min(90vw,50rem)] h-[min(90vw,50rem)]">
                     {/* Glowing effect */}
                     <div className="absolute inset-0 animate-pulse-smooth">
                         <div className="absolute inset-0 bg-red-500 opacity-10 blur-[100px]">
