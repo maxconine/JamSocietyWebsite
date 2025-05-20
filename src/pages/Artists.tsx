@@ -80,7 +80,11 @@ export default function Artists() {
             zIndex: 2,
           }}
         >
-          <h1 style={{ color: 'white', fontSize: 40 }}>Discover Student Artists</h1>
+          <h1
+            className="text-white text-3xl sm:text-4xl md:text-5xl font-bold text-center px-2"
+          >
+            Discover Student Artists
+          </h1>
         </div>
       </section>
 
