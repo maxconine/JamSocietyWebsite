@@ -45,15 +45,15 @@ const LoginButton: React.FC = () => {
                     value={schoolId}
                     onChange={(e) => setSchoolId(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Enter School ID"
-                    className="px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+                    placeholder="Enter School ID #"
+                    className="px-3 py-1 border border-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent text-yellow-500 placeholder-white font-roboto font-medium text-sm"
                     pattern="\d{8}"
                     title="School ID must be exactly 8 digits"
                 />
                 <button
                     onClick={handleLogin}
                     disabled={isLoading}
-                    className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                    className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 text-white-700 font-small"
                 >
                     {isLoading ? 'Logging in...' : 'Login'}
                 </button>
@@ -64,7 +64,7 @@ const LoginButton: React.FC = () => {
 
             {showRegistration && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                    <div className="bg-clear rounded-lg shadow-xl p-6 w-full max-w-md">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-xl font-semibold text-gray-800">New User Registration</h2>
                             <button

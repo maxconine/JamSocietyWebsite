@@ -41,11 +41,11 @@ const NavBar: React.FC = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/" className="hover:text-gray-300">Home</Link>
-            <Link to="/artists" className="hover:text-gray-300">Artists</Link>
-            <Link to="/equipment" className="hover:text-gray-300">Equipment</Link>
-            <Link to="/equipment-guides" className="hover:text-gray-300">Guides</Link>
-            <Link to="/reserve" className="hover:text-gray-300">Reserve</Link>
+            <Link to="/" className="hover:text-gray-300 font-roboto font-medium">Home</Link>
+            <Link to="/artists" className="hover:text-gray-300 font-roboto font-medium">Artists</Link>
+            <Link to="/equipment" className="hover:text-gray-300 font-roboto font-medium">Equipment</Link>
+            <Link to="/equipment-guides" className="hover:text-gray-300 font-roboto font-medium">Guides</Link>
+            <Link to="/reserve" className="hover:text-gray-300 font-roboto font-medium">Reserve</Link>
             {!isAuthenticated ? (
               <LoginButton />
             ) : (
@@ -62,11 +62,11 @@ const NavBar: React.FC = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 space-y-2">
-            <Link to="/" className="block py-2 hover:text-gray-300">Home</Link>
-            <Link to="/artists" className="block py-2 hover:text-gray-300">Artists</Link>
-            <Link to="/equipment" className="block py-2 hover:text-gray-300">Equipment</Link>
-            <Link to="/equipment-guides" className="block py-2 hover:text-gray-300">Guides</Link>
-            <Link to="/reserve" className="block py-2 hover:text-gray-300">Reserve</Link>
+            <Link to="/" className="block py-2 hover:text-gray-300 font-roboto font-medium">Home</Link>
+            <Link to="/artists" className="block py-2 hover:text-gray-300 font-roboto font-medium">Artists</Link>
+            <Link to="/equipment" className="block py-2 hover:text-gray-300 font-roboto font-medium">Equipment</Link>
+            <Link to="/equipment-guides" className="block py-2 hover:text-gray-300 font-roboto font-medium">Guides</Link>
+            <Link to="/reserve" className="block py-2 hover:text-gray-300 font-roboto font-medium">Reserve</Link>
             <div className="pt-2">
               {!isAuthenticated ? (
                 <LoginButton />

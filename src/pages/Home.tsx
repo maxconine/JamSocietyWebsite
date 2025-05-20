@@ -315,13 +315,13 @@ export default function Home() {
               <h2 className="font-roboto font-semibold text-2xl md:text-3xl mb-6 md:mb-10">Meet your Jam Society Presidents</h2>
               <div className="flex flex-col sm:flex-row justify-center gap-6 md:gap-8">
                 <div>
-                  <img src="/MaxC.jpeg" alt="Max Conine" className="w-32 h-44 md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
+                  <img src="/MaxC.jpeg" alt="Max Conine" className="w-[42px] h-[57px] md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
                   <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
                   <div className="text-gray-700 text-sm md:text-base">(857)-701-0870</div>
                 </div>
                 <div>
-                  <img src="/MaxB.jpeg" alt="Max Buchanan" className="w-32 h-44 md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
+                  <img src="/MaxB.jpeg" alt="Max Buchanan" className="w-[42px] h-[57px] md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
                   <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
                   <div className="text-gray-700 text-sm md:text-base">(626) 238-5252</div>
