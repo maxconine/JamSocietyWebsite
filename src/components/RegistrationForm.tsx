@@ -83,7 +83,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onCancel }) => {
 
     return (
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md font-roboto">
-            
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label htmlFor="schoolId" className="block text-sm font-medium text-gray-700 font-medium">

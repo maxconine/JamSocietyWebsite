@@ -80,7 +80,6 @@ const LoginButton: React.FC = () => {
                             </button>
                         </div>
                         <RegistrationForm
-                            schoolId={schoolId}
                             onCancel={() => {
                                 setShowRegistration(false);
                                 setSchoolId('');

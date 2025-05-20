@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getUserBySchoolId } from '../firebase/db';
 
 interface UserData {
@@ -29,7 +28,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const db = getFirestore();
-    const auth = getAuth();
 
     const ADMIN_IDS = ['40226906', '40225571'];
 
@@ -100,7 +98,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('schoolId');
     };
 
-    // Function to set quizPassed to true after quiz completion
     const setQuizPassed = async (schoolId: string) => {
         try {
             await setDoc(doc(db, 'users', schoolId), { quizPassed: true }, { merge: true });

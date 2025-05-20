@@ -1,53 +1,72 @@
-import { useEffect, useState } from 'react';
-import { getAuth, reload } from 'firebase/auth';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-export default function VerifyEmail() {
-  const [emailVerified, setEmailVerified] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const auth = getAuth();
+const VerifyEmail: React.FC = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const db = getFirestore();
 
-  const checkVerification = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (auth.currentUser) {
-        await reload(auth.currentUser);
-        if (auth.currentUser.emailVerified) {
-          setEmailVerified(true);
-          navigate('/quiz');
-        } else {
-          setEmailVerified(false);
-        }
-      }
-    } catch (err) {
-      setError('Failed to check verification status.');
-    } finally {
-      setLoading(false);
+    useEffect(() => {
+        const checkVerification = async () => {
+            try {
+                const schoolId = localStorage.getItem('schoolId');
+                if (!schoolId) {
+                    throw new Error('No school ID found');
+                }
+
+                const userDoc = await getDoc(doc(db, 'users', schoolId));
+                if (!userDoc.exists()) {
+                    throw new Error('User not found');
+                }
+
+                const userData = userDoc.data();
+                if (userData.emailVerified) {
+                    navigate('/quiz');
+                } else {
+                    setError('Please verify your email before proceeding');
+                }
+            } catch (error) {
+                setError(error instanceof Error ? error.message : 'An error occurred');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkVerification();
+    }, [navigate]);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Checking verification status...</p>
+                </div>
+            </div>
+        );
     }
-  };
 
-  useEffect(() => {
-    checkVerification();
-    // eslint-disable-next-line
-  }, []);
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-4">Verification Required</h1>
+                    <p className="text-gray-600 mb-4">{error}</p>
+                    <button
+                        onClick={() => navigate('/login')}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                        Return to Login
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
-        <h2 className="text-2xl font-bold mb-4">Verify Your Email</h2>
-        <p className="mb-4">A verification link has been sent to your email address. Please check your inbox and click the link to verify your account.</p>
-        <button
-          onClick={checkVerification}
-          disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? 'Checking...' : 'I have verified my email'}
-        </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </div>
-    </div>
-  );
-} 
+    return null;
+};
+
+export default VerifyEmail; 

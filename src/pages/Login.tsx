@@ -30,7 +30,6 @@ const Login: React.FC = () => {
     if (showRegistration) {
         return (
             <RegistrationForm
-                schoolId={schoolId}
                 onCancel={() => setShowRegistration(false)}
             />
         );
