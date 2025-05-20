@@ -85,14 +85,14 @@ export default function Artists() {
       </section>
 
       {/* Main Content */}
-      <section className="p-16">
+      <section className="p-16 sm:p-4">
         <div className="max-w-6xl mx-auto">
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 font-normal">
               {error}
             </div>
           )}
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 sm:gap-0">
             <h2 className="font-medium text-[35px]">Featured Artists</h2>
             {isAuthenticated ? (
               <button
@@ -105,11 +105,15 @@ export default function Artists() {
               <p className="text-gray-600 font-normal">Please log in to add an artist</p>
             )}
           </div>
-          <ArtistDropdown 
-            artists={artists} 
-            isAdmin={isAdmin} 
-            currentUserId={schoolId || ''} 
-          />
+          <div className="overflow-x-auto pb-4 -mx-2 sm:mx-0">
+            <div className="flex flex-row gap-4 min-w-[300px]">
+              <ArtistDropdown 
+                artists={artists} 
+                isAdmin={isAdmin} 
+                currentUserId={schoolId || ''} 
+              />
+            </div>
+          </div>
         </div>
       </section>
 

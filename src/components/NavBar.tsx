@@ -63,12 +63,12 @@ const NavBar: React.FC = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 space-y-2">
-            <Link to="/" className="block py-2 hover:text-gray-300 font-roboto font-medium">Home</Link>
-            <Link to="/artists" className="block py-2 hover:text-gray-300 font-roboto font-medium">Artists</Link>
-            <Link to="/equipment" className="block py-2 hover:text-gray-300 font-roboto font-medium">Equipment</Link>
-            <Link to="/equipment-guides" className="block py-2 hover:text-gray-300 font-roboto font-medium">Guides</Link>
-            <Link to="/reserve" className="block py-2 hover:text-gray-300 font-roboto font-medium">Reserve</Link>
-            <Link to="/join" className="block py-2 hover:text-gray-300 font-roboto font-medium">Join</Link>
+            <Link to="/" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link to="/artists" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Artists</Link>
+            <Link to="/equipment" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Equipment</Link>
+            <Link to="/equipment-guides" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Guides</Link>
+            <Link to="/reserve" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Reserve</Link>
+            <Link to="/join" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Join</Link>
             <div className="pt-2">
               {!isAuthenticated ? (
                 <LoginButton />
