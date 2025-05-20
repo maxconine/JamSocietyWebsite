@@ -49,7 +49,7 @@ function App() {
           <LoadingScreen />
           <div className="min-h-screen flex flex-col">
             <NavBar />
-            <main className="flex-grow container mx-auto px-4 py-8">
+            <main className="flex-grow w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/artists" element={<Artists />} />

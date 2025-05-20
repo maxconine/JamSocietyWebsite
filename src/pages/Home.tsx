@@ -222,13 +222,13 @@ export default function Home() {
           scrollSnapAlign: !isMobile() ? 'start' : undefined,
           scrollSnapStop: !isMobile() ? 'always' : undefined,
           backgroundColor: 'white',
-          width: '100vw',
+          width: '100%',
           padding: isMobile() ? '2rem 0' : '4rem 0'
         }}
       >
-        <div className="max-w-6xl mx-auto px-2 sm:px-4">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Info row section - 3 sharper, square, side-by-side blocks */}
-          <div className="w-screen max-w-none flex flex-col md:flex-row gap-4 mb-16 md:mb-24 px-4 md:px-12 mx-[-50vw] left-[50vw] right-[50vw] relative" style={{ left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
+          <div className="flex flex-col md:flex-row gap-4 mb-16 md:mb-24">
             {/* Location Block */}
             <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
               <img src="/pin.svg" alt="Location Pin" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
@@ -256,7 +256,7 @@ export default function Home() {
                 Who can use the room?
               </div>
               <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-                You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than respecting the equipment in the room. We have over 400 active members!
+                You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
               </div>
             </div>
           </div>
@@ -292,15 +292,19 @@ export default function Home() {
               <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have an equipment checkout system. Please only check out items for a maximum of 3 days. Sign in, then go to the equipment page to select what items you are checking out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
 
               <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Want to reserve the room?</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">You can! Now you don't have to worry about other bands practicing while you want to practice. Just go to the reserve tab for more info.</p>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">You can! If your band wants to practice at a certain time, you can mark it on the calendar. Just go to the reserve tab for more info.</p>
+
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Unsure how to use a piece of equipment?</h2>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have made guides for you to use! Go to the equipment page to see equipment guides.</p>
 
               <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment damaged or want to request new equipment?</h2>
-              <p className="text-black-300 text-sm md:text-base">Go to the equipment page.</p>
+              <p className="text-black-300 text-sm md:text-base">We have a damage report form. Go to the equipment page.</p>
+
             </div>
           </div>
 
           {/* Final Section with Contact Information */}
-          <div className="mt-8 md:mt-10 bg-white py-8 md:py-12 px-3 md:px-6 rounded-2xl">
+          <div className="mt-8 md:mt-10 bg-white py-8 md:py-1 px-3 md:px-6 rounded-2xl">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="font-roboto font-semibold text-2xl md:text-3xl mb-6 md:mb-10">Meet your Jam Society Presidents</h2>
               <div className="flex flex-col sm:flex-row justify-center gap-6 md:gap-8">
@@ -308,14 +312,32 @@ export default function Home() {
                   <img src="/MaxC.jpeg" alt="Max Conine" className="w-32 h-44 md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
                   <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
+                  <div className="text-gray-700 text-sm md:text-base">(857)-701-0870</div>
                 </div>
                 <div>
                   <img src="/MaxB.jpeg" alt="Max Buchanan" className="w-32 h-44 md:w-90 md:h-130 object-cover rounded-lg mb-2 mx-auto" />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
                   <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
+                  <div className="text-gray-700 text-sm md:text-base">(626) 238-5252</div>
                 </div>
               </div>
-              <p className="text-gray-700 mt-4 md:mt-6 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan.</p>
+              <p className="text-black-300 py-4 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan. Please don't hesitate to reach out!</p>
+              
+              {/* Instagram Section */}
+              <div className="flex flex-col items-center justify-center gap-2 mt-6">
+                <p className="text-black-300 text-sm md:text-base mb-2">Stay tuned for updates on live events and room improvements! Follow us on instagram!</p>
+                <div className="flex items-center justify-center gap-2">
+                  <a 
+                    href="https://www.instagram.com/hmcjamsoc/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                  >
+                    <img src="/insta.svg" alt="Instagram" className="w-6 h-6" />
+                    <span className="text-gray-700 hover:text-gray-900 text-sm md:text-base">@hmcjamsoc</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
