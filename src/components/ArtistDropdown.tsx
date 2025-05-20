@@ -80,7 +80,7 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
         </div>
       )}
       <select
-        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 font-normal"
+        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 font-normal"
         onChange={(e) => {
           const artist = artists.find(a => a.id === e.target.value);
           setSelectedArtist(artist || null);
@@ -172,12 +172,12 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-start space-x-4">
+              <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                 {selectedArtist.photoUrl && (
                   <img
                     src={selectedArtist.photoUrl}
                     alt={selectedArtist.name}
-                    className="w-32 h-32 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
+                    className="w-full sm:w-32 h-32 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
                     onClick={() => {
                       setModalImageUrl(selectedArtist.photoUrl || null);
                       setShowImageModal(true);

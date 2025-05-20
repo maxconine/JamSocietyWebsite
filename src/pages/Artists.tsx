@@ -97,7 +97,7 @@ export default function Artists() {
             </div>
           )}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 sm:gap-0">
-            <h2 className="font-medium text-[35px]">Featured Artists</h2>
+            <h2 className="font-medium text-2xl sm:text-[35px] whitespace-nowrap">Featured Artists</h2>
             {isAuthenticated ? (
               <button
                 onClick={() => setIsAddArtistModalOpen(true)}

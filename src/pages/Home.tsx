@@ -331,7 +331,7 @@ export default function Home() {
                     src="/MaxC.jpeg"
                     alt="Max Conine"
                     className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
-                    style={{ width: isMobile() ? 90 : 378, height: isMobile() ? 120 : 513 }}
+                    style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
                     onClick={() => { setEnlargedPresidentSrc('/MaxC.jpeg'); setIsPresidentEnlarged(true); }}
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
@@ -343,7 +343,7 @@ export default function Home() {
                     src="/MaxB.jpeg"
                     alt="Max Buchanan"
                     className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
-                    style={{ width: isMobile() ? 90 : 378, height: isMobile() ? 120 : 513 }}
+                    style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
                     onClick={() => { setEnlargedPresidentSrc('/MaxB.jpeg'); setIsPresidentEnlarged(true); }}
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
