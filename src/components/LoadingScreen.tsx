@@ -3,16 +3,16 @@ import logo from '../assets/Jam-Soc-Logo.svg';
 
 const LoadingScreen: React.FC = () => {
     const [showContent, setShowContent] = useState(false);
-    const [key, setKey] = useState(0); // Add key to force remount
+    const [key, setKey] = useState(0);
 
     useEffect(() => {
         // Reset the key on mount to force animation restart
         setKey(prev => prev + 1);
 
-        // Show the content after 2.5 seconds
+        // Show the content after 2 seconds
         const timer = setTimeout(() => {
             setShowContent(true);
-        }, 2500);
+        }, 2000);
 
         return () => clearTimeout(timer);
     }, []);
