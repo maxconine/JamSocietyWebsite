@@ -1,34 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import LoginButton from './LoginButton';
 
 const NavBar: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <nav className="bg-gray-800 text-white p-4">
-      <div className="w-full max-w-[1920px] mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="text-2xl font-black-ops-one">
-          JamSociety
-        </Link>
-        <div className="flex items-center space-x-4">
-          <Link to="/" className="hover:text-gray-300">Home</Link>
-          <Link to="/artists" className="hover:text-gray-300">Artists</Link>
-          <Link to="/equipment" className="hover:text-gray-300">Equipment</Link>
-          <Link to="/equipment-guides" className="hover:text-gray-300">Equipment Guides</Link>
-          <Link to="/reserve" className="hover:text-gray-300">Reserve</Link>
-          {!isAuthenticated ? (
-            <LoginButton />
-          ) : (
-            <button
-              onClick={logout}
-              className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="text-2xl font-black-ops-one">
+            JamSociety
+          </Link>
+          
+          {/* Mobile menu button */}
+          <button 
+            onClick={toggleMenu}
+            className="md:hidden p-2"
+            aria-label="Toggle menu"
+          >
+            <svg 
+              className="w-6 h-6" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
             >
-              Logout
-            </button>
-          )}
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+
+          {/* Desktop menu */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link to="/" className="hover:text-gray-300">Home</Link>
+            <Link to="/artists" className="hover:text-gray-300">Artists</Link>
+            <Link to="/equipment" className="hover:text-gray-300">Equipment</Link>
+            <Link to="/equipment-guides" className="hover:text-gray-300">Guides</Link>
+            <Link to="/reserve" className="hover:text-gray-300">Reserve</Link>
+            {!isAuthenticated ? (
+              <LoginButton />
+            ) : (
+              <button
+                onClick={logout}
+                className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
+              >
+                Logout
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 space-y-2">
+            <Link to="/" className="block py-2 hover:text-gray-300">Home</Link>
+            <Link to="/artists" className="block py-2 hover:text-gray-300">Artists</Link>
+            <Link to="/equipment" className="block py-2 hover:text-gray-300">Equipment</Link>
+            <Link to="/equipment-guides" className="block py-2 hover:text-gray-300">Guides</Link>
+            <Link to="/reserve" className="block py-2 hover:text-gray-300">Reserve</Link>
+            <div className="pt-2">
+              {!isAuthenticated ? (
+                <LoginButton />
+              ) : (
+                <button
+                  onClick={logout}
+                  className="w-full bg-red-500 hover:bg-red-600 px-3 py-2 rounded"
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

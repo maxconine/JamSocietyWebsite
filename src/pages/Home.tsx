@@ -6,7 +6,7 @@ const images = [
   { src: '/roomPhoto2.jpeg', alt: 'Room Photo 2' },
 ];
 
-const description = `Providing a "jam room" with instruments, music equipment, stage equipment, and recording equipment. Maintained by students, for students.`;
+const description = `Providing a "jam room" for students to use containing instruments, music equipment, stage equipment, and recording equipment. Maintained by students, for students.`;
 
 function isMobile() {
   if (typeof window === 'undefined') return false;
@@ -167,10 +167,9 @@ export default function Home() {
           backgroundImage: 'url(/mamakStage.jpeg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundAttachment: isMobile() ? 'scroll' : 'fixed',
           backgroundRepeat: 'no-repeat',
-          width: '150%',
-          margin: -33,
+          width: '100%',
           padding: 0
         }}
       >
@@ -179,8 +178,8 @@ export default function Home() {
         <img
           src={JamSocLogo}
           alt="Jam Society Logo"
-          className="w-[min(98vw,900px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10"
-          style={{ maxWidth: '900px' }}
+          className="w-[min(90vw,600px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10"
+          style={{ maxWidth: isMobile() ? '90vw' : '900px' }}
         />
         <div
           ref={descRef}
