@@ -272,7 +272,7 @@ export default function Home() {
                 Who can use the room?
               </div>
               <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-                You! It's free. Just fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
+                You! It's free. Go to the Join page and fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
               </div>
             </div>
           </div>

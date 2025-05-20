@@ -20,19 +20,24 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
   const handleEdit = (artist: Artist) => {
     setSelectedArtist(artist);
     setEditForm({
-      name: artist.name,
-      bio: artist.bio,
-      contact: artist.contact
+      name: artist.name || '',
+      bio: artist.bio || '',
+      contact: artist.contact || ''
     });
     setIsEditing(true);
     setError(null);
   };
 
   const handleSaveEdit = async () => {
-    if (!selectedArtist) return;
+    if (!selectedArtist?.id) return;
 
     try {
-      await updateArtist(selectedArtist.id, editForm);
+      await updateArtist(selectedArtist.id, {
+        name: editForm.name || '',
+        bio: editForm.bio || '',
+        contact: editForm.contact || '',
+        photoUrl: selectedArtist.photoUrl || ''
+      });
       setSelectedArtist({ ...selectedArtist, ...editForm });
       setIsEditing(false);
       setError(null);
@@ -77,7 +82,7 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
       >
         <option value="">Select an artist</option>
         {artists.map((artist) => (
-          <option key={artist.id} value={artist.id}>
+          <option key={artist.id || ''} value={artist.id || ''}>
             {artist.name}
           </option>
         ))}
@@ -161,7 +166,7 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
                   >
                     Edit
                   </button>
-                  {isAdmin && (
+                  {isAdmin && selectedArtist.id && (
                     <button
                       onClick={() => handleDelete(selectedArtist.id)}
                       className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium"
