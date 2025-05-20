@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getUserBySchoolId } from '../firebase/db';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } from 'firebase/auth';
 
 interface UserData {
     firstName?: string;
@@ -70,8 +71,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             validateSchoolId(userData.schoolId);
             validateEmail(userData.email || '');
             const isAdminUser = ADMIN_IDS.includes(userData.schoolId);
-            
-            // Store user profile in Firestore without creating a Firebase Auth user
+            const auth = getAuth();
+            // Use schoolId as password if not provided
+            const password = userData.password || userData.schoolId;
+            // Create Firebase Auth user
+            const userCredential = await createUserWithEmailAndPassword(auth, userData.email!, password);
+            // Send verification email
+            await sendEmailVerification(userCredential.user);
+            // Sign out the user after registration
+            await signOut(auth);
+            // Store user profile in Firestore
             await setDoc(doc(db, 'users', userData.schoolId), {
                 schoolId: userData.schoolId,
                 firstName: userData.firstName,
@@ -86,7 +95,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setIsAuthenticated(false); // Not authenticated until email is verified and quiz is passed
             setIsAdmin(isAdminUser);
             localStorage.setItem('schoolId', userData.schoolId);
-        } catch (error) {
+        } catch (error: any) {
+            if (error.code === 'auth/email-already-in-use') {
+                throw new Error('This email is already in use.');
+            }
+            if (error.code === 'auth/invalid-email') {
+                throw new Error('Invalid email address.');
+            }
+            if (error.code === 'auth/weak-password') {
+                throw new Error('Password is too weak.');
+            }
             console.error('Registration error:', error);
             throw error;
         }
