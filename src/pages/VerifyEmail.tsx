@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const VerifyEmail: React.FC = () => {
