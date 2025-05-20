@@ -96,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const verificationCode = generateVerificationCode();
 
             // Create Firebase Auth user
-            const userCredential = await createUserWithEmailAndPassword(auth, userData.email!, password);
+            await createUserWithEmailAndPassword(auth, userData.email!, password);
             
             // Store user profile in Firestore
             await setDoc(doc(db, 'users', userData.schoolId), {
