@@ -54,7 +54,7 @@ export interface Artist {
     image?: string;
     contact: string;
     createdBy: string; // School ID of the creator
-    photoUrl?: string;
+    photoUrl?: string | null;
 }
 
 // Collection References
@@ -178,7 +178,13 @@ export const addArtist = async (artist: Omit<Artist, 'id'>): Promise<string> => 
         throw new Error('An artist with this name already exists');
     }
 
-    const docRef = await addDoc(artistsCollection, artist);
+    // Convert undefined photoUrl to null
+    const artistData = {
+        ...artist,
+        photoUrl: artist.photoUrl || null
+    };
+
+    const docRef = await addDoc(artistsCollection, artistData);
     return docRef.id;
 };
 

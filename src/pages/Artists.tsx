@@ -27,20 +27,24 @@ export default function Artists() {
     };
   }, []);
 
-  const handleAddArtist = async (artistData: { name: string; bio: string; contact: string }) => {
+  const handleAddArtist = async (artistData: { name: string; bio: string; contact: string; photoUrl?: string }) => {
     if (!isAuthenticated || !schoolId) {
       setError('Please log in to add an artist.');
       return;
     }
 
     try {
-      await addArtist({
+      const artistToAdd = {
         ...artistData,
-        createdBy: schoolId
-      });
+        createdBy: schoolId,
+        photoUrl: artistData.photoUrl || null
+      };
+
+      await addArtist(artistToAdd);
       setIsAddArtistModalOpen(false);
+      setError(null);
     } catch (err) {
-      setError('Failed to add artist. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to add artist. Please try again.');
       console.error('Error adding artist:', err);
     }
   };

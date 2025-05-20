@@ -1,21 +1,26 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getUserBySchoolId } from '../firebase/db';
 
 interface UserData {
     firstName?: string;
     lastName?: string;
     email?: string;
+    classYear?: string;
+    quizPassed?: boolean;
     isAdmin: boolean;
     createdAt: string;
+    emailVerified: boolean;
 }
 
 interface AuthContextType {
     isAuthenticated: boolean;
     isAdmin: boolean;
     login: (schoolId: string) => Promise<void>;
-    registerNewUser: (userData: Omit<UserData, 'isAdmin' | 'createdAt'> & { schoolId: string }) => Promise<void>;
+    registerNewUser: (userData: Omit<UserData, 'isAdmin' | 'createdAt'> & { schoolId: string; password?: string }) => Promise<void>;
     logout: () => void;
+    setQuizPassed: (schoolId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,8 +29,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const db = getFirestore();
+    const auth = getAuth();
 
-    const ADMIN_IDS = ['40226906'];
+    const ADMIN_IDS = ['40226906', '40225571'];
 
     const validateSchoolId = (schoolId: string) => {
         if (!/^\d{8}$/.test(schoolId)) {
@@ -61,17 +67,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    const registerNewUser = async (userData: Omit<UserData, 'isAdmin' | 'createdAt'> & { schoolId: string }) => {
+    const registerNewUser = async (userData: Omit<UserData, 'isAdmin' | 'createdAt'> & { schoolId: string; password?: string }) => {
         try {
             validateSchoolId(userData.schoolId);
             validateEmail(userData.email || '');
             const isAdminUser = ADMIN_IDS.includes(userData.schoolId);
+            
+            // Create a Firebase Auth user using the school ID as the password
+            const userCredential = await createUserWithEmailAndPassword(auth, userData.email!, userData.schoolId);
+            // Send verification email
+            await sendEmailVerification(userCredential.user);
+            
+            // Store user profile in Firestore
             await setDoc(doc(db, 'users', userData.schoolId), {
-                ...userData,
+                schoolId: userData.schoolId,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                classYear: userData.classYear,
+                email: userData.email,
+                quizPassed: false,
                 isAdmin: isAdminUser,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                emailVerified: false
             });
-            setIsAuthenticated(true);
+            setIsAuthenticated(false); // Not authenticated until email is verified and quiz is passed
             setIsAdmin(isAdminUser);
             localStorage.setItem('schoolId', userData.schoolId);
         } catch (error) {
@@ -84,6 +103,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthenticated(false);
         setIsAdmin(false);
         localStorage.removeItem('schoolId');
+    };
+
+    // Function to set quizPassed to true after quiz completion
+    const setQuizPassed = async (schoolId: string) => {
+        try {
+            await setDoc(doc(db, 'users', schoolId), { quizPassed: true }, { merge: true });
+        } catch (error) {
+            console.error('Error setting quizPassed:', error);
+            throw error;
+        }
     };
 
     useEffect(() => {
@@ -106,7 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, registerNewUser, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, isAdmin, login, registerNewUser, logout, setQuizPassed }}>
             {children}
         </AuthContext.Provider>
     );

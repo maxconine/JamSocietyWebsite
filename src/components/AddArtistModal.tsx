@@ -1,7 +1,8 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AddArtistModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,16 +53,44 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
 
   const uploadPhoto = async (file: File): Promise<string> => {
     const storage = getStorage();
-    const timestamp = Date.now();
     const fileExtension = file.name.split('.').pop();
-    const photoRef = ref(storage, `artist-photos/${timestamp}.${fileExtension}`);
+    const uniqueFileName = `${uuidv4()}.${fileExtension}`;
+    const photoRef = ref(storage, `artist-photos/${uniqueFileName}`);
+    
+    console.log('Starting upload for file:', uniqueFileName);
     
     try {
-      const snapshot = await uploadBytes(photoRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      return downloadURL;
+      const uploadTask = uploadBytesResumable(photoRef, file);
+      
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(`Upload progress: ${progress.toFixed(2)}%`);
+            setUploadProgress(progress);
+          },
+          (error) => {
+            console.error('Error during upload:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            reject(new Error(`Failed to upload photo: ${error.message}`));
+          },
+          async () => {
+            console.log('Upload completed, getting download URL...');
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              console.log('Download URL obtained successfully');
+              resolve(downloadURL);
+            } catch (error) {
+              console.error('Error getting download URL:', error);
+              reject(new Error('Failed to get photo URL. Please try again.'));
+            }
+          }
+        );
+      });
     } catch (err) {
-      console.error('Error uploading photo:', err);
+      console.error('Error in uploadPhoto:', err);
       throw new Error('Failed to upload photo. Please try again.');
     }
   };
@@ -69,6 +99,8 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
     e.preventDefault();
     setIsUploading(true);
     setError(null);
+    setUploadProgress(0);
+    console.log('Starting form submission...');
 
     try {
       const formData = new FormData(e.currentTarget);
@@ -76,15 +108,19 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
 
       // Upload photo first if one was selected
       if (photoFile) {
+        console.log('Photo file selected, starting upload...');
         try {
           photoUrl = await uploadPhoto(photoFile);
+          console.log('Photo upload completed successfully');
         } catch (uploadError) {
-          setError('Failed to upload photo. Please try again.');
+          console.error('Photo upload failed:', uploadError);
+          setError(uploadError instanceof Error ? uploadError.message : 'Failed to upload photo. Please try again.');
           setIsUploading(false);
           return;
         }
       }
 
+      console.log('Submitting artist data...');
       // Then submit the artist data
       await onSubmit({
         name: formData.get('name') as string,
@@ -93,12 +129,14 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
         photoUrl
       });
       
+      console.log('Artist data submitted successfully');
       // Reset form
       setPhotoFile(null);
       setPhotoPreview(null);
+      setUploadProgress(0);
       onClose();
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Error in form submission:', err);
       setError(err instanceof Error ? err.message : 'Failed to add artist. Please try again.');
     } finally {
       setIsUploading(false);
@@ -109,6 +147,7 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
     setPhotoFile(null);
     setPhotoPreview(null);
     setError(null);
+    setUploadProgress(0);
     onClose();
   };
 
@@ -218,6 +257,19 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
                               alt="Preview"
                               className="h-32 w-32 object-cover rounded-md"
                             />
+                          </div>
+                        )}
+                        {isUploading && uploadProgress > 0 && (
+                          <div className="mt-2">
+                            <div className="w-full bg-gray-200 rounded-full h-2.5">
+                              <div
+                                className="bg-red-600 h-2.5 rounded-full"
+                                style={{ width: `${uploadProgress}%` }}
+                              ></div>
+                            </div>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Uploading: {Math.round(uploadProgress)}%
+                            </p>
                           </div>
                         )}
                       </div>

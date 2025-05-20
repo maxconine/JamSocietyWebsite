@@ -8,6 +8,9 @@ import EquipmentGuides from './pages/EquipmentGuides';
 import Reserve from './pages/Reserve';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
+import Join from './pages/Join';
+import VerifyEmail from './pages/VerifyEmail';
+import Quiz from './pages/Quiz';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from './firebase/config';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -57,6 +60,9 @@ function App() {
                 <Route path="/equipment-guides" element={<EquipmentGuides />} />
                 <Route path="/reserve" element={<Reserve />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/join" element={<Join />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/quiz" element={<Quiz />} />
               </Routes>
             </main>
             <Footer />
