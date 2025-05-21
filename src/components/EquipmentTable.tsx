@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToEquipment } from '../firebase/db';
 import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
+import { FaBoxOpen, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface AddFormData {
   name: string;
@@ -18,6 +19,7 @@ export default function EquipmentTable() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const { isAuthenticated, isAdmin } = useAuth();
   const schoolId = localStorage.getItem('schoolId');
@@ -55,11 +57,12 @@ export default function EquipmentTable() {
     );
   };
 
-  const toggleDescription = (id: string) => {
-    setExpandedDescriptions(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+  const toggleRowExpand = (id: string) => {
+    setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleDescriptionExpand = (id: string) => {
+    setExpandedDescriptions(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleCheckout = async () => {
@@ -193,51 +196,39 @@ export default function EquipmentTable() {
   }
 
   return (
-    <div>
-      <div className="mb-4 flex justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <input
-            type="text"
-            placeholder="Search equipment..."
-            className="p-2 w-64 bg-gray-100 text-gray-800 rounded border focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-          {isAdmin && (
-            <>
-              <button
-                className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
-                onClick={() => setShowAddModal(true)}
-              >
-                Add Equipment
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:opacity-50"
-                onClick={handleRemove}
-                disabled={selectedIds.length === 0}
-              >
-                Remove Selected
-              </button>
-            </>
-          )}
-        </div>
-        <div className="flex space-x-2">
+    <div className="bg-white rounded-2xl shadow-lg p-0 md:p-6">
+      {/* Status Legend */}
+      <div className="flex items-center justify-end gap-4 mb-2 pr-2">
+        <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>Available</span>
+        <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-yellow-400"></span>Reserved</span>
+        <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-red-500"></span>Checked Out</span>
+      </div>
+      {/* Search and Actions Bar */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 border-b border-gray-100 sticky top-0 z-10 bg-white rounded-t-2xl">
+        <input
+          type="text"
+          placeholder="Search equipment..."
+          className="p-2 w-full md:w-64 bg-gray-100 text-gray-800 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        <div className="flex flex-wrap gap-2 md:gap-3 mt-2 md:mt-0">
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
             onClick={handleCheckout}
             disabled={selectedIds.length === 0}
           >
             Check Out
           </button>
           <button
-            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 disabled:opacity-50"
+            className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
             onClick={handleReserve}
             disabled={selectedIds.length === 0}
           >
             Reserve
           </button>
           <button
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+            className="px-4 py-2 rounded-full bg-gray-500 text-white font-medium hover:bg-gray-600 transition disabled:opacity-50"
             onClick={handleCancelReservation}
             disabled={selectedIds.length === 0 || !selectedIds.some(id => {
               const eq = equipment.find(e => e.id === id);
@@ -247,22 +238,41 @@ export default function EquipmentTable() {
             Cancel Reservation
           </button>
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
+            className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
             onClick={handleReturn}
             disabled={selectedIds.length === 0}
           >
             Return
           </button>
+          {isAdmin && (
+            <>
+              <button
+                className="px-4 py-2 rounded-full bg-green-700 text-white font-medium hover:bg-green-800 transition"
+                onClick={() => setShowAddModal(true)}
+              >
+                Add Equipment
+              </button>
+              <button
+                className="px-4 py-2 rounded-full bg-red-500 text-white font-medium hover:bg-red-600 transition disabled:opacity-50"
+                onClick={handleRemove}
+                disabled={selectedIds.length === 0}
+              >
+                Remove Selected
+              </button>
+            </>
+          )}
         </div>
       </div>
-
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
+        <table className="min-w-full bg-white text-gray-900 table-fixed">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2">
+            <tr className="bg-gray-50 sticky top-0 z-10 text-xs uppercase tracking-wider text-gray-500 border-b border-gray-100">
+              <th className="w-1 p-0"></th>
+              <th className="w-10 px-1 py-2 text-left"></th>
+              <th className="w-8 px-1 py-2 text-left">
                 <input
                   type="checkbox"
+                  className="rounded-full w-4 h-4 border-gray-300 focus:ring-blue-500"
                   onChange={e => {
                     if (e.target.checked) {
                       setSelectedIds(filtered.map(eq => eq.id!));
@@ -270,69 +280,89 @@ export default function EquipmentTable() {
                       setSelectedIds([]);
                     }
                   }}
-                  checked={selectedIds.length === filtered.length}
+                  checked={selectedIds.length === filtered.length && filtered.length > 0}
                 />
               </th>
-              <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Code</th>
-              <th className="px-4 py-2 text-left">Type</th>
-              <th className="px-4 py-2 text-left">Location</th>
-              <th className="px-4 py-2 text-left">Status</th>
-              <th className="px-4 py-2 text-left">Description</th>
+              <th className="w-24 px-1 py-2 text-left font-semibold truncate">Name</th>
+              <th className="w-16 px-1 py-2 text-left font-semibold truncate hidden md:table-cell">Code</th>
+              <th className="w-16 px-1 py-2 text-left font-semibold truncate hidden sm:table-cell">Type</th>
+              <th className="w-16 px-1 py-2 text-left font-semibold truncate hidden md:table-cell">Location</th>
+              <th className="w-10 px-1 py-2 text-center font-semibold">Status</th>
+              <th className="w-8 px-1 py-2 text-center font-semibold">Info</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map(item => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.includes(item.id!)}
-                    onChange={() => toggleSelect(item.id!)}
-                  />
-                </td>
-                <td className="px-4 py-2">{item.name}</td>
-                <td className="px-4 py-2">{item.code}</td>
-                <td className="px-4 py-2">{item.type}</td>
-                <td className="px-4 py-2">{item.location}</td>
-                <td className="px-4 py-2">
-                  {item.available ? (
-                    item.reservedBy ? (
-                      item.reservedBy === schoolId ? (
-                        <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-800">Reserved by you</span>
+            {filtered.map(item => {
+              // Status bar color
+              let statusColor = item.available
+                ? item.reservedBy
+                  ? 'bg-yellow-400'
+                  : 'bg-green-500'
+                : 'bg-red-500';
+              return (
+                <React.Fragment key={item.id}>
+                  <tr className="border-b last:border-b-0 hover:bg-gray-50 transition group text-xs relative">
+                    <td className="p-0 w-1">
+                      <div className={`h-8 w-1 rounded-l-xl ${statusColor}`}></div>
+                    </td>
+                    <td className="px-1 py-2 w-10">
+                      {item.image ? (
+                        <img src={`/equipment-images/${item.image}`} alt={item.name} className="w-8 h-8 object-cover rounded-md" />
                       ) : (
-                        <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-800">Reserved</span>
-                      )
-                    ) : (
-                      <span className="px-2 py-1 rounded bg-green-100 text-green-800">Available</span>
-                    )
-                  ) : (
-                    <span className="px-2 py-1 rounded bg-red-100 text-red-800">Checked Out</span>
-                  )}
-                </td>
-                <td className="px-4 py-2">
-                  {item.description && (
-                    <button
-                      onClick={() => toggleDescription(item.id!)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      {expandedDescriptions[item.id!] ? 'Hide' : 'Show'} Description
-                    </button>
-                  )}
+                        <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md text-gray-400">
+                          <FaBoxOpen size={16} />
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-1 py-2 w-8">
+                      <input
+                        type="checkbox"
+                        className="rounded-full w-4 h-4 border-gray-300 focus:ring-blue-500"
+                        checked={selectedIds.includes(item.id!)}
+                        onChange={() => toggleSelect(item.id!)}
+                      />
+                    </td>
+                    <td className="px-1 py-2 w-24 font-medium whitespace-nowrap truncate" title={item.name}>{item.name}</td>
+                    <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.code}>{item.code}</td>
+                    <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden sm:table-cell" title={item.type}>{item.type}</td>
+                    <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.location}>{item.location}</td>
+                    <td className="px-1 py-2 w-10 text-center">
+                      {item.available ? (
+                        item.reservedBy ? (
+                          <span className="inline-block w-3 h-3 rounded-full bg-yellow-400"></span>
+                        ) : (
+                          <span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>
+                        )
+                      ) : (
+                        <span className="inline-block w-3 h-3 rounded-full bg-red-500"></span>
+                      )}
+                    </td>
+                    <td className="px-1 py-2 w-8 text-center">
+                      <button
+                        onClick={() => toggleDescriptionExpand(item.id!)}
+                        className="text-gray-400 hover:text-blue-600 focus:outline-none"
+                        aria-label="Show description"
+                      >
+                        {expandedDescriptions[item.id!] ? <FaChevronUp /> : <FaChevronDown />}
+                      </button>
+                    </td>
+                  </tr>
                   {expandedDescriptions[item.id!] && item.description && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      {item.description}
-                    </div>
+                    <tr className="bg-gray-50">
+                      <td colSpan={9} className="px-8 py-3 text-xs text-gray-700">
+                        <span className="font-semibold">Description:</span> {item.description}
+                      </td>
+                    </tr>
                   )}
-                </td>
-              </tr>
-            ))}
+                </React.Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
             <h2 className="text-xl font-bold mb-4">Add Equipment</h2>
             <form onSubmit={handleAddEquipment}>

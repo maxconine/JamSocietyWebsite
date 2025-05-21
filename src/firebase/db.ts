@@ -30,6 +30,8 @@ export interface Equipment {
     reason?: string;
     reservedBy?: string;
     reservedUntil?: string;
+    image?: string;
+    notes?: string;
 }
 
 export interface Reservation {
