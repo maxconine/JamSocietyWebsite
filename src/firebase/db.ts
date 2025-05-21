@@ -63,6 +63,18 @@ export interface Artist {
     music?: string;
 }
 
+interface EquipmentLog {
+    equipmentId: string;
+    equipmentName: string;
+    action: 'checkout' | 'return';
+    userId: string;
+    userName: string;
+    userEmail: string;
+    description?: string;
+    issues?: string;
+    timestamp: string;
+}
+
 // Collection References
 const equipmentCollection = collection(db, 'equipment');
 const reservationsCollection = collection(db, 'reservations');
@@ -261,5 +273,15 @@ export const addSampleEquipment = async () => {
     } catch (error) {
         console.error('Error adding sample equipment:', error);
         return false;
+    }
+};
+
+export const addEquipmentLog = async (log: EquipmentLog) => {
+    try {
+        const logsRef = collection(db, 'equipment_logs');
+        await addDoc(logsRef, log);
+    } catch (error) {
+        console.error('Error adding equipment log:', error);
+        throw error;
     }
 }; 

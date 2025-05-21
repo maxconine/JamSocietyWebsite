@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "equipment": {
+      ".read": true,
+      ".write": true
+    },
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

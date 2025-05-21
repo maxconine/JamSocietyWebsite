@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToEquipment } from '../firebase/db';
+import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToEquipment, addEquipmentLog } from '../firebase/db';
 import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
 import { FaBoxOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
@@ -13,6 +13,14 @@ interface AddFormData {
   condition: 'excellent' | 'good' | 'fair' | 'poor';
 }
 
+interface CheckoutFormData {
+  description: string;
+}
+
+interface ReturnFormData {
+  issues: string;
+}
+
 export default function EquipmentTable() {
   const [search, setSearch] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -20,9 +28,13 @@ export default function EquipmentTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin, user, userData } = useAuth();
   const schoolId = localStorage.getItem('schoolId');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [showReturnModal, setShowReturnModal] = useState(false);
+  const [checkoutForm, setCheckoutForm] = useState<CheckoutFormData>({ description: '' });
+  const [returnForm, setReturnForm] = useState<ReturnFormData>({ issues: '' });
   const [addForm, setAddForm] = useState<AddFormData>({
     name: '',
     code: '',
@@ -62,81 +74,113 @@ export default function EquipmentTable() {
   };
 
   const handleCheckout = async () => {
-    if (!isAuthenticated || !schoolId) {
+    if (!isAuthenticated || !schoolId || !user) {
       alert('Please log in to check out equipment.');
       return;
     }
 
+    setShowCheckoutModal(true);
+  };
+
+  const handleCheckoutSubmit = async () => {
+    if (!isAuthenticated || !schoolId || !user || !userData) return;
+
     try {
+      const checkoutData = {
+        available: false,
+        lastCheckedOut: new Date().toISOString(),
+        checkedOutBy: schoolId,
+        checkoutDescription: checkoutForm.description,
+        lastCheckedOutByName: userData.email,
+        lastCheckedOutByEmail: userData.email
+      };
+
       await Promise.all(selectedIds.map(id =>
-        updateEquipment(id, {
-          available: false,
-          lastCheckedOut: new Date().toISOString(),
-          checkedOutBy: schoolId
-        })
+        updateEquipment(id, checkoutData)
       ));
+
+      // Log the checkout in the equipment_logs collection
+      await Promise.all(selectedIds.map(id => {
+        const equipmentItem = equipment.find(e => e.id === id);
+        return addEquipmentLog({
+          equipmentId: id,
+          equipmentName: equipmentItem?.name || 'Unknown',
+          action: 'checkout',
+          userId: schoolId,
+          userName: userData.email,
+          userEmail: userData.email,
+          description: checkoutForm.description,
+          timestamp: new Date().toISOString()
+        });
+      }));
+
       setSelectedIds([]);
+      setShowCheckoutModal(false);
+      setCheckoutForm({ description: '' });
     } catch (err) {
       console.error('Error checking out equipment:', err);
       alert('Failed to check out equipment. Please try again.');
     }
   };
 
-  const handleReserve = async () => {
-    if (!isAuthenticated || !schoolId) {
-      alert('Please log in to reserve equipment.');
-      return;
-    }
-    try {
-      const reservedUntil = new Date();
-      reservedUntil.setDate(reservedUntil.getDate() + 3); // Reserve for 3 days
-      await Promise.all(selectedIds.map(id =>
-        updateEquipment(id, {
-          reservedBy: schoolId,
-          reservedUntil: reservedUntil.toISOString(),
-        })
-      ));
-      setSelectedIds([]);
-    } catch (err) {
-      console.error('Error reserving equipment:', err);
-      alert('Failed to reserve equipment. Please try again.');
-    }
-  };
-
-  const handleCancelReservation = async () => {
-    if (!isAuthenticated || !schoolId) {
-      alert('Please log in to cancel reservation.');
-      return;
-    }
-    try {
-      await Promise.all(selectedIds.map(id =>
-        updateEquipment(id, {
-          reservedBy: undefined,
-          reservedUntil: undefined,
-        })
-      ));
-      setSelectedIds([]);
-    } catch (err) {
-      console.error('Error cancelling reservation:', err);
-      alert('Failed to cancel reservation. Please try again.');
-    }
-  };
-
   const handleReturn = async () => {
-    if (!isAuthenticated || !schoolId) {
+    if (!isAuthenticated || !schoolId || !user) {
       alert('Please log in to return equipment.');
       return;
     }
 
+    // Check if user has checked out any of the selected items
+    const userCheckedOutItems = selectedIds.filter(id => {
+      const eq = equipment.find(e => e.id === id);
+      return eq && eq.checkedOutBy === schoolId;
+    });
+
+    if (userCheckedOutItems.length === 0) {
+      alert('You can only return items that you have checked out.');
+      return;
+    }
+
+    setShowReturnModal(true);
+  };
+
+  const handleReturnSubmit = async () => {
+    if (!isAuthenticated || !schoolId || !user || !userData) return;
+
     try {
+      const returnData = {
+        available: true,
+        lastReturned: new Date().toISOString(),
+        lastReturnedBy: schoolId,
+        lastReturnedByName: userData.email,
+        lastReturnedByEmail: userData.email,
+        lastReturnedIssues: returnForm.issues,
+        checkedOutBy: undefined,
+        lastCheckedOut: undefined,
+        checkoutDescription: undefined
+      };
+
       await Promise.all(selectedIds.map(id =>
-        updateEquipment(id, {
-          available: true,
-          lastCheckedOut: undefined,
-          checkedOutBy: undefined
-        })
+        updateEquipment(id, returnData)
       ));
+
+      // Log the return in the equipment_logs collection
+      await Promise.all(selectedIds.map(id => {
+        const equipmentItem = equipment.find(e => e.id === id);
+        return addEquipmentLog({
+          equipmentId: id,
+          equipmentName: equipmentItem?.name || 'Unknown',
+          action: 'return',
+          userId: schoolId,
+          userName: userData.email,
+          userEmail: userData.email,
+          issues: returnForm.issues,
+          timestamp: new Date().toISOString()
+        });
+      }));
+
       setSelectedIds([]);
+      setShowReturnModal(false);
+      setReturnForm({ issues: '' });
     } catch (err) {
       console.error('Error returning equipment:', err);
       alert('Failed to return equipment. Please try again.');
@@ -215,23 +259,6 @@ export default function EquipmentTable() {
             disabled={selectedIds.length === 0}
           >
             Check Out
-          </button>
-          <button
-            className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
-            onClick={handleReserve}
-            disabled={selectedIds.length === 0}
-          >
-            Reserve
-          </button>
-          <button
-            className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
-            onClick={handleCancelReservation}
-            disabled={selectedIds.length === 0 || !selectedIds.some(id => {
-              const eq = equipment.find(e => e.id === id);
-              return eq && eq.reservedBy === schoolId;
-            })}
-          >
-            Cancel Reservation
           </button>
           <button
             className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
@@ -317,6 +344,7 @@ export default function EquipmentTable() {
                           e.stopPropagation();
                           toggleSelect(item.id!);
                         }}
+                        onClick={(e) => e.stopPropagation()}
                       />
                     </td>
                     <td className="px-1 py-2 w-24 font-medium whitespace-nowrap truncate" title={item.name}>{item.name}</td>
@@ -460,6 +488,78 @@ export default function EquipmentTable() {
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                 >
                   {addLoading ? 'Adding...' : 'Add Equipment'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Checkout Modal */}
+      {showCheckoutModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Check Out Equipment</h2>
+            <form onSubmit={(e) => { e.preventDefault(); handleCheckoutSubmit(); }}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">What will you be using this equipment for?</label>
+                <textarea
+                  value={checkoutForm.description}
+                  onChange={e => setCheckoutForm({ description: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  required
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCheckoutModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-black text-white rounded hover:bg-black"
+                >
+                  Check Out
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Return Modal */}
+      {showReturnModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Return Equipment</h2>
+            <form onSubmit={(e) => { e.preventDefault(); handleReturnSubmit(); }}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Were there any issues with the equipment?</label>
+                <textarea
+                  value={returnForm.issues}
+                  onChange={e => setReturnForm({ issues: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  rows={3}
+                  placeholder="Leave blank if no issues"
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowReturnModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-black text-white rounded hover:bg-black"
+                >
+                  Return
                 </button>
               </div>
             </form>

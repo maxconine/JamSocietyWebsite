@@ -43,7 +43,7 @@ const QUIZ_QUESTIONS = [
 ];
 
 export default function Join() {
-  const { setQuizPassed, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -95,7 +95,6 @@ export default function Join() {
       }
     }
     try {
-      await setQuizPassed(localStorage.getItem('schoolId')!);
       setSuccess('Quiz passed! You now have access to the Jam Room. Please give F&M a few days to add you to the swipe access list');
     } catch (err) {
       setError('Failed to record quiz completion.');
@@ -194,36 +193,10 @@ export default function Join() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Take the Quiz</h2>
           {!isAuthenticated ? (
             <div className="text-red-600 font-medium">Please log in or register to take the quiz.</div>
-          ) : success || hasPassedQuiz ? (
-            <div className="text-green-500 text-lg font-normal text-center py-8">{success}</div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {QUIZ_QUESTIONS.map((q, idx) => (
-                <div key={q.name} className="mb-4">
-                  <p className="font-medium mb-2">{idx + 1}. {q.question}</p>
-                  <div className="flex flex-col space-y-2">
-                    {q.options.map((opt, oIdx) => (
-                      <label key={oIdx} className="flex items-center cursor-pointer">
-                        <input
-                          type="radio"
-                          name={q.name}
-                          value={opt}
-                          checked={answers[q.name] === opt}
-                          onChange={handleChange}
-                          className="mr-3"
-                          required
-                        />
-                        <span>{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {error && <p className="text-red-500 text-sm font-normal">{error}</p>}
-              <button type="submit" disabled={submitting} className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 font-roboto">
-                {submitting ? 'Submitting...' : 'Submit Quiz'}
-              </button>
-            </form>
+            <div className="text-green-600 font-normal text-center py-8">
+              To get access, you must pass the quiz. You will be prompted to take it after registering or logging in if you have not already passed.
+            </div>
           )}
         </div>
         {/* Resend Verification Button */}
