@@ -88,8 +88,39 @@ export default function EquipmentTable() {
       alert('Please log in to reserve equipment.');
       return;
     }
-    // TODO: Implement reservation logic
-    console.log('Reserving:', selectedIds);
+    try {
+      const reservedUntil = new Date();
+      reservedUntil.setDate(reservedUntil.getDate() + 3); // Reserve for 3 days
+      await Promise.all(selectedIds.map(id =>
+        updateEquipment(id, {
+          reservedBy: schoolId,
+          reservedUntil: reservedUntil.toISOString(),
+        })
+      ));
+      setSelectedIds([]);
+    } catch (err) {
+      console.error('Error reserving equipment:', err);
+      alert('Failed to reserve equipment. Please try again.');
+    }
+  };
+
+  const handleCancelReservation = async () => {
+    if (!isAuthenticated || !schoolId) {
+      alert('Please log in to cancel reservation.');
+      return;
+    }
+    try {
+      await Promise.all(selectedIds.map(id =>
+        updateEquipment(id, {
+          reservedBy: undefined,
+          reservedUntil: undefined,
+        })
+      ));
+      setSelectedIds([]);
+    } catch (err) {
+      console.error('Error cancelling reservation:', err);
+      alert('Failed to cancel reservation. Please try again.');
+    }
   };
 
   const handleReturn = async () => {
@@ -206,6 +237,16 @@ export default function EquipmentTable() {
             Reserve
           </button>
           <button
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+            onClick={handleCancelReservation}
+            disabled={selectedIds.length === 0 || !selectedIds.some(id => {
+              const eq = equipment.find(e => e.id === id);
+              return eq && eq.reservedBy === schoolId;
+            })}
+          >
+            Cancel Reservation
+          </button>
+          <button
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
             onClick={handleReturn}
             disabled={selectedIds.length === 0}
@@ -255,10 +296,19 @@ export default function EquipmentTable() {
                 <td className="px-4 py-2">{item.type}</td>
                 <td className="px-4 py-2">{item.location}</td>
                 <td className="px-4 py-2">
-                  <span className={`px-2 py-1 rounded ${item.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                    {item.available ? 'Available' : 'Checked Out'}
-                  </span>
+                  {item.available ? (
+                    item.reservedBy ? (
+                      item.reservedBy === schoolId ? (
+                        <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-800">Reserved by you</span>
+                      ) : (
+                        <span className="px-2 py-1 rounded bg-yellow-100 text-yellow-800">Reserved</span>
+                      )
+                    ) : (
+                      <span className="px-2 py-1 rounded bg-green-100 text-green-800">Available</span>
+                    )
+                  ) : (
+                    <span className="px-2 py-1 rounded bg-red-100 text-red-800">Checked Out</span>
+                  )}
                 </td>
                 <td className="px-4 py-2">
                   {item.description && (

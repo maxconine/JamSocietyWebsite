@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
+import FAQSection from '../components/FAQSection';
 
 const images = [
   { src: '/roomPhoto.jpeg', alt: 'Room Photo 1' },
@@ -389,6 +390,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* Place FAQSection at the very end of the main container */}
+      <FAQSection />
     </div>
   );
 }

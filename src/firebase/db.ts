@@ -28,6 +28,8 @@ export interface Equipment {
     checkedOutBy?: string;
     expectedReturn?: string;
     reason?: string;
+    reservedBy?: string;
+    reservedUntil?: string;
 }
 
 export interface Reservation {
