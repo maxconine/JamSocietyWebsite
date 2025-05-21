@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
 import FAQSection from '../components/FAQSection';
 
@@ -28,6 +28,13 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [isPresidentEnlarged, setIsPresidentEnlarged] = useState(false);
   const [enlargedPresidentSrc, setEnlargedPresidentSrc] = useState<string | null>(null);
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    if (window.scrollY > 0) {
+      setScrollLocked(false);
+    }
+  }, []);
 
   useEffect(() => {
     // Set mounted to true after initial render

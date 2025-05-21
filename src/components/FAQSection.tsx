@@ -3,7 +3,11 @@ import React, { useState } from 'react';
 const faqs = [
   {
     question: 'Can students from other 5Cs get swipe access to the room?',
-    answer: 'No, students from other 5Cs cannot get swipe access to the room. Unfortunately, F&M cannot give out swipe access to the room to students from outside Mudd.'
+    answer: (
+      <span>
+        No, students from other 5Cs cannot get swipe access to the room. Unfortunately, F&amp;M cannot give out swipe access to the room to students from outside Mudd.
+      </span>
+    )
   },
   {
     question: 'How can I request a new piece of equipment?',
@@ -15,7 +19,11 @@ const faqs = [
   },
   {
     question: 'Can I get swipe/card access to the Jam Room?',
-    answer: 'Yes, you need to create an account by loggin in to our website with your school ID. The login is located on the website header. Then once you have logged in, you can take the quiz on the Join page. Once you have completed it you will be added to the swipe access list by F&M.'
+    answer: (
+      <span>
+        Yes, you need to create an account by logging in to our website with your school ID. The login is located on the website header. Then once you have logged in, you can take the quiz on the Join page. Once you have completed it you will be added to the swipe access list by F&amp;M.
+      </span>
+    )
   },
   {
     question: 'How do I report missing or unlabeled equipment?',
@@ -27,27 +35,49 @@ const faqs = [
   },
   {
     question: 'Is [instrument] available for a performance or event?',
-    answer: 'You can use the Reserve button on the equipment page to reserve the instrument for your event. If you need to cancel, you can do so by clicking the "Cancel Reservation" button.'
+    answer: (
+      <span>
+        You can use the Reserve button on the equipment page to reserve the instrument for your event. If you need to cancel, you can do so by clicking the "Cancel Reservation" button.
+      </span>
+    )
   },
   {
     question: 'Can Jam Society provide sound equipment for our event (fashion shows, KSPC, ASP, etc.)?',
-    answer: 'Yes, we can likely provide sound equipment for your event. Please email us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> to discuss your needs.'
+    answer: (
+      <span>
+        Yes! Please email <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> with your event details and we will do our best to help.
+      </span>
+    )
   },
   {
     question: 'Does Jam Society have any custom-printed merchandise or apparel?',
-    answer: 'We are working on it! If you are interested in designing any merchandise, please email us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> and we will do our best to help you.'
+        answer: (
+      <span>
+'We are working on it! If you are interested in designing any merchandise, please email us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> and we will do our best to help you.
+  </span>
+        )
   },
   {
     question: 'Can we host a musical event or workshop in the Jam Room?',
-    answer: 'We are happy to host workshops and musical events in the Jam Room. Please email us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> to discuss your needs. We can advertise it on our social media.'
+    answer: (
+        <span>
+   'We are happy to host workshops and musical events in the Jam Room. Please email us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> to discuss your needs. We can advertise it on our social media.'
+   </span>
+        )
   },
   {
     question: 'What if there is a room usage conflict?',
-    answer: 'We operate on a first-come, first-served basis. If you have a conflict, please email the person who is scheduled to use the room and let them know if they are willing to change times'
+    answer: (
+        <span>We operate on a first-come, first-served basis. If you have a conflict, please email the person who is scheduled to use the room and let them know if they are willing to change times'
+  </span>
+    )
   },
   {
     question: 'I left an item in the room and now it is missing. What should I do?',
-    answer: 'You can email all the members in the club at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> or us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> and we will do our best to help you.'
+    answer: (
+        <span>You can email all the members in the club at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> or us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> and we will do our best to help you.
+  </span>
+    )
   },
   
 ];
