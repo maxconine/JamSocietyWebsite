@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import RegistrationForm from '../components/RegistrationForm';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 const Login: React.FC = () => {
     const { login } = useAuth();
@@ -15,13 +16,33 @@ const Login: React.FC = () => {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
-
+        const db = getFirestore();
         try {
+            // Query Firestore for user by schoolId
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('schoolId', '==', schoolId));
+            const querySnapshot = await getDocs(q);
+            
+            if (querySnapshot.empty) {
+                // Not found, show registration
+                localStorage.setItem('schoolId', schoolId);
+                setShowRegistration(true);
+                setIsLoading(false);
+                return;
+            }
+            
+            // User exists, proceed with login
             await login(schoolId);
-            navigate('/');
+            const userData = querySnapshot.docs[0].data();
+            
+            // Redirect based on quiz status
+            if (userData.quizPassed) {
+                navigate('/');
+            } else {
+                navigate('/quiz');
+            }
         } catch (err) {
-            setError('Invalid school ID. Please try again or register.');
-            setShowRegistration(true);
+            setError('Login failed. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -31,6 +52,7 @@ const Login: React.FC = () => {
         return (
             <RegistrationForm
                 onCancel={() => setShowRegistration(false)}
+                initialSchoolId={schoolId}
             />
         );
     }
