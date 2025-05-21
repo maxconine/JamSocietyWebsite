@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToEquipment } from '../firebase/db';
 import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
-import { FaBoxOpen, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaBoxOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
 
 interface AddFormData {
   name: string;
@@ -19,7 +19,6 @@ export default function EquipmentTable() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
   const { isAuthenticated, isAdmin } = useAuth();
   const schoolId = localStorage.getItem('schoolId');
@@ -34,6 +33,7 @@ export default function EquipmentTable() {
   });
   const [addError, setAddError] = useState<string | null>(null);
   const [addLoading, setAddLoading] = useState(false);
+  const [modalImage, setModalImage] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = subscribeToEquipment((data) => {
@@ -55,10 +55,6 @@ export default function EquipmentTable() {
     setSelectedIds(prev =>
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
-  };
-
-  const toggleRowExpand = (id: string) => {
-    setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const toggleDescriptionExpand = (id: string) => {
@@ -208,7 +204,7 @@ export default function EquipmentTable() {
         <input
           type="text"
           placeholder="Search equipment..."
-          className="p-2 w-full md:w-64 bg-gray-100 text-gray-800 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          className="p-3 w-full md:w-96 bg-gray-100 text-gray-800 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-base"
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -228,7 +224,7 @@ export default function EquipmentTable() {
             Reserve
           </button>
           <button
-            className="px-4 py-2 rounded-full bg-gray-500 text-white font-medium hover:bg-gray-600 transition disabled:opacity-50"
+            className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
             onClick={handleCancelReservation}
             disabled={selectedIds.length === 0 || !selectedIds.some(id => {
               const eq = equipment.find(e => e.id === id);
@@ -247,13 +243,13 @@ export default function EquipmentTable() {
           {isAdmin && (
             <>
               <button
-                className="px-4 py-2 rounded-full bg-green-700 text-white font-medium hover:bg-green-800 transition"
+                className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition"
                 onClick={() => setShowAddModal(true)}
               >
                 Add Equipment
               </button>
               <button
-                className="px-4 py-2 rounded-full bg-red-500 text-white font-medium hover:bg-red-600 transition disabled:opacity-50"
+                className="px-4 py-2 rounded-full bg-black text-white font-roboto font-medium hover:bg-black transition disabled:opacity-50"
                 onClick={handleRemove}
                 disabled={selectedIds.length === 0}
               >
@@ -265,28 +261,15 @@ export default function EquipmentTable() {
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white text-gray-900 table-fixed">
-          <thead>
+          <thead className="hidden md:table-header-group">
             <tr className="bg-gray-50 sticky top-0 z-10 text-xs uppercase tracking-wider text-gray-500 border-b border-gray-100">
               <th className="w-1 p-0"></th>
               <th className="w-10 px-1 py-2 text-left"></th>
-              <th className="w-8 px-1 py-2 text-left">
-                <input
-                  type="checkbox"
-                  className="rounded-full w-4 h-4 border-gray-300 focus:ring-blue-500"
-                  onChange={e => {
-                    if (e.target.checked) {
-                      setSelectedIds(filtered.map(eq => eq.id!));
-                    } else {
-                      setSelectedIds([]);
-                    }
-                  }}
-                  checked={selectedIds.length === filtered.length && filtered.length > 0}
-                />
-              </th>
+              <th className="w-8 px-1 py-2 text-left"></th>
               <th className="w-24 px-1 py-2 text-left font-semibold truncate">Name</th>
-              <th className="w-16 px-1 py-2 text-left font-semibold truncate hidden md:table-cell">Code</th>
-              <th className="w-16 px-1 py-2 text-left font-semibold truncate hidden sm:table-cell">Type</th>
-              <th className="w-16 px-1 py-2 text-left font-semibold truncate hidden md:table-cell">Location</th>
+              <th className="w-16 px-1 py-2 text-left font-semibold truncate">Code</th>
+              <th className="w-16 px-1 py-2 text-left font-semibold truncate">Type</th>
+              <th className="w-16 px-1 py-2 text-left font-semibold truncate">Location</th>
               <th className="w-10 px-1 py-2 text-center font-semibold">Status</th>
               <th className="w-8 px-1 py-2 text-center font-semibold">Info</th>
             </tr>
@@ -301,13 +284,24 @@ export default function EquipmentTable() {
                 : 'bg-red-500';
               return (
                 <React.Fragment key={item.id}>
-                  <tr className="border-b last:border-b-0 hover:bg-gray-50 transition group text-xs relative">
+                  <tr 
+                    className="border-b last:border-b-0 hover:bg-gray-50 transition group text-xs relative cursor-pointer"
+                    onClick={() => toggleDescriptionExpand(item.id!)}
+                  >
                     <td className="p-0 w-1">
                       <div className={`h-8 w-1 rounded-l-xl ${statusColor}`}></div>
                     </td>
                     <td className="px-1 py-2 w-10">
                       {item.image ? (
-                        <img src={`/equipment-images/${item.image}`} alt={item.name} className="w-8 h-8 object-cover rounded-md" />
+                        <img
+                          src={`/equipment-images/${item.image}`}
+                          alt={item.name}
+                          className="w-8 h-8 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setModalImage(`/equipment-images/${item.image}`);
+                          }}
+                        />
                       ) : (
                         <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md text-gray-400">
                           <FaBoxOpen size={16} />
@@ -319,14 +313,17 @@ export default function EquipmentTable() {
                         type="checkbox"
                         className="rounded-full w-4 h-4 border-gray-300 focus:ring-blue-500"
                         checked={selectedIds.includes(item.id!)}
-                        onChange={() => toggleSelect(item.id!)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          toggleSelect(item.id!);
+                        }}
                       />
                     </td>
                     <td className="px-1 py-2 w-24 font-medium whitespace-nowrap truncate" title={item.name}>{item.name}</td>
                     <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.code}>{item.code}</td>
-                    <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden sm:table-cell" title={item.type}>{item.type}</td>
+                    <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.type}>{item.type}</td>
                     <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.location}>{item.location}</td>
-                    <td className="px-1 py-2 w-10 text-center">
+                    <td className="px-1 py-2 w-10 text-center hidden md:table-cell">
                       {item.available ? (
                         item.reservedBy ? (
                           <span className="inline-block w-3 h-3 rounded-full bg-yellow-400"></span>
@@ -339,7 +336,10 @@ export default function EquipmentTable() {
                     </td>
                     <td className="px-1 py-2 w-8 text-center">
                       <button
-                        onClick={() => toggleDescriptionExpand(item.id!)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleDescriptionExpand(item.id!);
+                        }}
                         className="text-gray-400 hover:text-blue-600 focus:outline-none"
                         aria-label="Show description"
                       >
@@ -347,10 +347,26 @@ export default function EquipmentTable() {
                       </button>
                     </td>
                   </tr>
-                  {expandedDescriptions[item.id!] && item.description && (
+                  {expandedDescriptions[item.id!] && (
                     <tr className="bg-gray-50">
                       <td colSpan={9} className="px-8 py-3 text-xs text-gray-700">
-                        <span className="font-semibold">Description:</span> {item.description}
+                        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                          <div className="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                            <span><span className="font-semibold">Code:</span> {item.code}</span>
+                            <span><span className="font-semibold">Type:</span> {item.type}</span>
+                            <span><span className="font-semibold">Location:</span> {item.location}</span>
+                            <span><span className="font-semibold">Status:</span>{' '}
+                              {item.available
+                                ? item.reservedBy
+                                  ? 'Reserved'
+                                  : 'Available'
+                                : 'Checked Out'}
+                            </span>
+                            {item.description && (
+                              <span><span className="font-semibold">Description:</span> {item.description}</span>
+                            )}
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -448,6 +464,28 @@ export default function EquipmentTable() {
               </div>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Image Modal */}
+      {modalImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
+          onClick={() => setModalImage(null)}
+        >
+          <img
+            src={modalImage}
+            alt="Equipment Fullscreen"
+            className="max-w-full max-h-full rounded shadow-lg"
+            onClick={e => e.stopPropagation()}
+          />
+          <button
+            className="absolute top-4 right-4 text-white text-3xl font-bold bg-black bg-opacity-60 rounded-full px-3 py-1 hover:bg-opacity-90 focus:outline-none"
+            onClick={() => setModalImage(null)}
+            aria-label="Close"
+          >
+            <FaTimes />
+          </button>
         </div>
       )}
     </div>
