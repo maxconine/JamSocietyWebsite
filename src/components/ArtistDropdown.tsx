@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Artist, deleteArtist, updateArtist } from '../firebase/db';
 
 interface ArtistDropdownProps {
   artists: Artist[];
   isAdmin: boolean;
   currentUserId: string;
+  defaultArtist?: string;
 }
 
-export default function ArtistDropdown({ artists, isAdmin, currentUserId }: ArtistDropdownProps) {
+export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaultArtist }: ArtistDropdownProps) {
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -20,6 +21,13 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId }: Arti
   const [error, setError] = useState<string | null>(null);
   const [showImageModal, setShowImageModal] = useState(false);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (defaultArtist) {
+      const artist = artists.find(a => a.id === defaultArtist);
+      setSelectedArtist(artist || null);
+    }
+  }, [defaultArtist, artists]);
 
   const handleEdit = (artist: Artist) => {
     setSelectedArtist(artist);

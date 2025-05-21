@@ -98,25 +98,27 @@ export default function Artists() {
           )}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 sm:gap-0">
             <h2 className="font-medium text-2xl sm:text-[35px] whitespace-nowrap">Featured Artists</h2>
-            {isAuthenticated ? (
-              <button
-                onClick={() => setIsAddArtistModalOpen(true)}
-                className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors font-medium"
-              >
-                Add an Artist
-              </button>
-            ) : (
-              <p className="text-gray-600 font-normal">Please log in to add an artist</p>
-            )}
           </div>
           <div className="overflow-x-auto pb-4 -mx-2 sm:mx-0">
+            <p className="text-gray-600 font-normal mb-2">Select an artist from the dropdown to view their details.</p>
             <div className="flex flex-row gap-4 min-w-[300px]">
               <ArtistDropdown 
                 artists={artists} 
                 isAdmin={isAdmin} 
                 currentUserId={schoolId || ''} 
+                defaultArtist={artists[0]?.id || ''}
               />
             </div>
+            {isAuthenticated ? (
+              <button
+                onClick={() => setIsAddArtistModalOpen(true)}
+                className="mt-4 px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors font-medium"
+              >
+                Add an Artist
+              </button>
+            ) : (
+              <p className="text-gray-600 font-normal mt-4">Please log in to add an artist</p>
+            )}
           </div>
         </div>
       </section>
