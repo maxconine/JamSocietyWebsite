@@ -282,7 +282,7 @@ export default function Home() {
                 Who can use the room?
               </div>
               <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-                You! It's free. Go to the Join page and fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
+                Not you! It's free. Go to the Join page and fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
               </div>
             </div>
           </div>
@@ -344,7 +344,7 @@ export default function Home() {
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
                   <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
-                  <div className="text-gray-700 text-sm md:text-base">(857)-701-0870</div>
+                  <div className="text-gray-700 text-sm md:text-base">(857) 701-0870</div>
                 </div>
                 <div>
                   <img
