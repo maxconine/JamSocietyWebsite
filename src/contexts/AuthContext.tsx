@@ -5,7 +5,6 @@ import axios from 'axios';
 
 interface UserData {
     email: string;
-    emailVerified: boolean;
     isAdmin: boolean;
     createdAt: string;
     quizPassed?: boolean;
@@ -82,7 +81,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Store user profile in Firestore using schoolId as the document ID
             const userData: UserData = {
                 email: trimmedEmail,
-                emailVerified: false,
                 isAdmin: false,
                 createdAt: new Date().toISOString(),
                 quizPassed: false,

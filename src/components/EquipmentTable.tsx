@@ -3,6 +3,7 @@ import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToE
 import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
 import { FaBoxOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 interface AddFormData {
   name: string;
@@ -46,6 +47,7 @@ export default function EquipmentTable() {
   const [addError, setAddError] = useState<string | null>(null);
   const [addLoading, setAddLoading] = useState(false);
   const [modalImage, setModalImage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = subscribeToEquipment((data) => {
@@ -237,6 +239,20 @@ export default function EquipmentTable() {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-0 md:p-6">
+      {/* Inline Quiz Required Message */}
+      {isAuthenticated && userData && !userData.quizPassed && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded flex items-center justify-between">
+          <span>
+            <strong>Action Required:</strong> You must pass the quiz before you can check out equipment.
+          </span>
+          <button
+            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            onClick={() => navigate('/quiz')}
+          >
+            Take the Quiz
+          </button>
+        </div>
+      )}
       {/* Status Legend */}
       <div className="flex items-center justify-end gap-4 mb-2 pr-2">
         <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>Available</span>

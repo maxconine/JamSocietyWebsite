@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { getAuth, sendEmailVerification } from 'firebase/auth';
 
 const QUIZ_QUESTIONS = [
   {
@@ -49,8 +48,6 @@ export default function Join() {
   const [success, setSuccess] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [hasPassedQuiz, setHasPassedQuiz] = useState(false);
-  const [isVerified, setIsVerified] = useState(true);
-  const [resendStatus, setResendStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const checkQuizStatus = async () => {
@@ -64,7 +61,6 @@ export default function Join() {
             setHasPassedQuiz(true);
             setSuccess('Quiz passed! You now have access to the Jam Room. Please give F&M a few days to add you to the swipe access list');
           }
-          setIsVerified(!!userData.emailVerified);
         }
       }
     };
@@ -100,22 +96,6 @@ export default function Join() {
       setError('Failed to record quiz completion.');
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  // Handler for resending verification email
-  const handleResendVerification = async () => {
-    setResendStatus(null);
-    try {
-      const auth = getAuth();
-      if (auth.currentUser) {
-        await sendEmailVerification(auth.currentUser);
-        setResendStatus('Verification email sent! Please check your inbox.');
-      } else {
-        setResendStatus('You must be logged in to resend verification email.');
-      }
-    } catch (err) {
-      setResendStatus('Failed to send verification email. Please try again.');
     }
   };
 
@@ -199,25 +179,6 @@ export default function Join() {
             </div>
           )}
         </div>
-        {/* Resend Verification Button */}
-        {!isVerified && isAuthenticated && (
-          <div className="flex flex-col items-center mt-6">
-            <div className="mb-3 max-w-xl text-center text-gray-700 text-base font-normal">
-              <p>
-                <strong>You are not verified yet.</strong> In order to check out equipment and edit artist pages, you must verify that your school ID is linked to your email address. Please check your inbox for a verification email, and click the link inside to complete verification. If you did not receive the email, you can resend it below.
-              </p>
-            </div>
-            <button
-              onClick={handleResendVerification}
-              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-medium"
-            >
-              Resend Verification Email
-            </button>
-            {resendStatus && (
-              <p className={`mt-2 text-sm ${resendStatus.includes('sent') ? 'text-green-600' : 'text-red-600'}`}>{resendStatus}</p>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
