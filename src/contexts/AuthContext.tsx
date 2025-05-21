@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, User } from 'firebase/auth';
 import axios from 'axios';
 
@@ -77,9 +77,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             // Create Firebase Auth user
             const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-            const firebaseUser = userCredential.user;
+            // const firebaseUser = userCredential.user; // No longer needed for Firestore doc ID
 
-            // Store user profile in Firestore
+            // Store user profile in Firestore using schoolId as the document ID
             const userData: UserData = {
                 email: trimmedEmail,
                 emailVerified: false,
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 schoolId: schoolId
             };
 
-            await setDoc(doc(db, 'users', firebaseUser.uid), {
+            await setDoc(doc(db, 'users', schoolId), {
                 ...userData,
             });
 
@@ -120,6 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = async (schoolId: string) => {
         try {
             validateSchoolId(schoolId);
+            // Directly get the user doc by schoolId
             const userDoc = await getDoc(doc(db, 'users', schoolId));
             if (!userDoc.exists()) {
                 throw new Error('NEW_USER');
@@ -134,11 +135,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUserData(userData);
             setIsAdmin(userData.isAdmin);
             localStorage.setItem('schoolId', schoolId);
-            if (!userData.quizPassed) {
-                // Not authenticated until quiz is passed
-                window.location.href = '/quiz';
-                return;
-            }
             setIsAuthenticated(true);
         } catch (error) {
             console.error('Login error:', error);
