@@ -1,133 +1,143 @@
-import React, { useState } from 'react';
-import howToUseAMicImage from '../assets/images/equipment/HowToUseAMic.png';
+import React from 'react';
+import GuideGrid from '../components/GuideGrid';
 
-interface EquipmentItem {
-    id: string;
-    name: string;
-    coverImage: string;
-    detailImage: string;
-    manualUrl: string;
-    description: string;
-    videoUrl?: string;
-}
-
-interface MixerEquipmentItem extends EquipmentItem {
-    extraVideoUrl?: string;
-}
-
-const equipmentItems: (EquipmentItem | MixerEquipmentItem)[] = [
+const guides = [
     {
         id: 'mic1',
-        name: 'How To use a Microphone',
-        coverImage: howToUseAMicImage,
-        detailImage: howToUseAMicImage,
+        title: 'How To use a Microphone',
+        description: 'Learn the basics of microphone usage and proper technique',
+        image: 'guide-images/sureSM58.png',
+        details: 'This comprehensive guide covers everything from microphone placement to proper handling techniques. Learn about different types of microphones, their applications, and how to get the best sound quality in various situations.',
         manualUrl: 'https://docs.google.com/document/d/11tbgTuPSa9pvSVhvUmHxB_ExPH34xONR5haw2bY5Tvg/edit?usp=sharing',
-        description: 'This guide will teach you how to use a microphone in the Jam Room'
     },
     {
         id: 'mixer1',
-        name: 'How To use a Mixer',
-        coverImage: '/images/equipment/mg10xu.jpg',
-        detailImage: '/images/equipment/mg10xu.jpg',
+        title: 'How To use a Mixer',
+        description: 'This guide will walk you through how to use the mixer in the Jam Room',
+        image: 'guide-images/mixWizard-WZ3-16-2.webp',
+        details: 'This guide will walk you through the essential features of the mixer, including channel controls, effects, and proper gain staging. Perfect for both beginners and those looking to refresh their knowledge.',
         manualUrl: 'https://docs.google.com/document/d/your-doc-id-2',
-        description: '10-channel mixer with USB interface and effects',
         videoUrl: 'https://youtu.be/3nhk0CD_NKg?feature=shared',
         extraVideoUrl: 'https://www.youtube.com/watch?v=d__3qrr3USI'
     },
-    // Add more equipment items here
+    {
+        id: 'drum-kit-etiquette',
+        title: 'Drum Kit Etiquette and Setup',
+        description: 'Learn proper drum kit handling, setup procedures, and etiquette to ensure a great experience for everyone.',
+        image: 'guide-images/drum-kit.jpeg',
+        details: 'Essential guide for drummers of all levels',
+        manualUrl: '/manuals/drum-kit-setup.pdf'
+    },
+    {
+        id: 'amp-setup',
+        title: 'How to Set Up and Use an Amp',
+        description: 'Master the basics of amplifier setup, operation, and proper usage for the best sound quality.',
+        image: 'guide-images/amp-setup.jpg',
+        details: 'Complete guide to amplifier operation',
+        manualUrl: '/manuals/amp-setup.pdf'
+    },
+    {
+        id: 'speaker-usage',
+        title: 'Playing Music on the Speakers',
+        description: 'Learn how to properly connect and play music through the studio speakers.',
+        image: 'guide-images/speakers.jpg',
+        details: 'Guide to studio speaker operation',
+        manualUrl: '/manuals/speaker-usage.pdf'
+    },
+    {
+        id: 'audio-interface',
+        title: 'Connecting to the Audio Interface or Mixer',
+        description: 'Step-by-step guide to connecting instruments and microphones to the audio interface or mixer.',
+        image: 'guide-images/audio-interface.jpg',
+        details: 'Complete guide to audio interface setup',
+        manualUrl: '/manuals/audio-interface.pdf'
+    },
+    {
+        id: 'jam-room-reservation',
+        title: 'Reserving the Jam Room',
+        description: 'Learn how to properly reserve and use the jam room facilities.',
+        image: 'guide-images/jam-room.jpg',
+        details: 'Guide to jam room reservation and usage',
+        manualUrl: '/manuals/jam-room.pdf'
+    },
+    {
+        id: 'jam-room-etiquette',
+        title: 'Jam Room Do\'s and Don\'ts',
+        description: 'Essential guidelines for maintaining a positive and productive jam room environment.',
+        image: 'guide-images/jam-room-etiquette.jpg',
+        details: 'Essential guidelines for jam room usage',
+        manualUrl: '/manuals/jam-room-etiquette.pdf'
+    },
+    {
+        id: 'audio-effects',
+        title: 'Basic Audio Effects for Beginners',
+        description: 'Introduction to common audio effects and how to use them effectively.',
+        image: 'guide-images/audio-effects.jpg',
+        details: 'Guide to basic audio effects',
+        manualUrl: '/manuals/audio-effects.pdf'
+    },
+    {
+        id: 'jam-ideas',
+        title: 'Quick Jam Ideas to Try With Friends',
+        description: 'Fun and easy jam session ideas to get started with your band or friends.',
+        image: 'guide-images/jam-ideas.jpg',
+        details: 'Creative ideas for jam sessions',
+        manualUrl: '/manuals/jam-ideas.pdf'
+    }
 ];
 
 const EquipmentGuides: React.FC = () => {
-    const [selectedVideos, setSelectedVideos] = useState<string[] | null>(null);
-
-    const handleCardClick = (item: EquipmentItem | MixerEquipmentItem) => {
-        if (item.id === 'mixer1' && (item as MixerEquipmentItem).extraVideoUrl) {
-            setSelectedVideos([
-                (item as MixerEquipmentItem).videoUrl!,
-                (item as MixerEquipmentItem).extraVideoUrl!
-            ]);
-        } else if (item.videoUrl) {
-            setSelectedVideos([item.videoUrl]);
-        }
-    };
-
     return (
-        <div className="min-h-screen bg-white-100 p-8">
-            <div className="text-center mb-12">
-                <h1 className="text-4xl font-black-ops-one mb-4">Equipment Guides</h1>
-                <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                    This page is filled with resources to teach you how to use equipment in the Jam Room
-                </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-8xl mx-auto">
-                {equipmentItems.map((item) => (
-                    <div
-                        key={item.id}
-                        className="bg-gray-800 rounded-xl overflow-hidden shadow-lg cursor-pointer"
-                        onClick={() => handleCardClick(item as EquipmentItem | MixerEquipmentItem)}
-                    >
-                        <div className="flex flex-col md:flex-row">
-                            {/* Image Section */}
-                            <div className="md:w-1/3">
-                                <img
-                                    src={item.coverImage}
-                                    alt={item.name}
-                                    className="w-full h-48 md:h-full object-cover"
-                                />
-                            </div>
-
-                            {/* Content Section */}
-                            <div className="p-6 md:w-2/3 flex flex-col justify-between">
-                                <div>
-                                    <h3 className="text-xl font-bold text-white mb-2">{item.name}</h3>
-                                    <p className="text-gray-300 mb-4">{item.description}</p>
-                                </div>
-                                <a
-                                    href={item.manualUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-block w-full bg-blue-600 text-white text-center px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    Open Manual
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Video Modal */}
-            {selectedVideos && (
+        <div className="min-h-screen font-roboto">
+            {/* Hero Section */}
+            <section
+                style={{
+                    width: '100vw',
+                    height: '400px',
+                    backgroundImage: 'url(/Guides.jpeg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                    position: 'relative',
+                    zIndex: 1,
+                    marginLeft: 'calc(-50vw + 50%)',
+                    marginRight: 'calc(-50vw + 50%)',
+                    marginTop: -32,
+                }}
+            >
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
-                    onClick={() => setSelectedVideos(null)}
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'rgba(0,0,0,0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        zIndex: 2,
+                    }}
                 >
-                    <div
-                        className="bg-gray-800 rounded-xl p-4 max-w-4xl w-full"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {selectedVideos.map((video, idx) => (
-                            <div className="relative pb-[56.25%] h-0 mb-6" key={idx}>
-                                <iframe
-                                    className="absolute top-0 left-0 w-full h-full rounded-lg"
-                                    src={video.replace('youtu.be', 'youtube.com/embed').replace('watch?v=', 'embed/')}
-                                    title={`YouTube video player ${idx + 1}`}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
-                            </div>
-                        ))}
-                        <button
-                            onClick={() => setSelectedVideos(null)}
-                            className="mt-4 w-full bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
-                        >
-                            Close Video
-                        </button>
+                    <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold text-center px-2">
+                        Equipment Guides
+                    </h1>
+                </div>
+            </section>
+
+            {/* Main Content */}
+            <div className="max-w-8xl mx-auto px-4">
+                <div className="bg-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <p className="font-roboto font-light text-gray-700 mt-8 mb-8">
+                            This page is filled with resources to teach you how to use equipment in the Jam Room. Each guide includes detailed instructions, video tutorials, and links to official manuals.
+                        </p>
                     </div>
                 </div>
-            )}
+
+                <div className="mt-8">
+                    <GuideGrid guides={guides} />
+                </div>
+            </div>
         </div>
     );
 };

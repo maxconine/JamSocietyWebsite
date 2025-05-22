@@ -15,6 +15,22 @@ import { firebaseConfig } from './firebase/config';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import LoadingScreen from './components/LoadingScreen';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Roboto, Arial, sans-serif',
+  },
+  palette: {
+    primary: {
+      main: '#000000',
+    },
+    secondary: {
+      main: '#666666',
+    },
+  },
+});
 
 function App() {
   const [isFirebaseInitialized, setIsFirebaseInitialized] = useState(false);
@@ -45,29 +61,32 @@ function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <Router>
-          <LoadingScreen />
-          <div className="min-h-screen flex flex-col">
-            <NavBar />
-            <main className="flex-grow w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/artists" element={<Artists />} />
-                <Route path="/equipment" element={<EquipmentPage />} />
-                <Route path="/equipment-guides" element={<EquipmentGuides />} />
-                <Route path="/reserve" element={<Reserve />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/join" element={<Join />} />
-                <Route path="/quiz" element={<Quiz />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </AuthProvider>
-    </ErrorBoundary>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <ErrorBoundary>
+        <AuthProvider>
+          <Router>
+            <LoadingScreen />
+            <div className="min-h-screen flex flex-col">
+              <NavBar />
+              <main className="flex-grow w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/artists" element={<Artists />} />
+                  <Route path="/equipment" element={<EquipmentPage />} />
+                  <Route path="/equipment-guides" element={<EquipmentGuides />} />
+                  <Route path="/reserve" element={<Reserve />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/join" element={<Join />} />
+                  <Route path="/quiz" element={<Quiz />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </AuthProvider>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
 

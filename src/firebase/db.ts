@@ -23,6 +23,7 @@ export interface Equipment {
     condition?: 'excellent' | 'good' | 'fair' | 'poor' | 'broken';
     price?: number;
     description?: string;
+    owner?: string;
     lastCheckedOut?: string;
     checkedOutBy?: string;
     expectedReturn?: string;
@@ -36,6 +37,7 @@ export interface Equipment {
     checkoutDescription?: string;
     lastCheckedOutDate?: string;
     lastReturnedDate?: string;
+    lastReturnedNotes?: string;
     lastReturnedBy?: string;
     lastReturnedByName?: string;
     lastReturnedByEmail?: string;

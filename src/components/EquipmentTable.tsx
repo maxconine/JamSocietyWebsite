@@ -196,7 +196,7 @@ export default function EquipmentTable() {
           ? `${userData.firstName} ${userData.lastName}`
           : userData.email,
         lastReturnedByEmail: userData.email,
-        lastReturnedIssues: returnForm.issues,
+        lastReturnedNotes: returnForm.issues,
         lastReturnedDate: new Date().toISOString(),
         checkedOutBy: deleteField(),
         lastCheckedOut: deleteField(),
@@ -282,7 +282,7 @@ export default function EquipmentTable() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-0 md:p-6">
+    <div className="bg-white rounded-2xl shadow-lg p-0 md:p-6 font-roboto">
       {/* Inline Quiz Required Message */}
       {isAuthenticated && userData && !userData.quizPassed && (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded flex items-center justify-between">
@@ -450,46 +450,41 @@ export default function EquipmentTable() {
                         <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
                           <div className="flex flex-col gap-2">
                             <span><span className="font-semibold">Code:</span> {item.code}</span>
+                            <span><span className="font-semibold">Name:</span> {item.name}</span>
                             <span><span className="font-semibold">Type:</span> {item.type}</span>
                             <span><span className="font-semibold">Location:</span> {item.location}</span>
+                            <span><span className="font-semibold">Value:</span> ${item.price || 0}</span>
+                            <span><span className="font-semibold">Owner:</span> {item.owner || 'N/A'}</span>
+                            <span><span className="font-semibold">Condition:</span> {item.condition || 'N/A'}</span>
                             {item.description && (
                               <span><span className="font-semibold">Description:</span> {item.description}</span>
                             )}
                             {item.labelType && (
                               <span><span className="font-semibold">Label Type:</span> {item.labelType}</span>
                             )}
+                            <span><span className="font-semibold">Status:</span> {item.status}</span>
                           </div>
                           <div className="flex flex-col gap-2">
-                            <span><span className="font-semibold">Status:</span> {item.status}</span>
-                            {item.status === 'Checked Out' && (
+                            {item.lastCheckedOutByName && (
                               <>
-                                {item.lastCheckedOutByName && (
-                                  <>
-                                    {' '}by <span className="font-semibold">{item.lastCheckedOutByName}</span>
-                                  </>
+                                <span><span className="font-semibold">Last Checked Out By:</span> {item.lastCheckedOutByName}</span>
+                                <span><span className="font-semibold">Last Checked Out Email:</span> {item.lastCheckedOutByEmail}</span>
+                                {item.checkoutDescription && (
+                                  <span><span className="font-semibold">Checkout Description:</span> {item.checkoutDescription}</span>
                                 )}
-                                {item.lastCheckedOutByEmail && (
-                                  <>
-                                    {' '}(<a href={`mailto:${item.lastCheckedOutByEmail}`} className="underline text-blue-600 hover:text-blue-800">{item.lastCheckedOutByEmail}</a>)
-                                  </>
+                                {item.reason && (
+                                  <span><span className="font-semibold">Reason For Checkout:</span> {item.reason}</span>
                                 )}
                                 {item.lastCheckedOutDate && (
-                                  <>
-                                    <br />
-                                    <span className="font-semibold">Checked Out Date:</span> {new Date(item.lastCheckedOutDate).toLocaleDateString()}
-                                  </>
+                                  <span><span className="font-semibold">Last Checked Out Date:</span> {new Date(item.lastCheckedOutDate).toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}</span>
                                 )}
-                                {item.checkoutDescription && (
-                                  <>
-                                    <br />
-                                    <span className="font-semibold">Checkout Reason:</span> {item.checkoutDescription}
-                                  </>
-                                )}
-                                {item.lastReturnedDate && (
-                                  <>
-                                    <br />
-                                    <span className="font-semibold">Last Returned Date:</span> {new Date(item.lastReturnedDate).toLocaleDateString()}
-                                  </>
+                              </>
+                            )}
+                            {item.lastReturnedDate && (
+                              <>
+                                <span><span className="font-semibold">Last Returned Date:</span> {new Date(item.lastReturnedDate).toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}</span>
+                                {item.lastReturnedNotes && (
+                                  <span><span className="font-semibold">Last Return Notes:</span> {item.lastReturnedNotes}</span>
                                 )}
                               </>
                             )}
@@ -599,10 +594,12 @@ export default function EquipmentTable() {
       {showCheckoutModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Check Out Equipment</h2>
+            <h2 className="text-xl font-bold mb-2">Check Out Equipment</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleCheckoutSubmit(); }}>
               <div className="mb-4">
+              <p className="text-sm text-gray-500 mb-4">Please respect the equipment and use it properly. Only check items out for a maximum of three days.</p>
                 <label className="block text-sm font-medium text-gray-700">What will you be using this equipment for?</label>
+                
                 <textarea
                   value={checkoutForm.description}
                   onChange={e => setCheckoutForm({ description: e.target.value })}
