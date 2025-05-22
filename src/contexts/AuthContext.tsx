@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, User } from 'firebase/auth';
-import axios from 'axios';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
 
 interface UserData {
     email: string;
@@ -82,8 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const auth = getAuth();
 
             // Create Firebase Auth user
-            const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-            // const firebaseUser = userCredential.user; // No longer needed for Firestore doc ID
+            await createUserWithEmailAndPassword(auth, trimmedEmail, password);
 
             // Store user profile in Firestore using schoolId as the document ID
             const userData: UserData = {

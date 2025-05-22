@@ -4,7 +4,14 @@ import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
 import { FaBoxOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getFirestore, FieldValue, deleteField } from 'firebase/firestore';
+import { deleteField } from 'firebase/firestore';
+
+// Utility function to get processed image path
+function getProcessedImagePath(originalPath: string): string {
+  // Remove file extension and add _P.webp
+  const baseName = originalPath.replace(/\.[^/.]+$/, '');
+  return `${baseName}_P.webp`;
+}
 
 interface AddFormData {
   name: string;
@@ -30,7 +37,7 @@ export default function EquipmentTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
-  const { isAuthenticated, isAdmin, user, userData } = useAuth();
+  const { isAuthenticated, isAdmin, userData } = useAuth();
   const schoolId = localStorage.getItem('schoolId');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
@@ -383,12 +390,14 @@ export default function EquipmentTable() {
                     <td className="px-1 py-2 w-10">
                       {item.image ? (
                         <img
-                          src={`/equipment-images/processed/${item.image ? item.image.replace(/\.[^/.]+$/, '') + '_P' + item.image.slice(item.image.lastIndexOf('.')) : ''}`}
+                          src={`/equipment-images/processed/${getProcessedImagePath(item.image)}`}
                           alt={item.name}
                           className="w-8 h-8 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setModalImage(`/equipment-images/processed/${item.image ? item.image.replace(/\.[^/.]+$/, '') + '_P' + item.image.slice(item.image.lastIndexOf('.')) : ''}`);
+                            if (item.image) {
+                              setModalImage(`/equipment-images/processed/${getProcessedImagePath(item.image)}`);
+                            }
                           }}
                         />
                       ) : (

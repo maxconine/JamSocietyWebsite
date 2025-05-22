@@ -37,11 +37,11 @@ const CheckoutPopup: React.FC<CheckoutPopupProps> = ({ selectedIds, selectedEqui
         try {
             await Promise.all(selectedIds.map(id =>
                 updateEquipment(id, {
-                    available: false,
                     lastCheckedOut: new Date().toISOString(),
                     checkedOutBy: schoolId,
                     expectedReturn,
-                    reason
+                    reason,
+                    status: 'Checked Out'
                 })
             ));
             onSuccess();

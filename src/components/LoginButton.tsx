@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import RegistrationForm from './RegistrationForm';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginButton: React.FC = () => {
     const { login } = useAuth();
@@ -82,10 +80,8 @@ const LoginButton: React.FC = () => {
                             </button>
                         </div>
                         <RegistrationForm
-                            onCancel={() => {
-                                setShowRegistration(false);
-                                setSchoolId('');
-                            }}
+                            onCancel={() => setShowRegistration(false)}
+                            initialSchoolId={schoolId || ''}
                         />
                     </div>
                 </div>

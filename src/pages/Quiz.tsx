@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { getFirestore, doc, updateDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { useAuth } from '../contexts/AuthContext';
 
 const QUESTIONS = [
   {
@@ -43,22 +42,21 @@ const QUESTIONS = [
   },
 ];
 
-export default function Quiz() {
-  const [answers, setAnswers] = useState<number[]>(Array(QUESTIONS.length).fill(-1));
+const Quiz: React.FC = () => {
+  const { userData } = useAuth();
+  const navigate = useNavigate();
+  const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
-  const navigate = useNavigate();
   const db = getFirestore();
-  const { userData } = useAuth();
   const schoolId = userData?.schoolId;
 
   if (!schoolId) {
     return <div className="min-h-screen flex items-center justify-center text-red-600 font-bold">You must be logged in to take the quiz.</div>;
   }
 
-  const handleChange = (qIdx: number, value: number) => {
-    setAnswers(a => a.map((v, i) => (i === qIdx ? value : v)));
+  const handleChange = (qIdx: number, value: string) => {
+    setAnswers(a => ({ ...a, [`q${qIdx}`]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,7 +65,7 @@ export default function Quiz() {
     setSubmitting(true);
     // Check answers
     for (let i = 0; i < QUESTIONS.length; i++) {
-      if (answers[i] !== QUESTIONS[i].correct) {
+      if (answers[`q${i + 2}`] !== QUESTIONS[i].correct.toString()) {
         setError('You must answer all questions correctly to pass.');
         setSubmitting(false);
         return;
@@ -77,7 +75,6 @@ export default function Quiz() {
       if (schoolId) {
         // Mark quiz as passed in Firestore using schoolId
         await updateDoc(doc(db, 'users', schoolId), { quizPassed: true });
-        setSuccess('Quiz passed! You now have access to the Jam Room. Please give F&M a few days to add you to the swipe access list');
         setTimeout(() => navigate('/'), 2000);
       } else {
         setError('No user found. Please log in again.');
@@ -102,10 +99,10 @@ export default function Quiz() {
                   <label key={oIdx} className="flex items-center text-sm md:text-base cursor-pointer">
                     <input
                       type="radio"
-                      name={`q${idx}`}
-                      value={oIdx}
-                      checked={answers[idx] === oIdx}
-                      onChange={() => handleChange(idx, oIdx)}
+                      name={`q${idx + 2}`}
+                      value={oIdx.toString()}
+                      checked={answers[`q${idx + 2}`] === oIdx.toString()}
+                      onChange={() => handleChange(idx, oIdx.toString())}
                       className="mr-3 w-4 h-4"
                       required
                     />
@@ -127,4 +124,6 @@ export default function Quiz() {
       </div>
     </div>
   );
-} 
+};
+
+export default Quiz; 

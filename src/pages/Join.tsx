@@ -1,103 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-const QUIZ_QUESTIONS = [
-  {
-    question: 'When can you use the jam room?',
-    name: 'q2',
-    options: ['Anytime', 'Only after F&M Hours'],
-    correct: 'Only after F&M Hours',
-  },
-  {
-    question: 'What do you have to do when you want to check out equipment from the room?',
-    name: 'q3',
-    options: [
-      'Go to the equipment page and check it out',
-      'Borrow it from the room without checking it out',
-    ],
-    correct: 'Go to the equipment page and check it out',
-  },
-  {
-    question: 'What do you have to do when you want to return equipment from the room?',
-    name: 'q4',
-    options: [
-      'Place the piece of equipment back where it belongs, go to the equipment page and return it',
-      'Throw it in the room and leave',
-    ],
-    correct: 'Place the piece of equipment back where it belongs, go to the equipment page and return it',
-  },
-  {
-    question: 'Are food and drink allowed in the jam room?',
-    name: 'q5',
-    options: ['Yes', 'No'],
-    correct: 'No',
-  },
-  {
-    question: 'How many days in advance should you reserve the room if you want to reserve it?',
-    name: 'q6',
-    options: ['No days in advance', '3 days'],
-    correct: '3 days',
-  },
-];
-
-export default function Join() {
+const Join: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const [answers, setAnswers] = useState<{ [key: string]: string }>({});
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [hasPassedQuiz, setHasPassedQuiz] = useState(false);
-
-  useEffect(() => {
-    const checkQuizStatus = async () => {
-      const schoolId = localStorage.getItem('schoolId');
-      if (schoolId) {
-        const db = getFirestore();
-        const userDoc = await getDoc(doc(db, 'users', schoolId));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          if (userData.quizPassed) {
-            setHasPassedQuiz(true);
-            setSuccess('Quiz passed! You now have access to the Jam Room. Please give F&M a few days to add you to the swipe access list');
-          }
-        }
-      }
-    };
-    checkQuizStatus();
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setAnswers(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-    setSubmitting(true);
-    // Validation
-    for (const q of QUIZ_QUESTIONS) {
-      if (!answers[q.name]) {
-        setError('Please answer all questions.');
-        setSubmitting(false);
-        return;
-      }
-      if (answers[q.name] !== q.correct) {
-        setError('You must answer all questions correctly to pass.');
-        setSubmitting(false);
-        return;
-      }
-    }
-    try {
-      setSuccess('Quiz passed! You now have access to the Jam Room. Please give F&M a few days to add you to the swipe access list');
-    } catch (err) {
-      setError('Failed to record quiz completion.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -182,4 +87,6 @@ export default function Join() {
       </div>
     </div>
   );
-} 
+};
+
+export default Join; 

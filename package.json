@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && mkdir -p dist/equipment-images/processed && cp -r public/equipment-images/* dist/equipment-images/ && cp -r public/equipment-images/processed/* dist/equipment-images/processed/",
     "lint": "eslint .",
     "preview": "vite preview",
     "process-images": "ts-node --esm scripts/processEquipmentImages.ts",
@@ -30,10 +30,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@tailwindcss/postcss": "^4.1.5",
+    "@tailwindcss/postcss": "^4.1.7",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/react-router-dom": "^5.3.3",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.22.0",
