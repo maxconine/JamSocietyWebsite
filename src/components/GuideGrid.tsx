@@ -2,17 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Container, Dialog, DialogContent, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import GuideCard from './GuideCard';
-
-interface Guide {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  details: string;
-  manualUrl: string;
-  videoUrl?: string;
-  extraVideoUrl?: string;
-}
+import { Guide } from '../types/guide';
 
 interface GuideGridProps {
   guides: Guide[];
@@ -31,9 +21,32 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
 
   return (
     <Container maxWidth="xl">
-      <Grid container spacing={3}>
+      <Grid 
+        container 
+        spacing={3} 
+        sx={{ 
+          justifyContent: 'center',
+          alignItems: 'stretch'
+        }}
+      >
         {guides.map((guide) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={guide.id}>
+          <Grid 
+            key={guide.id}
+            sx={{
+              width: {
+                xs: '100%',
+                sm: '50%',
+                md: '33.33%',
+                lg: '25%'
+              },
+              maxWidth: {
+                xs: '100%',
+                sm: '400px',
+                md: '350px',
+                lg: '300px'
+              }
+            }}
+          >
             <GuideCard
               title={guide.title}
               description={guide.description}

@@ -32,7 +32,7 @@ const guides = [
         id: 'amp-setup',
         title: 'How to Set Up and Use an Amp',
         description: 'Master the basics of amplifier setup, operation, and proper usage for the best sound quality.',
-        image: 'guide-images/amp-setup.jpg',
+        image: 'guide-images/spiderV240.jpg',
         details: 'Complete guide to amplifier operation',
         manualUrl: '/manuals/amp-setup.pdf'
     },
@@ -45,18 +45,10 @@ const guides = [
         manualUrl: '/manuals/speaker-usage.pdf'
     },
     {
-        id: 'audio-interface',
-        title: 'Connecting to the Audio Interface or Mixer',
-        description: 'Step-by-step guide to connecting instruments and microphones to the audio interface or mixer.',
-        image: 'guide-images/audio-interface.jpg',
-        details: 'Complete guide to audio interface setup',
-        manualUrl: '/manuals/audio-interface.pdf'
-    },
-    {
         id: 'jam-room-reservation',
         title: 'Reserving the Jam Room',
         description: 'Learn how to properly reserve and use the jam room facilities.',
-        image: 'guide-images/jam-room.jpg',
+        image: 'guide-images/calendar.png',
         details: 'Guide to jam room reservation and usage',
         manualUrl: '/manuals/jam-room.pdf'
     },

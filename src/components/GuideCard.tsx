@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -8,8 +8,9 @@ import {
   IconButton,
   Box,
   styled,
+  Button,
 } from '@mui/material';
-import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { ExpandMore as ExpandMoreIcon, PlayArrow as PlayArrowIcon } from '@mui/icons-material';
 
 interface GuideCardProps {
   title: string;
@@ -43,7 +44,7 @@ const GuideCard: React.FC<GuideCardProps> = ({
   extraVideoUrl,
   onVideoClick,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -51,7 +52,10 @@ const GuideCard: React.FC<GuideCardProps> = ({
 
   const handleVideoClick = () => {
     if (onVideoClick && videoUrl) {
-      const urls = extraVideoUrl ? [videoUrl, extraVideoUrl] : [videoUrl];
+      const urls = [videoUrl];
+      if (extraVideoUrl) {
+        urls.push(extraVideoUrl);
+      }
       onVideoClick(urls);
     }
   };
@@ -59,62 +63,68 @@ const GuideCard: React.FC<GuideCardProps> = ({
   return (
     <Card
       sx={{
-        maxWidth: 345,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'transform 0.2s, box-shadow 0.2s',
+        transition: 'transform 0.2s',
         '&:hover': {
-          transform: 'scale(1.02)',
-          boxShadow: 6,
-        },
+          transform: 'translateY(-4px)',
+          boxShadow: 3
+        }
       }}
     >
-      <CardMedia
-        component="img"
-        height="140"
-        image={image}
-        alt={title}
-        sx={{ objectFit: 'cover' }}
-      />
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          paddingTop: '87.5%', // 16:14 aspect ratio
+          overflow: 'hidden',
+          backgroundColor: '#ffffff' // White background
+        }}
+      >
+        <CardMedia
+          component="img"
+          image={image}
+          alt={title}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            backgroundColor: '#ffffff' // White background
+          }}
+        />
+      </Box>
       <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5" component="h2" sx={{ fontWeight: 500 }}>
           {title}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {description}
         </Typography>
-        
-        <Box sx={{ mt: 'auto', display: 'flex', gap: 1 }}>
-          <a
+        <Box sx={{ mt: 'auto', display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          <Button
+            variant="contained"
+            color="primary"
             href={manualUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ textDecoration: 'none' }}
+            sx={{ flex: 1, minWidth: '120px' }}
           >
-            <Typography
-              variant="button"
-              color="primary"
-              sx={{
-                display: 'inline-block',
-                '&:hover': { textDecoration: 'underline' },
-              }}
-            >
-              Open Manual
-            </Typography>
-          </a>
+            View Manual
+          </Button>
           {videoUrl && (
-            <Typography
-              variant="button"
+            <Button
+              variant="outlined"
               color="primary"
               onClick={handleVideoClick}
-              sx={{
-                cursor: 'pointer',
-                '&:hover': { textDecoration: 'underline' },
-              }}
+              startIcon={<PlayArrowIcon />}
+              sx={{ flex: 1, minWidth: '120px' }}
             >
-              Watch Tutorial
-            </Typography>
+              Watch Video
+            </Button>
           )}
         </Box>
       </CardContent>
