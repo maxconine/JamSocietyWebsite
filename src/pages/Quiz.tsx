@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { useAuth } from '../contexts/AuthContext';
 
 const QUESTIONS = [
   {
@@ -49,10 +50,10 @@ export default function Quiz() {
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
   const db = getFirestore();
-  const auth = getAuth();
-  const uid = auth.currentUser?.uid;
+  const { userData } = useAuth();
+  const schoolId = userData?.schoolId;
 
-  if (!uid) {
+  if (!schoolId) {
     return <div className="min-h-screen flex items-center justify-center text-red-600 font-bold">You must be logged in to take the quiz.</div>;
   }
 
@@ -73,9 +74,9 @@ export default function Quiz() {
       }
     }
     try {
-      if (uid) {
-        // Mark quiz as passed in Firestore using UID
-        await updateDoc(doc(db, 'users', uid), { quizPassed: true });
+      if (schoolId) {
+        // Mark quiz as passed in Firestore using schoolId
+        await updateDoc(doc(db, 'users', schoolId), { quizPassed: true });
         setSuccess('Quiz passed! You now have access to the Jam Room. Please give F&M a few days to add you to the swipe access list');
         setTimeout(() => navigate('/'), 2000);
       } else {

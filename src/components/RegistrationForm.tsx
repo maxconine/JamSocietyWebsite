@@ -49,7 +49,14 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onCancel, initialSc
         }
 
         try {
-            await registerNewUser(schoolIdToUse, formData.email.trim(), schoolIdToUse);
+            await registerNewUser(
+                schoolIdToUse,
+                formData.email.trim(),
+                schoolIdToUse,
+                formData.firstName.trim(),
+                formData.lastName.trim(),
+                formData.classYear
+            );
             // Immediately log the user in after registration
             await login(schoolIdToUse);
             setFormData({ schoolId: '', firstName: '', lastName: '', classYear: '', email: '' });

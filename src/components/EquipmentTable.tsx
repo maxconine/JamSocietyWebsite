@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
 import { FaBoxOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { getFirestore, FieldValue, deleteField } from 'firebase/firestore';
 
 interface AddFormData {
   name: string;
@@ -76,25 +77,40 @@ export default function EquipmentTable() {
   };
 
   const handleCheckout = async () => {
-    if (!isAuthenticated || !schoolId || !user) {
+    if (!isAuthenticated || !schoolId || !userData) {
       alert('Please log in to check out equipment.');
       return;
     }
-
+    if (!userData?.quizPassed) {
+      alert('You must pass the quiz before you can check out equipment.');
+      return;
+    }
+    // Prevent checking out equipment that is already checked out
+    const unavailableItems = selectedIds.filter(id => {
+      const eq = equipment.find(e => e.id === id);
+      return eq && eq.status !== 'Available';
+    });
+    if (unavailableItems.length > 0) {
+      alert('One or more selected items are already checked out. Please deselect them or wait until they are returned.');
+      return;
+    }
     setShowCheckoutModal(true);
   };
 
   const handleCheckoutSubmit = async () => {
-    if (!isAuthenticated || !schoolId || !user || !userData) return;
+    if (!isAuthenticated || !schoolId || !userData) return;
 
     try {
       const checkoutData = {
-        available: false,
+        status: 'Checked Out' as const,
         lastCheckedOut: new Date().toISOString(),
-        checkedOutBy: schoolId,
+        checkedOutBy: userData.email,
+        lastCheckedOutByName: (userData.firstName && userData.lastName)
+          ? `${userData.firstName} ${userData.lastName}`
+          : userData.email,
+        lastCheckedOutByEmail: userData.email,
         checkoutDescription: checkoutForm.description,
-        lastCheckedOutByName: userData.email,
-        lastCheckedOutByEmail: userData.email
+        lastCheckedOutDate: new Date().toISOString(),
       };
 
       await Promise.all(selectedIds.map(id =>
@@ -108,8 +124,10 @@ export default function EquipmentTable() {
           equipmentId: id,
           equipmentName: equipmentItem?.name || 'Unknown',
           action: 'checkout',
-          userId: schoolId,
-          userName: userData.email,
+          userId: userData.email,
+          userName: (userData.firstName && userData.lastName)
+            ? `${userData.firstName} ${userData.lastName}`
+            : userData.email,
           userEmail: userData.email,
           description: checkoutForm.description,
           timestamp: new Date().toISOString()
@@ -126,15 +144,29 @@ export default function EquipmentTable() {
   };
 
   const handleReturn = async () => {
-    if (!isAuthenticated || !schoolId || !user) {
+    if (!isAuthenticated || !schoolId || !userData) {
       alert('Please log in to return equipment.');
+      return;
+    }
+    if (!userData?.quizPassed) {
+      alert('You must pass the quiz before you can return equipment.');
       return;
     }
 
     // Check if user has checked out any of the selected items
+    const notCheckedOutByUser = selectedIds.filter(id => {
+      const eq = equipment.find(e => e.id === id);
+      return eq && eq.checkedOutBy && eq.checkedOutBy !== userData.email;
+    });
+
+    if (notCheckedOutByUser.length > 0) {
+      alert('One or more selected items were checked out by someone else. You need to sign in with their account before returning.');
+      return;
+    }
+
     const userCheckedOutItems = selectedIds.filter(id => {
       const eq = equipment.find(e => e.id === id);
-      return eq && eq.checkedOutBy === schoolId;
+      return eq && eq.checkedOutBy === userData.email;
     });
 
     if (userCheckedOutItems.length === 0) {
@@ -146,23 +178,26 @@ export default function EquipmentTable() {
   };
 
   const handleReturnSubmit = async () => {
-    if (!isAuthenticated || !schoolId || !user || !userData) return;
+    if (!isAuthenticated || !schoolId || !userData) return;
 
     try {
       const returnData = {
-        available: true,
+        status: 'Available' as const,
         lastReturned: new Date().toISOString(),
-        lastReturnedBy: schoolId,
-        lastReturnedByName: userData.email,
+        lastReturnedBy: userData.email,
+        lastReturnedByName: (userData.firstName && userData.lastName)
+          ? `${userData.firstName} ${userData.lastName}`
+          : userData.email,
         lastReturnedByEmail: userData.email,
         lastReturnedIssues: returnForm.issues,
-        checkedOutBy: undefined,
-        lastCheckedOut: undefined,
-        checkoutDescription: undefined
+        lastReturnedDate: new Date().toISOString(),
+        checkedOutBy: deleteField(),
+        lastCheckedOut: deleteField(),
+        checkoutDescription: deleteField(),
       };
 
       await Promise.all(selectedIds.map(id =>
-        updateEquipment(id, returnData)
+        updateEquipment(id, returnData as any)
       ));
 
       // Log the return in the equipment_logs collection
@@ -172,8 +207,10 @@ export default function EquipmentTable() {
           equipmentId: id,
           equipmentName: equipmentItem?.name || 'Unknown',
           action: 'return',
-          userId: schoolId,
-          userName: userData.email,
+          userId: userData.email,
+          userName: (userData.firstName && userData.lastName)
+            ? `${userData.firstName} ${userData.lastName}`
+            : userData.email,
           userEmail: userData.email,
           issues: returnForm.issues,
           timestamp: new Date().toISOString()
@@ -209,8 +246,8 @@ export default function EquipmentTable() {
         code: addForm.code,
         type: addForm.type,
         location: addForm.location,
-        available: true,
-        hasLabel: false
+        status: 'Available' as const,
+        labelType: ''
       };
       if (addForm.description) equipmentData.description = addForm.description;
       if (addForm.condition) equipmentData.condition = addForm.condition;
@@ -258,6 +295,7 @@ export default function EquipmentTable() {
         <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>Available</span>
         <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-yellow-400"></span>Reserved</span>
         <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-red-500"></span>Checked Out</span>
+        <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-gray-500"></span>Missing</span>
       </div>
       {/* Search and Actions Bar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 border-b border-gray-100 sticky top-0 z-10 bg-white rounded-t-2xl">
@@ -320,11 +358,19 @@ export default function EquipmentTable() {
           <tbody>
             {filtered.map(item => {
               // Status bar color
-              let statusColor = item.available
-                ? item.reservedBy
-                  ? 'bg-yellow-400'
-                  : 'bg-green-500'
-                : 'bg-red-500';
+              let statusColor = 'bg-gray-500'; // Default for Missing
+              switch (item.status) {
+                case 'Available':
+                  statusColor = 'bg-green-500';
+                  break;
+                case 'Checked Out':
+                  statusColor = 'bg-red-500';
+                  break;
+                case 'Missing':
+                  statusColor = 'bg-gray-500';
+                  break;
+              }
+
               return (
                 <React.Fragment key={item.id}>
                   <tr 
@@ -337,12 +383,12 @@ export default function EquipmentTable() {
                     <td className="px-1 py-2 w-10">
                       {item.image ? (
                         <img
-                          src={`/equipment-images/${item.image}`}
+                          src={`/equipment-images/processed/${item.image ? item.image.replace(/\.[^/.]+$/, '') + '_P' + item.image.slice(item.image.lastIndexOf('.')) : ''}`}
                           alt={item.name}
                           className="w-8 h-8 object-cover rounded-md cursor-pointer hover:opacity-80 transition"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setModalImage(`/equipment-images/${item.image}`);
+                            setModalImage(`/equipment-images/processed/${item.image ? item.image.replace(/\.[^/.]+$/, '') + '_P' + item.image.slice(item.image.lastIndexOf('.')) : ''}`);
                           }}
                         />
                       ) : (
@@ -363,20 +409,18 @@ export default function EquipmentTable() {
                         onClick={(e) => e.stopPropagation()}
                       />
                     </td>
-                    <td className="px-1 py-2 w-24 font-medium whitespace-nowrap truncate" title={item.name}>{item.name}</td>
+                    <td className="px-1 py-2 w-24 font-medium whitespace-nowrap truncate" title={item.name}>
+                      <span className="block md:inline">
+                        {window.innerWidth < 768 && item.name.length > 25
+                          ? item.name.slice(0, 25) + '...'
+                          : item.name}
+                      </span>
+                    </td>
                     <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.code}>{item.code}</td>
                     <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.type}>{item.type}</td>
                     <td className="px-1 py-2 w-16 whitespace-nowrap truncate hidden md:table-cell" title={item.location}>{item.location}</td>
                     <td className="px-1 py-2 w-10 text-center hidden md:table-cell">
-                      {item.available ? (
-                        item.reservedBy ? (
-                          <span className="inline-block w-3 h-3 rounded-full bg-yellow-400"></span>
-                        ) : (
-                          <span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>
-                        )
-                      ) : (
-                        <span className="inline-block w-3 h-3 rounded-full bg-red-500"></span>
-                      )}
+                      <span className={`inline-block w-3 h-3 rounded-full ${statusColor}`}></span>
                     </td>
                     <td className="px-1 py-2 w-8 text-center">
                       <button
@@ -394,20 +438,51 @@ export default function EquipmentTable() {
                   {expandedDescriptions[item.id!] && (
                     <tr className="bg-gray-50">
                       <td colSpan={9} className="px-8 py-3 text-xs text-gray-700">
-                        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                          <div className="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                        <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-2">
                             <span><span className="font-semibold">Code:</span> {item.code}</span>
                             <span><span className="font-semibold">Type:</span> {item.type}</span>
                             <span><span className="font-semibold">Location:</span> {item.location}</span>
-                            <span><span className="font-semibold">Status:</span>{' '}
-                              {item.available
-                                ? item.reservedBy
-                                  ? 'Reserved'
-                                  : 'Available'
-                                : 'Checked Out'}
-                            </span>
                             {item.description && (
                               <span><span className="font-semibold">Description:</span> {item.description}</span>
+                            )}
+                            {item.labelType && (
+                              <span><span className="font-semibold">Label Type:</span> {item.labelType}</span>
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <span><span className="font-semibold">Status:</span> {item.status}</span>
+                            {item.status === 'Checked Out' && (
+                              <>
+                                {item.lastCheckedOutByName && (
+                                  <>
+                                    {' '}by <span className="font-semibold">{item.lastCheckedOutByName}</span>
+                                  </>
+                                )}
+                                {item.lastCheckedOutByEmail && (
+                                  <>
+                                    {' '}(<a href={`mailto:${item.lastCheckedOutByEmail}`} className="underline text-blue-600 hover:text-blue-800">{item.lastCheckedOutByEmail}</a>)
+                                  </>
+                                )}
+                                {item.lastCheckedOutDate && (
+                                  <>
+                                    <br />
+                                    <span className="font-semibold">Checked Out Date:</span> {new Date(item.lastCheckedOutDate).toLocaleDateString()}
+                                  </>
+                                )}
+                                {item.checkoutDescription && (
+                                  <>
+                                    <br />
+                                    <span className="font-semibold">Checkout Reason:</span> {item.checkoutDescription}
+                                  </>
+                                )}
+                                {item.lastReturnedDate && (
+                                  <>
+                                    <br />
+                                    <span className="font-semibold">Last Returned Date:</span> {new Date(item.lastReturnedDate).toLocaleDateString()}
+                                  </>
+                                )}
+                              </>
                             )}
                           </div>
                         </div>

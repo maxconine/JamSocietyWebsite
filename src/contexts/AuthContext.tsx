@@ -9,6 +9,9 @@ interface UserData {
     createdAt: string;
     quizPassed?: boolean;
     schoolId: string;
+    firstName: string;
+    lastName: string;
+    classYear: string;
 }
 
 export interface AuthContextType {
@@ -18,7 +21,7 @@ export interface AuthContextType {
     userData: UserData | null;
     login: (schoolId: string) => Promise<void>;
     logout: () => Promise<void>;
-    registerNewUser: (schoolId: string, email: string, password: string) => Promise<void>;
+    registerNewUser: (schoolId: string, email: string, password: string, firstName: string, lastName: string, classYear: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const registerNewUser = async (schoolId: string, email: string, password: string): Promise<void> => {
+    const registerNewUser = async (schoolId: string, email: string, password: string, firstName: string, lastName: string, classYear: string): Promise<void> => {
         try {
             // Validate school ID
             validateSchoolId(schoolId);
@@ -70,6 +73,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Validate password
             if (password.length < 6) {
                 throw new Error('Password must be at least 6 characters long');
+            }
+
+            if (!firstName || !lastName || !classYear) {
+                throw new Error('First name, last name, and class year are required.');
             }
 
             const auth = getAuth();
@@ -84,7 +91,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isAdmin: false,
                 createdAt: new Date().toISOString(),
                 quizPassed: false,
-                schoolId: schoolId
+                schoolId: schoolId,
+                firstName,
+                lastName,
+                classYear
             };
 
             await setDoc(doc(db, 'users', schoolId), {

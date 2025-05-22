@@ -18,8 +18,7 @@ export interface Equipment {
     code: string;
     type: string;
     location: string;
-    available: boolean;
-    hasLabel: boolean;
+    status: 'Available' | 'Checked Out' | 'Missing';
     labelType?: string;
     condition?: 'excellent' | 'good' | 'fair' | 'poor' | 'broken';
     price?: number;
@@ -32,6 +31,15 @@ export interface Equipment {
     reservedUntil?: string;
     image?: string;
     notes?: string;
+    lastCheckedOutByName?: string;
+    lastCheckedOutByEmail?: string;
+    checkoutDescription?: string;
+    lastCheckedOutDate?: string;
+    lastReturnedDate?: string;
+    lastReturnedBy?: string;
+    lastReturnedByName?: string;
+    lastReturnedByEmail?: string;
+    lastReturnedIssues?: string;
 }
 
 export interface Reservation {
@@ -125,7 +133,7 @@ export const getEquipmentByType = async (type: string): Promise<Equipment[]> => 
 };
 
 export const getAvailableEquipment = async (): Promise<Equipment[]> => {
-    const q = query(equipmentCollection, where('available', '==', true));
+    const q = query(equipmentCollection, where('status', '==', 'Available'));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
         id: doc.id,
@@ -225,8 +233,7 @@ export const addSampleEquipment = async () => {
             code: 'GTR001',
             type: 'guitar',
             location: 'Music Room A',
-            available: true,
-            hasLabel: true,
+            status: 'Available',
             labelType: 'QR',
             condition: 'excellent' as const,
             price: 799.99,
@@ -238,8 +245,7 @@ export const addSampleEquipment = async () => {
             code: 'DRM001',
             type: 'drums',
             location: 'Storage Room B',
-            available: true,
-            hasLabel: true,
+            status: 'Available',
             labelType: 'QR',
             condition: 'good' as const,
             price: 1299.99,
@@ -251,8 +257,7 @@ export const addSampleEquipment = async () => {
             code: 'MIC001',
             type: 'microphone',
             location: 'Music Room A',
-            available: false,
-            hasLabel: true,
+            status: 'Checked Out',
             labelType: 'QR',
             condition: 'good' as const,
             price: 99.99,
