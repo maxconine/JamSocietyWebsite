@@ -26,6 +26,14 @@ const faqs = [
     )
   },
   {
+    question: 'Something went wrong—how do I report it?',
+    answer: (
+      <span>
+        If you noticed broken gear, missing items, rule violations, or anything that needs attention in the Jam Room, please fill out our <a href="https://forms.gle/YWJ5KRMVFjiJ4C1j9" target="_blank" rel="noopener noreferrer" className="underline text-blue-600 hover:text-blue-800">Incident Report Form</a>.
+      </span>
+    )
+  },
+  {
     question: 'How do I report missing or unlabeled equipment?',
     answer: (
       <span>
@@ -79,7 +87,7 @@ const faqs = [
   </span>
     )
   },
-  
+
 ];
 
 const FAQSection: React.FC = () => {
