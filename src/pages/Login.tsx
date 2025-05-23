@@ -33,14 +33,7 @@ const Login: React.FC = () => {
             
             // User exists, proceed with login
             await login(schoolId);
-            const userData = querySnapshot.docs[0].data();
-            
-            // Redirect based on quiz status
-            if (userData.quizPassed) {
-                navigate('/');
-            } else {
-                navigate('/quiz');
-            }
+            navigate('/');
         } catch (err) {
             setError('Login failed. Please try again.');
         } finally {

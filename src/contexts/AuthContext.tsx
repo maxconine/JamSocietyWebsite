@@ -1,12 +1,11 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, User, onAuthStateChanged } from 'firebase/auth';
 
 interface UserData {
     email: string;
     isAdmin: boolean;
     createdAt: string;
-    quizPassed?: boolean;
     schoolId: string;
     firstName: string;
     lastName: string;
@@ -20,7 +19,7 @@ export interface AuthContextType {
     userData: UserData | null;
     login: (schoolId: string) => Promise<void>;
     logout: () => Promise<void>;
-    registerNewUser: (schoolId: string, email: string, password: string, firstName: string, lastName: string, classYear: string) => Promise<void>;
+    registerNewUser: (schoolId: string, email: string, firstName: string, lastName: string, classYear: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,10 +30,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [userData, setUserData] = useState<UserData | null>(null);
     const db = getFirestore();
+    const auth = getAuth();
 
     const validateSchoolId = (schoolId: string) => {
-        if (!/^\d{8}$/.test(schoolId)) {
-            throw new Error('School ID must be exactly 8 digits');
+        if (!schoolId) {
+            throw new Error('School ID is required');
         }
     };
 
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
-    const registerNewUser = async (schoolId: string, email: string, password: string, firstName: string, lastName: string, classYear: string): Promise<void> => {
+    const registerNewUser = async (schoolId: string, email: string, firstName: string, lastName: string, classYear: string): Promise<void> => {
         try {
             // Validate school ID
             validateSchoolId(schoolId);
@@ -69,26 +69,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const trimmedEmail = email.trim();
             validateEmail(trimmedEmail);
 
-            // Validate password
-            if (password.length < 6) {
-                throw new Error('Password must be at least 6 characters long');
-            }
-
             if (!firstName || !lastName || !classYear) {
                 throw new Error('First name, last name, and class year are required.');
             }
-
-            const auth = getAuth();
-
-            // Create Firebase Auth user
-            await createUserWithEmailAndPassword(auth, trimmedEmail, password);
 
             // Store user profile in Firestore using schoolId as the document ID
             const userData: UserData = {
                 email: trimmedEmail,
                 isAdmin: false,
                 createdAt: new Date().toISOString(),
-                quizPassed: false,
                 schoolId: schoolId,
                 firstName,
                 lastName,
@@ -99,50 +88,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...userData,
             });
 
+            // Sign in anonymously
+            await signInAnonymously(auth);
+            localStorage.setItem('schoolId', schoolId);
+            setIsAuthenticated(true);
+            setUserData(userData);
+
             // Redirect to quiz page after registration
             window.location.href = '/quiz';
         } catch (error: any) {
             console.error('Registration error:', error);
-            
-            // Handle specific Firebase errors
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    throw new Error('This email is already registered. Please try logging in instead.');
-                case 'auth/invalid-email':
-                    throw new Error('Please enter a valid email address ending with @hmc.edu or @g.hmc.edu');
-                case 'auth/weak-password':
-                    throw new Error('Password is too weak. Please use at least 6 characters.');
-                case 'auth/operation-not-allowed':
-                    throw new Error('Email/password accounts are not enabled. Please contact support.');
-                default:
-                    if (error.message) {
-                        throw new Error(error.message);
-                    }
-                    throw new Error('An error occurred during registration. Please try again.');
-            }
+            throw error;
         }
     };
 
     const login = async (schoolId: string) => {
         try {
             validateSchoolId(schoolId);
-            // Directly get the user doc by schoolId
+            
+            // First check if user exists in Firestore
             const userDoc = await getDoc(doc(db, 'users', schoolId));
             if (!userDoc.exists()) {
-                throw new Error('NEW_USER');
+                throw new Error('User not found. Please join Jam Society through our membership form: https://forms.gle/oy9483FkZGwEBc1u7');
             }
+            
             const userData = userDoc.data() as UserData;
-            const email = userData.email;
-            if (!email) {
-                throw new Error('No email found for this user.');
-            }
-            const auth = getAuth();
-            await signInWithEmailAndPassword(auth, email, schoolId);
+            
+            // Sign in anonymously
+            await signInAnonymously(auth);
+
             setUserData(userData);
             setIsAdmin(userData.isAdmin);
             localStorage.setItem('schoolId', schoolId);
             setIsAuthenticated(true);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Login error:', error);
             throw error;
         }
@@ -156,26 +135,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('schoolId');
     };
 
+    // Add Firebase Auth state listener
     useEffect(() => {
-        const schoolId = localStorage.getItem('schoolId');
-        if (schoolId) {
-            checkAuth(schoolId);
-        }
-    }, []);
-
-    const checkAuth = async (schoolId: string) => {
-        try {
-            const userDoc = await getDoc(doc(db, 'users', schoolId));
-            if (userDoc.exists()) {
-                const userData = userDoc.data() as UserData;
-                setIsAuthenticated(true);
-                setIsAdmin(userData.isAdmin);
-                setUserData(userData);
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                setUser(firebaseUser);
+                // Try to get user data from Firestore
+                const schoolId = localStorage.getItem('schoolId');
+                if (schoolId) {
+                    const userDoc = await getDoc(doc(db, 'users', schoolId));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data() as UserData;
+                        setUserData(userData);
+                        setIsAdmin(userData.isAdmin);
+                        setIsAuthenticated(true);
+                    }
+                }
+            } else {
+                setUser(null);
+                setUserData(null);
+                setIsAuthenticated(false);
+                setIsAdmin(false);
             }
-        } catch (error) {
-            console.error('Error checking auth:', error);
-        }
-    };
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, isAdmin, user, userData, login, logout, registerNewUser }}>

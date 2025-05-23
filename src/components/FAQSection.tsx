@@ -21,7 +21,7 @@ const faqs = [
     question: 'Can I get swipe/card access to the Jam Room?',
     answer: (
       <span>
-        Yes, you need to create an account by logging in to our website with your school ID. The login is located on the website header. Then once you have logged in, you can take the quiz on the Join page. Once you have completed it you will be added to the swipe access list by F&amp;M.
+        Yes, you need to create an account by logging in to our website with your school ID. The login is located on the website header. Once you have logged in, you will be added to the swipe access list by F&amp;M.
       </span>
     )
   },

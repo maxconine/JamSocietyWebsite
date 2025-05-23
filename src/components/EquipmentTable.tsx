@@ -88,10 +88,6 @@ export default function EquipmentTable() {
       alert('Please log in to check out equipment.');
       return;
     }
-    if (!userData?.quizPassed) {
-      alert('You must pass the quiz before you can check out equipment.');
-      return;
-    }
     // Prevent checking out equipment that is already checked out
     const unavailableItems = selectedIds.filter(id => {
       const eq = equipment.find(e => e.id === id);
@@ -153,10 +149,6 @@ export default function EquipmentTable() {
   const handleReturn = async () => {
     if (!isAuthenticated || !schoolId || !userData) {
       alert('Please log in to return equipment.');
-      return;
-    }
-    if (!userData?.quizPassed) {
-      alert('You must pass the quiz before you can return equipment.');
       return;
     }
 
@@ -283,20 +275,6 @@ export default function EquipmentTable() {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-0 md:p-6 font-roboto">
-      {/* Inline Quiz Required Message */}
-      {isAuthenticated && userData && !userData.quizPassed && (
-        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded flex items-center justify-between">
-          <span>
-            <strong>Action Required:</strong> You must pass the quiz before you can check out equipment.
-          </span>
-          <button
-            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            onClick={() => navigate('/quiz')}
-          >
-            Take the Quiz
-          </button>
-        </div>
-      )}
       {/* Status Legend */}
       <div className="flex items-center justify-end gap-4 mb-2 pr-2">
         <span className="flex items-center gap-1 text-xs text-gray-600"><span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>Available</span>
