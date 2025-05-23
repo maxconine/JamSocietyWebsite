@@ -2,6 +2,8 @@ import React from 'react';
 import EquipmentTable from '../components/EquipmentTable';
 // import { addSampleEquipment } from '../firebase/db';
 
+//Note: to add new equipment images, you need to add them to the public/equipment-images folder and run the process-images script. by typing npm run process-images
+
 const Equipment: React.FC = () => {
 
   return (
