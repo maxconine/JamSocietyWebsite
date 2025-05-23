@@ -7,8 +7,7 @@ const Join: React.FC = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4 font-roboto">Join the Jam Society!</h1>
           <p className="text-lg text-gray-600 font-roboto">
-            To join the Jam Society please create an account by typing in your school ID in the page header. This will redirect you to a short quiz. Once you have passed the quiz we will add you to the Jam Room swipe list.
-          </p>
+To join the Jam Society fil out the new member form.          </p>
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-8 mb-12">
