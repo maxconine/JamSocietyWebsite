@@ -8,7 +8,9 @@ const guides = [
         description: 'Learn the basics of microphone usage and proper technique',
         image: 'guide-images/sureSM58.png',
         details: 'This comprehensive guide covers everything from microphone placement to proper handling techniques. Learn about different types of microphones, their applications, and how to get the best sound quality in various situations.',
-        manualUrl: 'https://docs.google.com/document/d/11tbgTuPSa9pvSVhvUmHxB_ExPH34xONR5haw2bY5Tvg/edit?usp=sharing',
+        manualUrl: 'https://docs.google.com/document/d/138RKmVXsEuQjblL9vGtHngH64iduepRtpboIVa57uX8/edit?usp=sharing',
+        extraManualUrl: '/SM57-user-guide.pdf',
+        extraManualLabel: 'SM57 Manual'
     },
     {
         id: 'mixer1',

@@ -18,6 +18,8 @@ interface GuideCardProps {
   image: string;
   details: string;
   manualUrl: string;
+  extraManualUrl?: string;
+  extraManualLabel?: string;
   videoUrl?: string;
   extraVideoUrl?: string;
   onVideoClick?: (urls: string[]) => void;
@@ -40,6 +42,8 @@ const GuideCard: React.FC<GuideCardProps> = ({
   image,
   details,
   manualUrl,
+  extraManualUrl,
+  extraManualLabel,
   videoUrl,
   extraVideoUrl,
   onVideoClick,
@@ -143,6 +147,30 @@ const GuideCard: React.FC<GuideCardProps> = ({
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>{details}</Typography>
+          <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {extraManualUrl && (
+              <Button
+                variant="contained"
+                color="primary"
+                href={extraManualUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                fullWidth
+              >
+                {extraManualLabel || 'Extra Manual'}
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              href="/SM58-user-guide.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              fullWidth
+            >
+              SM58 Manual
+            </Button>
+          </Box>
         </CardContent>
       </Collapse>
     </Card>

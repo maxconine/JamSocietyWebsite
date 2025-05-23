@@ -5,6 +5,8 @@ export interface Guide {
   image: string;
   details: string;
   manualUrl: string;
+  extraManualUrl?: string;
+  extraManualLabel?: string;
   videoUrl?: string;
   extraVideoUrl?: string;
 } 
