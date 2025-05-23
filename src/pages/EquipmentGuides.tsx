@@ -5,9 +5,9 @@ const guides = [
     {
         id: 'mic1',
         title: 'How To use a Microphone',
-        description: 'Learn the basics of microphone usage and proper technique',
+        description: 'Guide to using a dynamic mic. Manuals for the SM57 and SM58 are included in the dropdown.',
         image: 'guide-images/sureSM58.png',
-        details: 'This comprehensive guide covers everything from microphone placement to proper handling techniques. Learn about different types of microphones, their applications, and how to get the best sound quality in various situations.',
+        details: 'Here are the manuals for the SM57 and SM58. The SM57 is the better mic for singing and the SM58 is better for instruments.',
         manualUrl: 'https://docs.google.com/document/d/138RKmVXsEuQjblL9vGtHngH64iduepRtpboIVa57uX8/edit?usp=sharing',
         extraManualUrl: '/SM57-user-guide.pdf',
         extraManualLabel: 'SM57 Manual'
@@ -15,10 +15,10 @@ const guides = [
     {
         id: 'mixer1',
         title: 'How To use a Mixer',
-        description: 'This guide will walk you through how to use the mixer in the Jam Room',
+        description: 'This guide will walk you through how to use the mixer in the Jam Room. Please just watch those videos, they are very helpful.',
         image: 'guide-images/mixWizard-WZ3-16-2.webp',
         details: 'This guide will walk you through the essential features of the mixer, including channel controls, effects, and proper gain staging. Perfect for both beginners and those looking to refresh their knowledge.',
-        manualUrl: 'https://docs.google.com/document/d/your-doc-id-2',
+        manualUrl: 'https://docs.google.com/document/d/1FfQD29hu4TG-uWih7Vyt5K9HdT0H8H4igcFrYIv40L4/edit?usp=sharing',
         videoUrl: 'https://youtu.be/3nhk0CD_NKg?feature=shared',
         extraVideoUrl: 'https://www.youtube.com/watch?v=d__3qrr3USI'
     },
