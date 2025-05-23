@@ -1,8 +1,8 @@
 export default function Footer() {
     return (
-      <footer className="bg-black text-gray-500 text-center py-4">
-        <div className="flex flex-col items-center justify-center gap-2">
-          <div className="flex items-center justify-center gap-2">
+      <footer className="bg-black text-gray-500 text-center py-2">
+        <div className="flex flex-col items-center justify-center gap-1">
+          <div className="flex items-center justify-center gap-1">
             <span>© {new Date().getFullYear()} Jam Society</span>
             <a 
               href="https://www.instagram.com/hmcjamsoc/" 
@@ -23,6 +23,11 @@ export default function Footer() {
             className="text-gray-500 hover:text-gray-300 transition-colors"
           >
             jamsociety-leadership-l@g.hmc.edu
+          </a>
+          <a 
+            className="text-gray-500"
+          >
+            website created by Max Conine
           </a>
         </div>
       </footer>
