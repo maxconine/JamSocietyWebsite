@@ -23,6 +23,10 @@ interface GuideCardProps {
   videoUrl?: string;
   extraVideoUrl?: string;
   onVideoClick?: (urls: string[]) => void;
+  additionalButtons?: Array<{
+    label: string;
+    url: string;
+  }>;
 }
 
 const ExpandMore = styled((props: any) => {
@@ -47,6 +51,7 @@ const GuideCard: React.FC<GuideCardProps> = ({
   videoUrl,
   extraVideoUrl,
   onVideoClick,
+  additionalButtons,
 }) => {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -160,16 +165,19 @@ const GuideCard: React.FC<GuideCardProps> = ({
                 {extraManualLabel || 'Extra Manual'}
               </Button>
             )}
-            <Button
-              variant="contained"
-              color="primary"
-              href="/SM58-user-guide.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              fullWidth
-            >
-              SM58 Manual
-            </Button>
+            {additionalButtons?.map((button, index) => (
+              <Button
+                key={index}
+                variant="contained"
+                color="primary"
+                href={button.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                fullWidth
+              >
+                {button.label}
+              </Button>
+            ))}
           </Box>
         </CardContent>
       </Collapse>

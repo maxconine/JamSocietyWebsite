@@ -9,4 +9,8 @@ export interface Guide {
   extraManualLabel?: string;
   videoUrl?: string;
   extraVideoUrl?: string;
+  additionalButtons?: Array<{
+    label: string;
+    url: string;
+  }>;
 } 

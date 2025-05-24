@@ -58,6 +58,7 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
               videoUrl={guide.videoUrl}
               extraVideoUrl={guide.extraVideoUrl}
               onVideoClick={handleVideoClick}
+              additionalButtons={guide.additionalButtons}
             />
           </Grid>
         ))}
