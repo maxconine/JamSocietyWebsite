@@ -32,7 +32,7 @@ const guides = [
         id: 'drum-kit-etiquette',
         title: 'Drum Kit Etiquette and Setup',
         description: 'Guide to drum kit etiquette and setup. If you just want to know how to set up a drum kit, there is a wikihow guide in the dropdown.',
-        image: 'guide-images/drum-kit.jpeg',
+        image: '/equipment-images/processed/drum-kit_P.webp',
         details: 'If you just want to know how to set up a drum kit, here is a wikihow guide.',
         manualUrl: 'https://docs.google.com/document/d/12ooI-9FL_kujaxe_3paOUbXdJUO0EdY3qjX6hyCS-sM/edit?usp=sharing',
         additionalButtons: [
@@ -84,7 +84,7 @@ const EquipmentGuides: React.FC = () => {
                 style={{
                     width: '100vw',
                     height: '400px',
-                    backgroundImage: 'url(/Guides.jpeg)',
+                    backgroundImage: 'url(/equipment-images/processed/Guides_P.webp)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
