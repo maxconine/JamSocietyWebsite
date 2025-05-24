@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, User, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getAuth, signInAnonymously, User, onAuthStateChanged } from 'firebase/auth';
 
 interface UserData {
     email: string;
@@ -177,63 +177,16 @@ export function useAuth() {
     return context;
 }
 
-// 🔄 Firestore ➜ Sheet
-function importFirestoreToSheet() {
-  const token = getFirestoreToken();
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Updated Inventory");
-  sheet.clearContents();
-
-  const headers = [
-    "Image", "Item Code", "Item Name", "Location", "Type", "Description", "Value", "Owner",
-    "Condition", "Notes", "Label Type", "Status",
-    "Last Checked Out Name", "Last Checked Out Email", "Checkout Description",
-    "Reason For Checkout", "Last Checked Out Date", "Last Returned Date", "Last Returned Notes"
-  ];
-  sheet.appendRow(headers);
-
-  let pageToken = null;
-  let allDocuments = [];
-
-  do {
-    let url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/equipment`;
-    if (pageToken) {
-      url += `?pageToken=${pageToken}`;
-    }
-
-    const response = UrlFetchApp.fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const data = JSON.parse(response.getContentText());
-    if (data.documents) {
-      allDocuments = allDocuments.concat(data.documents);
-    }
-    pageToken = data.nextPageToken;
-  } while (pageToken);
-
-  // Process all documents
-  for (const doc of allDocuments) {
-    const f = doc.fields || {};
-    sheet.appendRow([
-      f.image?.stringValue || "",
-      f.code?.stringValue || "",
-      f.name?.stringValue || "",
-      f.location?.stringValue || "",
-      f.type?.stringValue || "",
-      f.description?.stringValue || "",
-      f.price?.doubleValue || "",
-      f.owner?.stringValue || "",
-      f.condition?.stringValue || "",
-      f.notes?.stringValue || "",
-      f.labelType?.stringValue || "",
-      f.status?.stringValue || "",
-      f.lastCheckedOutByName?.stringValue || "",
-      f.lastCheckedOutByEmail?.stringValue || "",
-      f.checkoutDescription?.stringValue || "",
-      f.reason?.stringValue || "",
-      f.lastCheckedOutDate?.stringValue || "",
-      f.lastReturnedDate?.stringValue || "",
-      f.lastReturnedNotes?.stringValue || ""
-    ]);
-  }
-} 
+// �� Firestore ➜ Sheet
+// function importFirestoreToSheet() {
+//   const token = getFirestoreToken();
+//   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Updated Inventory");
+//   let allDocuments = [];
+//   let url = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/equipment`;
+//   const response = UrlFetchApp.fetch(url, {
+//     method: 'get',
+//     headers: { Authorization: `Bearer ${token}` },
+//   });
+//   const data = JSON.parse(response.getContentText());
+//   allDocuments = allDocuments.concat(data.documents);
+// } 

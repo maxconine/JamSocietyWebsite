@@ -191,7 +191,7 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
       )}
       <div className="w-full max-w-xs mx-auto md:max-w-full lg:max-w-full">
         <Listbox value={selectedArtist} onChange={artist => { setSelectedArtist(artist); setIsEditing(false); }}>
-          {({ open }) => (
+          {() => (
             <div className="relative mt-1">
               <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white/90 backdrop-blur-sm py-2 pl-3 pr-10 text-left shadow focus:border-gray-400 focus:outline-none focus:ring-0 font-normal">
                 <span className="block truncate">{selectedArtist ? selectedArtist.name : 'Select an artist'}</span>
@@ -204,7 +204,7 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
                   key="placeholder"
                   value={null}
                   disabled
-                  className={({ active }) =>
+                  className={() =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 text-gray-400`
                   }
                 >

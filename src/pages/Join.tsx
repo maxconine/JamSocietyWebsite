@@ -7,7 +7,8 @@ const Join: React.FC = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4 font-roboto">Join the Jam Society!</h1>
           <p className="text-lg text-gray-600 font-roboto">
-To join the Jam Society fil out the new member form.          </p>
+            To join the Jam Society <strong>fill out the <a href="https://forms.gle/dziWupCVz6AqfL5t8" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">new member form</a></strong>.
+          </p>
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-8 mb-12">

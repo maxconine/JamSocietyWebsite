@@ -3,7 +3,6 @@ import { updateEquipment, Equipment, addEquipment, deleteEquipment, subscribeToE
 import { useAuth } from '../contexts/AuthContext';
 import React from 'react';
 import { FaBoxOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import { deleteField } from 'firebase/firestore';
 
 // Utility function to get processed image path
@@ -55,7 +54,6 @@ export default function EquipmentTable() {
   const [addError, setAddError] = useState<string | null>(null);
   const [addLoading, setAddLoading] = useState(false);
   const [modalImage, setModalImage] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = subscribeToEquipment((data) => {

@@ -184,7 +184,7 @@ export default function Home() {
           minHeight: '93vh',
           scrollSnapAlign: !isMobile() ? 'start' : undefined,
           scrollSnapStop: !isMobile() ? 'always' : undefined,
-          backgroundImage: 'url(/mamakStage.jpeg)',
+          backgroundImage: 'url(/mamakStage.jpeg)', //change image here
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: isMobile() ? 'scroll' : 'fixed',
@@ -336,7 +336,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row justify-center gap-6 md:gap-8">
                 <div>
                   <img
-                    src="/MaxC.jpeg"
+                    src="/equipment-images/processed/MaxC_P.webp"
                     alt="Max Conine"
                     className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
                     style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
@@ -348,7 +348,7 @@ export default function Home() {
                 </div>
                 <div>
                   <img
-                    src="/MaxB.jpeg"
+                    src="/equipment-images/processed/MaxB_P.webp"
                     alt="Max Buchanan"
                     className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
                     style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
