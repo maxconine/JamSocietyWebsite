@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Artist, deleteArtist, updateArtist } from '../firebase/db';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
+import { Listbox } from '@headlessui/react';
+import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
 
 interface ArtistDropdownProps {
   artists: Artist[];
@@ -187,23 +189,53 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
           {error}
         </div>
       )}
-      <div className="w-full">
-        <select
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 font-normal"
-          onChange={(e) => {
-            const artist = artists.find(a => a.id === e.target.value);
-            setSelectedArtist(artist || null);
-            setIsEditing(false);
-          }}
-          value={selectedArtist?.id || ''}
-        >
-          <option value="">Select an artist</option>
-          {artists.map((artist) => (
-            <option key={artist.id || ''} value={artist.id || ''}>
-              {artist.name}
-            </option>
-          ))}
-        </select>
+      <div className="w-full max-w-xs mx-auto md:max-w-full lg:max-w-full">
+        <Listbox value={selectedArtist} onChange={artist => { setSelectedArtist(artist); setIsEditing(false); }}>
+          {({ open }) => (
+            <div className="relative mt-1">
+              <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white/90 backdrop-blur-sm py-2 pl-3 pr-10 text-left shadow focus:border-gray-400 focus:outline-none focus:ring-0 font-normal">
+                <span className="block truncate">{selectedArtist ? selectedArtist.name : 'Select an artist'}</span>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </span>
+              </Listbox.Button>
+              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white/80 backdrop-blur-sm py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Listbox.Option
+                  key="placeholder"
+                  value={null}
+                  disabled
+                  className={({ active }) =>
+                    `relative cursor-default select-none py-2 pl-10 pr-4 text-gray-400`
+                  }
+                >
+                  Select an artist
+                </Listbox.Option>
+                {artists.map((artist) => (
+                  <Listbox.Option
+                    key={artist.id}
+                    value={artist}
+                    className={({ active }) =>
+                      `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-900'
+                      }`
+                    }
+                  >
+                    {({ selected }) => (
+                      <>
+                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>{artist.name}</span>
+                        {selected ? (
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-red-600">
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        ) : null}
+                      </>
+                    )}
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </div>
+          )}
+        </Listbox>
       </div>
 
       {selectedArtist && (
