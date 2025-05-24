@@ -59,6 +59,49 @@ const Equipment: React.FC = () => {
           <div className="bg-white shadow rounded-lg p-6">
             <EquipmentTable />
           </div>
+
+          <div className="mt-12 mb-12">
+            <h2 className="text-2xl font-bold mb-4">Item Code System</h2>
+            <p className="font-roboto font-light text-gray-700 mb-6">
+              All instruments and equipment in Jam Society are given an item code consisting of a 3 letter category and a 2 digit number. This item code can be found attached to the item with either a laminated tag or a sticker.
+            </p>
+            
+            <h3 className="text-xl font-semibold mb-4">Item Categories</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">AMP</p>
+                <p className="text-gray-600">amps and speakers</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">AUD</p>
+                <p className="text-gray-600">mixers, effect pedals</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">CBL</p>
+                <p className="text-gray-600">microphone cables, instrument cables, speakon cables, etc.</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">DRM</p>
+                <p className="text-gray-600">drums, drum stands, kick pedals, cowbells, drum accessories</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">INS</p>
+                <p className="text-gray-600">instruments besides drums</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">MIC</p>
+                <p className="text-gray-600">microphones</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">PWR</p>
+                <p className="text-gray-600">power cords, power strips, extension cords</p>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="font-medium">STN</p>
+                <p className="text-gray-600">microphone stands, keyboard stands, etc.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

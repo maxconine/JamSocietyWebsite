@@ -45,16 +45,16 @@ function importFirestoreToSheet() {
 
   const data = JSON.parse(response.getContentText());
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Equipment");
-  
+
   // Only add headers if sheet is empty
   if (sheet.getLastRow() === 0) {
-    const headers = [
+  const headers = [
       "Image", "Item Code", "Item Name", "Location", "Type", "Description", "Value", "Owner",
       "Condition", "Notes", "Label Type", "Status", "Last Checked Out Name", "Last Checked Out Email",
       "Checkout Description", "Reason For Checkout", "Last Checked Out Date", "Last Returned Date",
       "Last Returned Notes"
-    ];
-    sheet.appendRow(headers);
+  ];
+  sheet.appendRow(headers);
   }
 
   if (!data.documents) return;
@@ -107,7 +107,7 @@ function importFirestoreToSheet() {
       }
     } else {
       // Add new items from website
-      sheet.appendRow([
+    sheet.appendRow([
         f.image?.stringValue || "", // Image
         itemCode, // Item Code
         f.name?.stringValue || "", // Item Name
@@ -127,7 +127,7 @@ function importFirestoreToSheet() {
         f.lastCheckedOutDate?.stringValue || "", // Last Checked Out Date
         f.lastReturnedDate?.stringValue || "", // Last Returned Date
         f.lastReturnedNotes?.stringValue || "" // Last Returned Notes
-      ]);
+    ]);
     }
   }
 }
@@ -152,7 +152,7 @@ function pushSheetToFirestore() {
     
     // Only add if item doesn't exist in Firestore
     if (checkResponse.getResponseCode() !== 200) {
-      const fields = {
+    const fields = {
         image: { stringValue: row[0] || "" },
         code: { stringValue: row[1] || "" },
         name: { stringValue: row[2] || "" },
@@ -163,7 +163,7 @@ function pushSheetToFirestore() {
         owner: { stringValue: row[7] || "" },
         condition: { stringValue: row[8] || "" },
         notes: { stringValue: row[9] || "" },
-        labelType: { stringValue: row[10] || "" },
+      labelType: { stringValue: row[10] || "" },
         status: { stringValue: row[11] || "Available" },
         lastCheckedOutByName: { stringValue: row[12] || "" },
         lastCheckedOutByEmail: { stringValue: row[13] || "" },
@@ -176,13 +176,13 @@ function pushSheetToFirestore() {
 
       UrlFetchApp.fetch(checkUrl, {
         method: "put",
-        contentType: "application/json",
-        payload: JSON.stringify({ fields }),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        muteHttpExceptions: true,
-      });
+      contentType: "application/json",
+      payload: JSON.stringify({ fields }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      muteHttpExceptions: true,
+    });
     }
   }
 }
