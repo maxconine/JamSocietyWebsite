@@ -24,11 +24,22 @@ export default function Footer() {
           >
             jamsociety-leadership-l@g.hmc.edu
           </a>
-          <a 
-            className="text-gray-500"
-          >
-            website created by Max Conine
-          </a>
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-gray-500">website created by Max Conine</span>
+            <a 
+              href="https://github.com/maxconine/JamSocietyWebsite" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src="/github.png" 
+                alt="GitHub" 
+                className="w-5 h-5 inline-block" 
+                style={{ filter: 'invert(100%) brightness(200%)' }}
+              />
+            </a>
+          </div>
         </div>
       </footer>
     );
