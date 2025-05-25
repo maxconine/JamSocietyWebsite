@@ -1,7 +1,8 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
     children: ReactNode;
+    fallback?: ReactNode;
 }
 
 interface State {
@@ -25,19 +26,29 @@ class ErrorBoundary extends Component<Props, State> {
 
     public render() {
         if (this.state.hasError) {
+            if (this.props.fallback) {
+                return this.props.fallback;
+            }
+
             return (
-                <div className="min-h-screen flex items-center justify-center bg-gray-100">
-                    <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-                        <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
-                        <p className="text-gray-600 mb-4">
-                            {this.state.error?.message || 'An unexpected error occurred'}
-                        </p>
-                        <button
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            onClick={() => window.location.reload()}
-                        >
-                            Reload Page
-                        </button>
+                <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                    <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
+                        <div className="text-center">
+                            <h2 className="mt-6 text-3xl font-bold text-gray-900">
+                                Oops! Something went wrong
+                            </h2>
+                            <p className="mt-2 text-sm text-gray-600">
+                                {this.state.error?.message || 'An unexpected error occurred'}
+                            </p>
+                            <div className="mt-6">
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Refresh Page
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );

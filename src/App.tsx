@@ -12,6 +12,7 @@ import Join from './pages/Join';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from './firebase/config';
 import ErrorBoundary from './components/ErrorBoundary';
+import RouteErrorBoundary from './components/RouteErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import LoadingScreen from './components/LoadingScreen';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -70,13 +71,41 @@ function App() {
               <NavBar />
               <main className="flex-grow w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-x-hidden">
                 <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/artists" element={<Artists />} />
-                  <Route path="/equipment" element={<EquipmentPage />} />
-                  <Route path="/equipment-guides" element={<EquipmentGuides />} />
-                  <Route path="/reserve" element={<Reserve />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/join" element={<Join />} />
+                  <Route path="/" element={
+                    <RouteErrorBoundary routeName="Home">
+                      <Home />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/artists" element={
+                    <RouteErrorBoundary routeName="Artists">
+                      <Artists />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/equipment" element={
+                    <RouteErrorBoundary routeName="Equipment">
+                      <EquipmentPage />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/equipment-guides" element={
+                    <RouteErrorBoundary routeName="Equipment Guides">
+                      <EquipmentGuides />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/reserve" element={
+                    <RouteErrorBoundary routeName="Reservation">
+                      <Reserve />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/admin" element={
+                    <RouteErrorBoundary routeName="Admin">
+                      <Admin />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/join" element={
+                    <RouteErrorBoundary routeName="Join">
+                      <Join />
+                    </RouteErrorBoundary>
+                  } />
                 </Routes>
               </main>
               <Footer />

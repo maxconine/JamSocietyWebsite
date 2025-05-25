@@ -21,7 +21,7 @@ const faqs = [
     question: 'Can I get swipe/card access to the Jam Room?',
     answer: (
       <span>
-        Yes, you need to create an account by logging in to our website with your school ID. The login is located on the website header. Once you have logged in, you will be added to the swipe access list by F&amp;M.
+        Yes, if you are a Harvey Mudd student, you can fill out the membership form: https://forms.gle/oy9483FkZGwEBc1u7 and we will add you to the swipe access list. In addition, you will be able to login to this website once registered as a member.
       </span>
     )
   },
