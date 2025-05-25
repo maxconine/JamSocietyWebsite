@@ -1,11 +1,11 @@
 import { useRef, useEffect, useState, useLayoutEffect } from 'react';
-import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
+// import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
 import FAQSection from '../components/FAQSection';
 import { PinIcon, ClockIcon, DoorIcon, InstagramIcon } from '../components/Icons';
 
 const images = [
-  { src: '/roomPhoto.jpeg', alt: 'Room Photo 1' },
-  { src: '/roomPhoto2.jpeg', alt: 'Room Photo 2' },
+  { src: '/roomPhoto.webp', alt: 'Room Photo 1' },
+  { src: '/roomPhoto2.webp', alt: 'Room Photo 2' },
 ];
 
 const description = `Providing a "jam room" for students to use containing instruments, music equipment, stage equipment, and recording equipment. Maintained by students, for students.`;
@@ -203,11 +203,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/70 z-0 pointer-events-none" />
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <img
-            src={JamSocLogo}
+            src="/Jam-Soc-Logo.svg"
             alt="Jam Society Logo"
             className="w-[min(90vw,900px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10 mx-auto"
             style={{ maxWidth: isMobile() ? '90vw' : '900px' }}
             loading="lazy"
+            decoding="async"
           />
           <div
             ref={descRef}

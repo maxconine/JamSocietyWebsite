@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../assets/Jam-Soc-Logo.svg';
 
 const LoadingScreen: React.FC = () => {
     const [showContent, setShowContent] = useState(false);
@@ -29,16 +28,17 @@ const LoadingScreen: React.FC = () => {
                     {/* Glowing effect */}
                     <div className="absolute inset-0 animate-pulse-smooth">
                         <div className="absolute inset-0 bg-red-500 opacity-10 blur-[100px]">
-                            <img src={logo} alt="JamSociety Logo" className="w-full h-full" />
+                            <img src="/Jam-Soc-Logo.svg" alt="JamSociety Logo" className="w-full h-full" loading="eager" />
                         </div>
                     </div>
 
                     {/* Logo */}
                     <div className="relative z-10 flex items-center justify-center w-full h-full">
                         <img
-                            src={logo}
+                            src="/Jam-Soc-Logo.svg"
                             alt="JamSociety Logo"
                             className="w-full h-full drop-shadow-[0_0_25px_rgba(239,68,68,0.3)]"
+                            loading="eager"
                         />
                     </div>
                 </div>
