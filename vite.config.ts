@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcssPostcss from '@tailwindcss/postcss'
 import autoprefixer from 'autoprefixer'
+import { resolve } from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -41,5 +42,6 @@ export default defineConfig({
     hmr: {
       overlay: false
     }
-  }
+  },
+  publicDir: 'public'
 })
