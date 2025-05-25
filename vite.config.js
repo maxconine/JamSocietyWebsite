@@ -23,6 +23,23 @@ export default defineConfig({
                     'ui': ['@headlessui/react', '@heroicons/react']
                 }
             }
+        },
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true
+            }
+        },
+        sourcemap: false,
+        assetsInlineLimit: 4096,
+        cssCodeSplit: true,
+        reportCompressedSize: false
+    },
+    server: {
+        hmr: {
+            overlay: false
         }
-    }
+    },
+    publicDir: 'public'
 });
