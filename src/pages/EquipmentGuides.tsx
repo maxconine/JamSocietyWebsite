@@ -6,7 +6,7 @@ const guides = [
         id: 'mic1',
         title: 'How To use a Microphone',
         description: 'Guide to using a dynamic mic. Manuals for the SM57 and SM58 are included in the dropdown.',
-        image: 'guide-images/sureSM58.png',
+        image: '/equipment-images/processed/shureSM58_P.webp',
         details: 'Here are the manuals for the SM57 and SM58. The SM57 is the better mic for singing and the SM58 is better for instruments.',
         manualUrl: 'https://docs.google.com/document/d/138RKmVXsEuQjblL9vGtHngH64iduepRtpboIVa57uX8/edit?usp=sharing',
         extraManualUrl: '/SM57-user-guide.pdf',

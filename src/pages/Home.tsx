@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
 import FAQSection from '../components/FAQSection';
+import { PinIcon, ClockIcon, DoorIcon, InstagramIcon } from '../components/Icons';
 
 const images = [
   { src: '/roomPhoto.jpeg', alt: 'Room Photo 1' },
@@ -206,6 +207,7 @@ export default function Home() {
             alt="Jam Society Logo"
             className="w-[min(90vw,900px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10 mx-auto"
             style={{ maxWidth: isMobile() ? '90vw' : '900px' }}
+            loading="lazy"
           />
           <div
             ref={descRef}
@@ -256,32 +258,44 @@ export default function Home() {
           {/* Info row section - 3 sharper, square, side-by-side blocks */}
           <div className="flex flex-col md:flex-row gap-4 mb-16 md:mb-24">
             {/* Location Block */}
-            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
-              <img src="/pin.svg" alt="Location Pin" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
-              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#fff' }}>
+            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
+              <style>
+                {`
+                  .cls-1 {
+                    fill: none;
+                    stroke: currentColor;
+                    stroke-width: 2px;
+                  }
+                  .cls-2 {
+                    fill: currentColor;
+                  }
+                `}
+              </style>
+              <PinIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
+              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#000' }}>
                 Location
               </div>
-              <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
+              <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
                 Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711
               </div>
             </div>
             {/* Hours Block */}
-            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
-              <img src="/clock.svg" alt="Clock Icon" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
-              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#fff' }}>
+            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
+              <ClockIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
+              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#000' }}>
                 Hours
               </div>
-              <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
+              <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
                 After 5:00 pm Monday-Friday<br />All day Saturday-Sunday
               </div>
             </div>
             {/* Who can use the room Block */}
-            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#40413c' }}>
-              <img src="/door.svg" alt="Door Icon" className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(100%) brightness(200%)' }} />
-              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4 text-center" style={{ fontWeight: 500, color: '#fff' }}>
+            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
+              <DoorIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
+              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4 text-center" style={{ fontWeight: 500, color: '#000' }}>
                 Who can use the room?
               </div>
-              <div className="text-gray-200 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
+              <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
                 Not you! It's free. Go to the Join page and fill out the room entry quiz to get 24/7 swipe access to the room and you'll be all set. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
               </div>
             </div>
@@ -296,6 +310,8 @@ export default function Home() {
                 alt={images[currentImageIndex].alt}
                 className="w-full h-auto rounded-lg shadow-lg cursor-pointer"
                 onClick={() => setIsEnlarged(true)}
+                loading="lazy"
+                decoding="async"
               />
               <button onClick={prevImage} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">←</button>
               <button onClick={nextImage} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">→</button>
@@ -341,6 +357,8 @@ export default function Home() {
                     className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
                     style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
                     onClick={() => { setEnlargedPresidentSrc('/MaxC.jpeg'); setIsPresidentEnlarged(true); }}
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
                   <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
@@ -353,6 +371,8 @@ export default function Home() {
                     className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
                     style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
                     onClick={() => { setEnlargedPresidentSrc('/MaxB.jpeg'); setIsPresidentEnlarged(true); }}
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
                   <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
@@ -381,17 +401,15 @@ export default function Home() {
               {/* Instagram Section */}
               <div className="flex flex-col items-center justify-center gap-2 mt-6">
                 <p className="text-black-300 text-sm md:text-base mb-2">Stay tuned for updates on live events and room improvements! Follow us on instagram!</p>
-                <div className="flex items-center justify-center gap-2">
-                  <a 
-                    href="https://www.instagram.com/hmcjamsoc/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                  >
-                    <img src="/insta.svg" alt="Instagram" className="w-6 h-6" />
-                    <span className="text-gray-700 hover:text-gray-900 text-sm md:text-base">@hmcjamsoc</span>
-                  </a>
-                </div>
+                <a 
+                  href="https://www.instagram.com/hmcjamsoc/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-black hover:text-blue-600 transition-colors duration-300 flex items-center gap-2"
+                >
+                  <InstagramIcon className="w-12 h-12 inline-block" />
+                  <span className="text-lg font-medium">@hmcjamsoc</span>
+                </a>
               </div>
             </div>
           </div>

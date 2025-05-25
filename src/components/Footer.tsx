@@ -1,21 +1,19 @@
+import { InstagramIcon } from './Icons';
+
 export default function Footer() {
     return (
       <footer className="bg-black text-gray-500 text-center py-2">
         <div className="flex flex-col items-center justify-center gap-1">
           <div className="flex items-center justify-center gap-1">
-            <span>© {new Date().getFullYear()} Jam Society</span>
+            <span>© {new Date().getFullYear()} Jam Society </span>
             <a 
               href="https://www.instagram.com/hmcjamsoc/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
+              className="text-blue-600 hover:text-blue-800"
+              style={{filter: 'invert(100%) brightness(200%)'}}
             >
-              <img 
-                src="/insta.svg" 
-                alt="Instagram" 
-                className="w-5 h-5 inline-block" 
-                style={{ filter: 'invert(100%) brightness(200%)' }}
-              />
+              <InstagramIcon className="w-6 h-6 inline-block" />
             </a>
           </div>
           <a 
