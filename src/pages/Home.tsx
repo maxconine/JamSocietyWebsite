@@ -228,7 +228,7 @@ export default function Home() {
         </div>
         {!isMobile() && scrollLocked && currentSection === 0 && (
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="text-white text-sm mb-2">Scroll to reveal</div>
+            <div className="text-white text-sm mb-2"></div>
             <svg
               className="w-6 h-6 text-white"
               fill="none"
@@ -277,17 +277,17 @@ export default function Home() {
                 Location
               </div>
               <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-                Located in the Basement of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711
+              Located in the Basement hallway of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711. Look for the Jam Society sign!
               </div>
             </div>
             {/* Hours Block */}
             <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
               <ClockIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
               <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#000' }}>
-                Hours
+              Room Hours
               </div>
               <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-                After 5:00 pm Monday-Friday<br />All day Saturday-Sunday
+              Open 24/7 for equipment checkout and other activities. Playing hours, anything louder than an acoustic guitar, are outside of F&M hours (Mon-Fri 8am-5pm) only.
               </div>
             </div>
             {/* Who can use the room Block */}
@@ -297,7 +297,7 @@ export default function Home() {
                 Who can use the room?
               </div>
               <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-                You! It's free. All you have to do is fill out this membership form: https://forms.gle/oy9483FkZGwEBc1u7 to get 24/7 swipe access to the room. Theres no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
+              All current Mudd students! Go to the Join page and fill out the room entry quiz to get 24/7 swipe access to the room . There's no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
               </div>
             </div>
           </div>
@@ -331,17 +331,17 @@ export default function Home() {
           {/* New Section with Black Background */}
           <div className="mt-8 md:mt-10 bg-white text-black py-8 md:py-12 px-3 md:px-6 rounded-2xl">
             <div className="max-w-4xl mx-auto">
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Need to check out equipment for an event?</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have an equipment checkout system. Please only check out items for a maximum of 3 days. Sign in, then go to the equipment page to select what items you are checking out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment Checkout Policy</h2>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have an equipment checkout system in the "Equipment" tab above. Please only check out items for a maximum of 3 days. Make sure you are signed in, and select the items you want to check out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
 
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Want to reserve the room?</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">You can! If your band wants to practice at a certain time, you can mark it on the calendar. Just go to the reserve tab for more info.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Room Reservations</h2>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">You can reserve the room for a band practice or recording session! Just go to the "Reserve" tab above and select a time on the calendar.</p>
 
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Unsure how to use a piece of equipment?</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have made guides for you to use! Go to the equipment page to see equipment guides.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment Guides</h2>
+              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">If you're new to an instrument or equipment, we have equipment guides to help you play and operate the equipment! Go to the equipment page to see equipment guides for instruments (like guitar and drums), as well as equipment (like microphones/mixers).</p>
 
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment damaged or want to request new equipment?</h2>
-              <p className="text-black-300 text-sm md:text-base">We have a damage report form. Go to the equipment page.</p>
+              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Damaged Equipment/New Equipment Request</h2>
+              <p className="text-black-300 text-sm md:text-base">If some equipment gets damaged during normal use, it's okay! Just make sure to fill out our damage report form in the equipment tab. If you think the Jam Room could use a specific new piece of equipment, fill out the New Equipment Request Form found in the Equipment tab.</p>
 
             </div>
           </div>
@@ -397,7 +397,7 @@ export default function Home() {
                   </button>
                 </div>
               )}
-              <p className="text-black-300 py-4 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025 -2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan. Please don't hesitate to reach out!</p>
+              <p className="text-black-300 py-4 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025-2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan. Please don't hesitate to reach out!</p>
               
               {/* Instagram Section */}
               <div className="flex flex-col items-center justify-center gap-2 mt-6">
