@@ -1,54 +1,79 @@
-# React + TypeScript + Vite
+# Jam Society Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, fast, and mobile-friendly website for the Harvey Mudd College Jam Society.  
+This site provides information about the club, equipment checkout, room reservations, event updates, and more for HMC students.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React + TypeScript + Vite**: Fast, modern frontend stack
+- **Firebase Hosting**: Secure, scalable, and reliable hosting
+- **Progressive Web App (PWA)**: Installable and works offline
+- **SEO Optimized**: Meta tags, sitemap, robots.txt, and structured data
+- **Responsive Design**: Looks great on all devices
+- **Equipment Checkout**: Track and manage music equipment
+- **Room Reservation**: Reserve the jam room for your band or practice
+- **Admin Tools**: Manage users, equipment, and events
+- **Image Optimization**: Uses WebP and lazy loading for fast performance
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Node.js (v18+ recommended)
+- npm
+- Firebase CLI (`npm install -g firebase-tools`)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/jamsocietywebsite.git
+   cd jamsocietywebsite
+   ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up Firebase:
+   - Make sure you have access to the Firebase project.
+   - Run `firebase login` and `firebase use --add` to select the correct project.
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Build for production:
+   ```bash
+   npm run build
+   ```
+
+6. Deploy to Firebase:
+   ```bash
+   firebase deploy
+   ```
+
+## Project Structure
+
+- `src/` — React components, pages, and logic
+- `public/` — Static assets (images, icons, manifest, etc.)
+- `functions/` — (Optional) Firebase Cloud Functions
+- `firebase.json` — Firebase Hosting configuration
+- `vite.config.ts` — Vite build configuration
+
+## Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+[MIT](LICENSE)
+
+## Credits
+
+- Harvey Mudd College Jam Society
+- [Vite](https://vitejs.dev/)
+- [Firebase](https://firebase.google.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
