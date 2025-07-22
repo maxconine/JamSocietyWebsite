@@ -35,6 +35,7 @@ export default function Footer() {
                 alt="GitHub" 
                 className="w-5 h-5 inline-block" 
                 style={{ filter: 'invert(100%) brightness(200%)' }}
+                loading="lazy"
               />
             </a>
           </div>

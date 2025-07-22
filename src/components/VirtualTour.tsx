@@ -21,7 +21,7 @@ export default function VirtualTour({ images }: VirtualTourProps) {
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4"
           onClick={() => setSelected(null)}
         >
-          <img src={selected} alt="Full view" className="max-h-full max-w-full" />
+          <img src={selected} alt="Full view" className="max-h-full max-w-full" loading="lazy" />
         </div>
       )}
     </div>
