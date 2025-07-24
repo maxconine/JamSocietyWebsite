@@ -22,6 +22,7 @@ export default function Footer() {
           >
             jamsociety-leadership-l@g.hmc.edu
           </a>
+          {/*
           <div className="flex items-center justify-center gap-2">
             <span className="text-gray-500">website created by Max Conine</span>
             <a 
@@ -39,6 +40,7 @@ export default function Footer() {
               />
             </a>
           </div>
+          */}
         </div>
       </footer>
     );
