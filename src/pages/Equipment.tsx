@@ -1,10 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import EquipmentTable from '../components/EquipmentTable';
+import AddEquipmentModal from '../components/AddEquipmentModal';
+import { addEquipment } from '../firebase/db';
 // import { addSampleEquipment } from '../firebase/db';
 
 //Note: to add new equipment images, you need to add them to the public/equipment-images folder and run the process-images script. by typing npm run process-images
 
 const Equipment: React.FC = () => {
+  const [showAddEquipmentModal, setShowAddEquipmentModal] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+
+  const handleAddEquipment = async (data: {
+    category: string;
+    name: string;
+    condition: string;
+    value?: string;
+    description?: string;
+    code?: string;
+    owner?: string;
+    labelType?: string;
+  }) => {
+    setAddError(null);
+    try {
+      console.log('Adding equipment:', data);
+      const categoryTypeMap: Record<string, string> = {
+        AMP: 'Amp',
+        AUD: 'Audio equipment',
+        CBL: 'Cable',
+        DRM: 'Drum',
+        INS: 'Instrument',
+        MIC: 'Microphone',
+        PWR: 'Power',
+        STN: 'Stand',
+      };
+      const equipmentData = {
+        checkoutDescription: '',
+        code: data.code!,
+        condition: (data.condition as 'excellent' | 'good' | 'fair' | 'poor' | 'broken') || 'N/A',
+        description: data.description || '',
+        image: '',
+        labelType: data.labelType || 'Unlabeled',
+        lastCheckedOutByEmail: '',
+        lastCheckedOutByName: '',
+        lastCheckedOutDate: '',
+        lastReturnedDate: '',
+        lastReturnedNotes: '',
+        location: '',
+        name: data.name || '',
+        notes: '',
+        owner: data.owner || 'Jam Society',
+        price: data.value ? Number(data.value) : 0,
+        reason: '',
+        status: 'Available' as 'Available',
+        type: categoryTypeMap[data.category] || data.category || '',
+      };
+      await addEquipment(equipmentData);
+    } catch (err: any) {
+      setAddError(err?.message || 'Failed to add equipment.');
+      console.error('Add equipment error:', err);
+      throw err;
+    }
+  };
 
   return (
     <div className="min-h-screen font-roboto">
@@ -100,6 +156,46 @@ const Equipment: React.FC = () => {
                 <p className="font-medium">STN</p>
                 <p className="text-gray-600">microphone stands, keyboard stands, etc.</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Support Jam Society Section */}
+      <div className="bg-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold mb-8 text-center">Want to support the Jam Society?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Donate Section */}
+            <div className="bg-gray-50 p-6 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">Donate</h3>
+              <p className="font-roboto font-light text-gray-700 mb-2">
+                Reach out to <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you are interested in supporting our club.
+              </p>
+            </div>
+            {/* Add New Equipment Section */}
+            <div className="bg-gray-50 p-6 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">Add New Equipment</h3>
+              <p className="font-roboto font-light text-gray-700 mb-4">
+                If you have musical equipment you would like to donate to the Jam Society, click the add equipment button below and place the equipment in the room. If you have any questions, contact us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a>.
+              </p>
+              <button
+                className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition-colors"
+                onClick={() => setShowAddEquipmentModal(true)}
+              >
+                Add Equipment
+              </button>
+              <AddEquipmentModal
+                isOpen={showAddEquipmentModal}
+                onClose={() => setShowAddEquipmentModal(false)}
+                onSubmit={async (data) => {
+                  try {
+                    await handleAddEquipment(data);
+                    setShowAddEquipmentModal(false);
+                  } catch {}
+                }}
+                error={addError}
+              />
             </div>
           </div>
         </div>

@@ -8,7 +8,8 @@ import {
     deleteDoc,
     onSnapshot,
     query,
-    where
+    where,
+    setDoc
 } from 'firebase/firestore';
 
 // Types
@@ -111,8 +112,9 @@ export const subscribeToEquipment = (callback: (data: Equipment[]) => void) => {
 };
 
 export const addEquipment = async (equipment: Omit<Equipment, 'id'>): Promise<string> => {
-    const docRef = await addDoc(equipmentCollection, equipment);
-    return docRef.id;
+    const docRef = doc(equipmentCollection, equipment.code);
+    await setDoc(docRef, equipment);
+    return equipment.code;
 };
 
 export const updateEquipment = async (id: string, updates: Partial<Equipment>): Promise<void> => {
