@@ -1,7 +1,8 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase/config';
 import { v4 as uuidv4 } from 'uuid';
 
 interface AddArtistModalProps {
@@ -52,7 +53,6 @@ export default function AddArtistModal({ isOpen, onClose, onSubmit }: AddArtistM
   };
 
   const uploadPhoto = async (file: File): Promise<string> => {
-    const storage = getStorage();
     const fileExtension = file.name.split('.').pop();
     const uniqueFileName = `${uuidv4()}.${fileExtension}`;
     const photoRef = ref(storage, `artist-photos/${uniqueFileName}`);

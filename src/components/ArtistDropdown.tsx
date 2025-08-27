@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Artist, deleteArtist, updateArtist } from '../firebase/db';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase/config';
 import { v4 as uuidv4 } from 'uuid';
 import { Listbox } from '@headlessui/react';
 import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
@@ -86,7 +87,6 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
   };
 
   const uploadPhoto = async (file: File): Promise<string> => {
-    const storage = getStorage();
     const fileExtension = file.name.split('.').pop();
     const uniqueFileName = `${uuidv4()}.${fileExtension}`;
     const photoRef = ref(storage, `artist-photos/${uniqueFileName}`);
