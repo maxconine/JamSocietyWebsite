@@ -70,6 +70,22 @@ const Join: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Join Button Section */}
+        <div className="text-center">
+          <a 
+            href="https://forms.gle/dziWupCVz6AqfL5t8" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-md shadow-md hover:shadow-lg transition-all duration-200"
+          >
+            Join Now - New Member Form
+            <span className="ml-2">→</span>
+          </a>
+          <p className="text-sm text-gray-500 font-roboto mt-3">
+            Opens in a new tab
+          </p>
+        </div>
       </div>
     </div>
   );

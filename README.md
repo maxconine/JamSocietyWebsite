@@ -63,6 +63,20 @@ This site provides information about the club, equipment checkout, room reservat
 - `firebase.json` — Firebase Hosting configuration
 - `vite.config.ts` — Vite build configuration
 
+## Image Processing
+
+For detailed instructions on processing and deploying equipment images, see [IMAGE_PROCESSING_GUIDE.md](./IMAGE_PROCESSING_GUIDE.md).
+
+### Quick Commands:
+```bash
+# Process all equipment images
+npx tsx scripts/processEquipmentImages.ts
+
+# Build and deploy
+npm run build
+firebase deploy --only hosting
+```
+
 ## Contributing
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.

@@ -109,9 +109,46 @@ const Equipment: React.FC = () => {
           <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             If you need help using pieces of equipment, please refer to the guides page for help. A lot of equipment in this room is expensive and if you are using it improperly it can get damaged easily. Please understand how to use the equipment before attempting to use it.
           </p>
-          <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
-            Below are some commonly checked out eqipment. You can press on them and it will automatically select the items for you.
+                    <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
+                    <u>Please email us</u> at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you would like to check out the <u>QSC K12.2</u> speakers or the <u>drum kit</u> from the room as those items are more expensive and harder to transport.
           </p>
+          <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
+            Please <u>do not</u> take any equipment out of the room that doesn't have a Jam Society label on it.
+          </p>
+          {/* <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
+            Below are some commonly checked out eqipment. You can press on them and it will automatically select the items for you.
+          </p> */}
+          
+          {/* Quick Select Buttons
+          <div className="mb-6">
+            <div className="flex flex-col gap-2">
+              <span className="font-roboto font-medium text-gray-700">Quick Select:</span>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="ludwig-drum-kit"
+                  className="w-4 h-4 border-gray-300 rounded focus:ring-0"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      // Ludwig drum kit item codes
+                      const ludwigDrumKitCodes = ['DRM06', 'DRM08', 'DRM10', 'DRM15', 'DRM25', 'DRM29', 'DRM30', 'DRM31', 'DRM44', 'DRM45', 'STN12', 'STN19'];
+                      // This will be handled by the EquipmentTable component
+                      window.dispatchEvent(new CustomEvent('selectLudwigDrumKit', { 
+                        detail: { codes: ludwigDrumKitCodes } 
+                      }));
+                    } else {
+                      // Clear selection
+                      window.dispatchEvent(new CustomEvent('clearSelection'));
+                    }
+                  }}
+                />
+                <label htmlFor="ludwig-drum-kit" className="font-roboto text-black cursor-pointer">
+                  Select Ludwig Drum Kit
+                </label>
+              </div>
+            </div>
+          </div> */}
+          
           <div className="bg-white shadow rounded-lg p-6">
             <EquipmentTable />
           </div>
@@ -170,7 +207,7 @@ const Equipment: React.FC = () => {
             <div className="bg-gray-50 p-6 rounded-lg shadow">
               <h3 className="text-xl font-semibold mb-4">Donate</h3>
               <p className="font-roboto font-light text-gray-700 mb-2">
-                Reach out to <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you are interested in supporting our club.
+                Reach out to <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you are interested in supporting our club or reach out to the Office of Advancement at HMC.
               </p>
             </div>
             {/* Add New Equipment Section */}

@@ -1,5 +1,5 @@
 import { db } from './config';
-import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, setDoc } from 'firebase/firestore';
 // Collection References
 const equipmentCollection = collection(db, 'equipment');
 const reservationsCollection = collection(db, 'reservations');
@@ -23,8 +23,9 @@ export const subscribeToEquipment = (callback) => {
     });
 };
 export const addEquipment = async (equipment) => {
-    const docRef = await addDoc(equipmentCollection, equipment);
-    return docRef.id;
+    const docRef = doc(equipmentCollection, equipment.code);
+    await setDoc(docRef, equipment);
+    return equipment.code;
 };
 export const updateEquipment = async (id, updates) => {
     const docRef = doc(db, 'equipment', id);

@@ -172,6 +172,10 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
       await deleteArtist(artistId);
       if (selectedArtist?.id === artistId) {
         setSelectedArtist(null);
+        setIsEditing(false);
+        setPhotoFile(null);
+        setPhotoPreview(null);
+        setUploadProgress(0);
       }
       setError(null);
     } catch (err) {
@@ -340,14 +344,22 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
               <div className="flex justify-end space-x-3 mt-8">
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium"
+                  className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none font-medium"
                 >
                   Cancel
                 </button>
+                {selectedArtist.id && (
+                  <button
+                    onClick={() => selectedArtist.id && handleDelete(selectedArtist.id)}
+                    className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none font-medium"
+                  >
+                    Delete Artist
+                  </button>
+                )}
                 <button
                   onClick={handleSaveEdit}
                   disabled={isUploading}
-                  className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isUploading ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -389,14 +401,14 @@ export default function ArtistDropdown({ artists, isAdmin, currentUserId, defaul
                 <div className="flex justify-end space-x-2">
                   <button
                     onClick={() => handleEdit(selectedArtist)}
-                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium"
+                    className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none font-medium"
                   >
                     Edit
                   </button>
                   {isAdmin && selectedArtist.id && (
                     <button
                       onClick={() => selectedArtist.id && handleDelete(selectedArtist.id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium"
+                      className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none font-medium"
                     >
                       Delete
                     </button>

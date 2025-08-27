@@ -62,8 +62,29 @@ export default function EquipmentTable() {
       setError(null);
     });
 
-    return () => unsubscribe();
-  }, []);
+    // Listen for custom event to select Ludwig drum kit
+    const handleSelectLudwigDrumKit = (event: CustomEvent) => {
+      const codes = event.detail.codes;
+      const equipmentIds = equipment
+        .filter(item => codes.includes(item.code))
+        .map(item => item.id!);
+      setSelectedIds(equipmentIds);
+    };
+
+    // Listen for custom event to clear selection
+    const handleClearSelection = () => {
+      setSelectedIds([]);
+    };
+
+    window.addEventListener('selectLudwigDrumKit', handleSelectLudwigDrumKit as EventListener);
+    window.addEventListener('clearSelection', handleClearSelection);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('selectLudwigDrumKit', handleSelectLudwigDrumKit as EventListener);
+      window.removeEventListener('clearSelection', handleClearSelection);
+    };
+  }, [equipment]);
 
   const filtered = equipment.filter(e =>
     e.name.toLowerCase().includes(search.toLowerCase()) ||
