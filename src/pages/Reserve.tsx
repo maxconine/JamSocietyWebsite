@@ -22,7 +22,7 @@ export default function Reserve() {
         ></iframe>
       </div>
       <p className="font-roboto text-center max-w-3xl mx-auto">
-        After booking, you'll receive a confirmation email with your reservation details.
+        I hope this feature gets used!
       </p>
     </div>
   );
