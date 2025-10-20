@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import { Link } from 'react-router-dom';
 // import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
 import FAQSection from '../components/FAQSection';
-import { PinIcon, ClockIcon, DoorIcon, InstagramIcon } from '../components/Icons';
+import { PinIcon, ClockIcon, DoorIcon, InstagramIcon, DiscordIcon } from '../components/Icons';
 
 const images = [
   { src: '/roomPhoto.webp', alt: 'Room Photo 1' },
@@ -277,7 +278,7 @@ export default function Home() {
                 Location
               </div>
               <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-              Located in the Basement hallway of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711. Look for the Jam Society sign!
+              Located in the Basement hallway of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711. Look for the Jam Society sign! We also provide equipment for the large practice room upstairs.
               </div>
             </div>
             {/* Hours Block */}
@@ -287,7 +288,7 @@ export default function Home() {
               Room Hours
               </div>
               <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-              Open 24/7 for equipment checkout and other activities. Playing hours, anything louder than an acoustic guitar, are outside of F&M hours (Mon-Fri 8am-5pm) only.
+              Open 24/7 for equipment checkout and other activities. Playing hours are outside of F&M hours (Mon-Fri 8am-5pm) only.
               </div>
             </div>
             {/* Who can use the room Block */}
@@ -363,7 +364,6 @@ export default function Home() {
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
                   <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
-                  <div className="text-gray-700 text-sm md:text-base">(857) 701-0870</div>
                 </div>
                 <div>
                   <img
@@ -377,7 +377,6 @@ export default function Home() {
                   />
                   <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
                   <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
-                  <div className="text-gray-700 text-sm md:text-base">(626) 238-5252</div>
                 </div>
               </div>
               {isPresidentEnlarged && enlargedPresidentSrc && (
@@ -399,18 +398,35 @@ export default function Home() {
               )}
               <p className="text-black-300 py-4 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025-2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan. Please don't hesitate to reach out!</p>
               
-              {/* Instagram Section */}
-              <div className="flex flex-col items-center justify-center gap-2 mt-6">
-                <p className="text-black-300 text-sm md:text-base mb-2">Stay tuned for updates on live events and room improvements! Follow us on instagram!</p>
-                <a 
-                  href="https://www.instagram.com/hmcjamsoc/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-black hover:text-blue-600 transition-colors duration-300 flex items-center gap-2"
-                >
-                  <InstagramIcon className="w-12 h-12 inline-block" />
-                  <span className="text-lg font-medium">@hmcjamsoc</span>
-                </a>
+              {/* Social Media and Join Section */}
+              <div className="flex flex-col items-center justify-center gap-4 mt-6">
+                <p className="text-black-300 text-sm md:text-base mb-2">Stay tuned for updates on live events and room improvements! Follow us on social media and join our community!</p>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <a 
+                    href="https://www.instagram.com/hmcjamsoc/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-black hover:text-blue-600 transition-colors duration-300 flex items-center gap-2"
+                  >
+                    <InstagramIcon className="w-12 h-12 inline-block" />
+                    <span className="text-lg font-medium">@hmcjamsoc</span>
+                  </a>
+                  <a 
+                    href="https://discord.gg/33ERv9rMmZ" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-black hover:text-indigo-600 transition-colors duration-300 flex items-center gap-2"
+                  >
+                    <DiscordIcon className="w-12 h-12 inline-block" />
+                    <span className="text-lg font-medium">Discord</span>
+                  </a>
+                  <Link 
+                    to="/join" 
+                    className="text-black hover:text-green-600 transition-colors duration-300 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg"
+                  >
+                    <span className="text-lg font-medium">Join Jam Society</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
