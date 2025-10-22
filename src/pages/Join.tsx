@@ -7,7 +7,7 @@ const Join: React.FC = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4 font-roboto">Join the Jam Society!</h1>
           <p className="text-lg text-gray-600 font-roboto">
-            To join the Jam Society <strong>fill out the <a href="https://forms.gle/dziWupCVz6AqfL5t8" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">new member form</a></strong>.
+            To join the Jam Society <strong>fill out the <a href="https://forms.gle/dziWupCVz6AqfL5t8" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">new member form</a></strong>. 
           </p>
         </div>
 
@@ -86,6 +86,10 @@ const Join: React.FC = () => {
             Opens in a new tab
           </p>
         </div>
+        <p className="text-lg text-gray-600 font-roboto">
+          <br />
+            Don't forget to join the discord <a href="https://discord.gg/33ERv9rMmZ" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">(https://discord.gg/33ERv9rMmZ)</a> and join the mailing list <a href="https://groups.google.com/a/g.hmc.edu/g/jamsociety-l" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">(https://groups.google.com/a/g.hmc.edu/g/jamsociety-l)</a>. And follow us on instagram @hmcjamsoc!! Happy jamming!
+          </p>
       </div>
     </div>
   );
