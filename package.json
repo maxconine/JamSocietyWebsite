@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && mkdir -p dist/equipment-images/processed && cp -r public/equipment-images/* dist/equipment-images/ && cp -r public/equipment-images/processed/* dist/equipment-images/processed/ && cp -r public/*.svg dist/",
+    "build": "npm run build:types && npm run build:app && npm run build:assets",
+    "build:types": "tsc -b",
+    "build:app": "vite build",
+    "build:assets": "mkdir -p dist/equipment-images/processed && cp -r public/equipment-images/* dist/equipment-images/ && cp -r public/equipment-images/processed/* dist/equipment-images/processed/ && cp -r public/*.svg dist/",
     "lint": "eslint .",
     "preview": "vite preview",
     "process-images": "ts-node --esm scripts/processEquipmentImages.ts",
