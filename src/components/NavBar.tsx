@@ -46,6 +46,7 @@ const NavBar: React.FC = () => {
             <Link to="/equipment" className="hover:text-gray-300 font-roboto font-medium">Equipment</Link>
             <Link to="/equipment-guides" className="hover:text-gray-300 font-roboto font-medium">Guides</Link>
             <Link to="/reserve" className="hover:text-gray-300 font-roboto font-medium">Reserve</Link>
+            <Link to="/peer-tutoring" className="hover:text-gray-300 font-roboto font-medium">Peer Tutoring</Link>
             <Link to="/join" className="hover:text-gray-300 font-roboto font-medium">Join</Link>
             {!isAuthenticated ? (
               <LoginButton />
@@ -69,6 +70,7 @@ const NavBar: React.FC = () => {
             <Link to="/equipment-guides" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Guides</Link>
             <Link to="/reserve" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Reserve</Link>
             <Link to="/join" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Join</Link>
+            <Link to="/peer-tutoring" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Peer Tutoring</Link>
             <div className="pt-2">
               {!isAuthenticated ? (
                 <LoginButton />

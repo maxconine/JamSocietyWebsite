@@ -186,7 +186,7 @@ export default function Home() {
           minHeight: '93vh',
           scrollSnapAlign: !isMobile() ? 'start' : undefined,
           scrollSnapStop: !isMobile() ? 'always' : undefined,
-          backgroundImage: 'url(/mamakStage.jpeg)', //change image here
+          backgroundImage: 'url(/home/home_page_cover.webp)', //change image here
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: isMobile() ? 'scroll' : 'fixed',
@@ -201,7 +201,7 @@ export default function Home() {
         }}
       >
         {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-black/70 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-black/50 z-0 pointer-events-none" />
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <img
             src="/Jam-Soc-Logo.svg"

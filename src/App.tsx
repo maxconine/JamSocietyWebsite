@@ -6,6 +6,7 @@ import Artists from './pages/Artists';
 import EquipmentPage from './pages/Equipment';
 import EquipmentGuides from './pages/EquipmentGuides';
 import Reserve from './pages/Reserve';
+import PeerTutoring from './pages/PeerTutoring';
 import Footer from './components/Footer';
 import Admin from './pages/Admin';
 import Join from './pages/Join';
@@ -94,6 +95,11 @@ function App() {
                   <Route path="/reserve" element={
                     <RouteErrorBoundary routeName="Reservation">
                       <Reserve />
+                    </RouteErrorBoundary>
+                  } />
+                  <Route path="/peer-tutoring" element={
+                    <RouteErrorBoundary routeName="Peer Tutoring">
+                      <PeerTutoring />
                     </RouteErrorBoundary>
                   } />
                   <Route path="/admin" element={
