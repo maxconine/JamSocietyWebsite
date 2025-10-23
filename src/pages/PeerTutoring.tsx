@@ -10,7 +10,7 @@ const PeerTutoring: React.FC = () => {
           height: '400px',
           backgroundImage: 'url(/peer_tutoring_cover.jpeg)',
           backgroundSize: 'cover',
-          backgroundPosition: '-10% 30%',
+          backgroundPosition: '0% 30%',
           backgroundRepeat: 'no-repeat',
           position: 'relative',
           zIndex: 1,

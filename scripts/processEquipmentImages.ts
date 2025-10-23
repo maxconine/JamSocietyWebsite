@@ -23,7 +23,7 @@ const PROCESSED_DIR = path.join(SOURCE_DIR, 'processed');
 const PROCESSING_OPTIONS = {
   width: 800,        // Maximum width in pixels
   height: 600,       // Maximum height in pixels
-  quality: 80,       // WebP quality (0-100)
+  quality: 100,       // WebP quality (0-100)
   format: 'webp' as const // Output format for better compression
 };
 

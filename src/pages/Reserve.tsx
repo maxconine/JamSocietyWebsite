@@ -10,7 +10,9 @@ export default function Reserve() {
         <br />
         <span className="font-bold">To reserve the room, make a calendar event on your Google Calendar. Name it with your band or band member's names. Then share the event with the email <span className="underline">jamsocky@gmail.com</span>.</span> Your calendar invite will then show up on the calendar below and the room is <span className="underline">'reserved'</span> for your band.<br />
         <br />
-        <span className="font-bold">Please only reserve the room for groups larger than 2 in the Jam Room.</span> If you'd like to practice individually, you can use the Jam Room, but if a larger group comes, then please use the upstairs practice rooms.
+        <span className="font-bold">Note: Please only reserve the room for groups larger than 2 in the Jam Room.</span>
+        If you'd like to practice individually, you can use the Jam Room, but if a larger group comes, then please use the
+        upstairs practice rooms.
       </p>
       <div className="w-full max-w-[800px] h-[600px] md:max-w-[1000px] md:h-[800px] lg:max-w-[1200px] lg:h-[900px] mx-auto mb-8">
         <iframe
