@@ -109,16 +109,19 @@ const Equipment: React.FC = () => {
           <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             If you need help using pieces of equipment, please refer to the guides page for help. A lot of equipment in this room is expensive and if you are using it improperly it can get damaged easily. Please understand how to use the equipment before attempting to use it.
           </p>
-                    <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
-                    <u>Please email us</u> at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you would like to check out the <u>QSC K12.2</u> speakers or the <u>drum kit</u> from the room as those items are more expensive and harder to transport.
+          <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
+            <u>Please email us</u> at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you would like to check out the <u>QSC K12.2</u> speakers or the <u>drum kit</u> from the room as those items are more expensive and harder to transport.
           </p>
           <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             Please <u>do not</u> take any equipment out of the room that doesn't have a Jam Society label on it.
+            <br />
+            <br />
+            Note: Currently, only Mudd students are allowed to check out equipment from the Jam Room.
           </p>
           {/* <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             Below are some commonly checked out eqipment. You can press on them and it will automatically select the items for you.
           </p> */}
-          
+
           {/* Quick Select Buttons
           <div className="mb-6">
             <div className="flex flex-col gap-2">
@@ -148,7 +151,7 @@ const Equipment: React.FC = () => {
               </div>
             </div>
           </div> */}
-          
+
           <div className="bg-white shadow rounded-lg p-6">
             <EquipmentTable />
           </div>
@@ -158,7 +161,7 @@ const Equipment: React.FC = () => {
             <p className="font-roboto font-light text-gray-700 mb-6">
               All instruments and equipment in Jam Society are given an item code consisting of a 3 letter category and a 2 digit number. This item code can be found attached to the item with either a laminated tag or a sticker.
             </p>
-            
+
             <h3 className="text-xl font-semibold mb-4">Item Categories</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
@@ -229,7 +232,7 @@ const Equipment: React.FC = () => {
                   try {
                     await handleAddEquipment(data);
                     setShowAddEquipmentModal(false);
-                  } catch {}
+                  } catch { }
                 }}
                 error={addError}
               />

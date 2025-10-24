@@ -5,8 +5,9 @@ import FAQSection from '../components/FAQSection';
 import { PinIcon, ClockIcon, DoorIcon, InstagramIcon, DiscordIcon } from '../components/Icons';
 
 const images = [
-  { src: '/roomPhoto.webp', alt: 'Room Photo 1' },
-  { src: '/roomPhoto2.webp', alt: 'Room Photo 2' },
+  { src: '/room0.jpeg', alt: 'Room Photo 1' },
+  { src: '/room1.jpeg', alt: 'Room Photo 2' },
+  { src: '/room2.jpeg', alt: 'Room Photo 3' },
 ];
 
 const description = `Providing a "jam room" for students to use containing instruments, music equipment, stage equipment, and recording equipment. Maintained by students, for students.`;
