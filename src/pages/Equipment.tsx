@@ -1,66 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import EquipmentTable from '../components/EquipmentTable';
-import AddEquipmentModal from '../components/AddEquipmentModal';
-import { addEquipment } from '../firebase/db';
 // import { addSampleEquipment } from '../firebase/db';
 
 //Note: to add new equipment images, you need to add them to the public/equipment-images folder and run the process-images script. by typing npm run process-images
 
 const Equipment: React.FC = () => {
-  const [showAddEquipmentModal, setShowAddEquipmentModal] = useState(false);
-  const [addError, setAddError] = useState<string | null>(null);
-
-  const handleAddEquipment = async (data: {
-    category: string;
-    name: string;
-    condition: string;
-    value?: string;
-    description?: string;
-    code?: string;
-    owner?: string;
-    labelType?: string;
-  }) => {
-    setAddError(null);
-    try {
-      console.log('Adding equipment:', data);
-      const categoryTypeMap: Record<string, string> = {
-        AMP: 'Amp',
-        AUD: 'Audio equipment',
-        CBL: 'Cable',
-        DRM: 'Drum',
-        INS: 'Instrument',
-        MIC: 'Microphone',
-        PWR: 'Power',
-        STN: 'Stand',
-      };
-      const equipmentData = {
-        checkoutDescription: '',
-        code: data.code!,
-        condition: (data.condition as 'excellent' | 'good' | 'fair' | 'poor' | 'broken') || 'N/A',
-        description: data.description || '',
-        image: '',
-        labelType: data.labelType || 'Unlabeled',
-        lastCheckedOutByEmail: '',
-        lastCheckedOutByName: '',
-        lastCheckedOutDate: '',
-        lastReturnedDate: '',
-        lastReturnedNotes: '',
-        location: '',
-        name: data.name || '',
-        notes: '',
-        owner: data.owner || 'Jam Society',
-        price: data.value ? Number(data.value) : 0,
-        reason: '',
-        status: 'Available' as 'Available',
-        type: categoryTypeMap[data.category] || data.category || '',
-      };
-      await addEquipment(equipmentData);
-    } catch (err: any) {
-      setAddError(err?.message || 'Failed to add equipment.');
-      console.error('Add equipment error:', err);
-      throw err;
-    }
-  };
 
   return (
     <div className="min-h-screen font-roboto">
@@ -103,18 +47,21 @@ const Equipment: React.FC = () => {
 
       <div className="bg-white min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="font-roboto font-light text-gray-700 mt-12 mb-6">
+          <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             This is where you can check equipment in and out of the room. If you want to borrow equipment from the room, you must check it out by selecting the equipment you are checking out and pressing the check out button. When returning equipment, please note the condition and mark it as broken if there are any issues. We will fix it promptly.
           </p>
           <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             If you need help using pieces of equipment, please refer to the guides page for help. A lot of equipment in this room is expensive and if you are using it improperly it can get damaged easily. Please understand how to use the equipment before attempting to use it.
           </p>
           <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
-            <u>Please email us</u> at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you would like to check out the <u>QSC K12.2</u> speakers or the <u>drum kit</u> from the room as those items are more expensive and harder to transport.
+            <u>Please email us</u> at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you are having trouble using this site or would like to check out the <u>QSC K12.2</u> speakers or the <u>drum kit</u> from the room as those items are more expensive and harder to transport. 
+            If you do check out any equipment, please return them within 3 days and set them back up as you found them.
           </p>
           <p className="font-roboto font-light text-gray-700 mt-6 mb-6">
             Please <u>do not</u> take any equipment out of the room that doesn't have a Jam Society label on it.
-            <br />
+            <p className="font-roboto font-light text-gray-700 mt-12 mb-6">
+            If you find any broken equipment in the room, please report it using the <a href="https://forms.gle/xRhg6yEiptmP9zi46" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">broken equipment form</a>. We do our best to make sure everything in the room is in the best condition possible.
+          </p>
             <br />
             Note: Currently, only Mudd students are allowed to check out equipment from the Jam Room.
           </p>
@@ -196,46 +143,6 @@ const Equipment: React.FC = () => {
                 <p className="font-medium">STN</p>
                 <p className="text-gray-600">microphone stands, keyboard stands, etc.</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Support Jam Society Section */}
-      <div className="bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold mb-8 text-center">Want to support the Jam Society?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Donate Section */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold mb-4">Donate</h3>
-              <p className="font-roboto font-light text-gray-700 mb-2">
-                Reach out to <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you are interested in supporting our club or reach out to the Office of Advancement at HMC.
-              </p>
-            </div>
-            {/* Add New Equipment Section */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold mb-4">Add New Equipment</h3>
-              <p className="font-roboto font-light text-gray-700 mb-4">
-                If you have musical equipment you would like to donate to the Jam Society, click the add equipment button below and place the equipment in the room. If you have any questions, contact us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a>.
-              </p>
-              <button
-                className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition-colors"
-                onClick={() => setShowAddEquipmentModal(true)}
-              >
-                Add Equipment
-              </button>
-              <AddEquipmentModal
-                isOpen={showAddEquipmentModal}
-                onClose={() => setShowAddEquipmentModal(false)}
-                onSubmit={async (data) => {
-                  try {
-                    await handleAddEquipment(data);
-                    setShowAddEquipmentModal(false);
-                  } catch { }
-                }}
-                error={addError}
-              />
             </div>
           </div>
         </div>
