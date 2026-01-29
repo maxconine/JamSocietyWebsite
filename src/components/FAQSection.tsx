@@ -61,7 +61,7 @@ const faqs = [
     question: 'Does Jam Society have any custom-printed merchandise or apparel?',
         answer: (
       <span>
-'Yes! Come to our events to get some cool Jam Society merch!'
+Yes! Come to our events to get some cool Jam Society merch!
   </span>
         )
   },
