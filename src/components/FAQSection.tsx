@@ -61,7 +61,7 @@ const faqs = [
     question: 'Does Jam Society have any custom-printed merchandise or apparel?',
         answer: (
       <span>
-'We are working on it! If you are interested in designing any merchandise, please email us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="underline text-blue-600 hover:text-blue-800">jamsociety-leadership-l@g.hmc.edu</a> and we will do our best to help you.
+'Yes! Come to our events to get some cool Jam Society merch!'
   </span>
         )
   },
