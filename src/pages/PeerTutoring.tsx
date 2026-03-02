@@ -51,16 +51,36 @@ const PeerTutoring: React.FC = () => {
                 Hey Jammers!
               </p>
               <p className="text-lg text-gray-800 mb-4">
-                We are starting a new program for peer instrument tutoring where we match Mudd volunteer music tutors to other Mudders looking to learn/develop skills in a particular instrument. We are currently looking to teach the drums, keyboard, guitar, and bass (open to others if there is demand!). Please fill out this form if you are interested in either being a tutor or learner as part of this program! <a href="https://forms.gle/rMw8HBLTdwBXVTrHA" target="_blank" rel="noopener noreferrer">(https://forms.gle/rMw8HBLTdwBXVTrHA)</a>
+                We are starting a new program for peer instrument tutoring where we match Mudd volunteer music tutors to other Mudders looking to learn/develop skills in a particular instrument. We are currently looking to teach the drums, keyboard, guitar, and bass (open to others if there is demand!). Please fill out this form if you are interested in either being a tutor or learner as part of this program!</p>
+            </div>
+
+            {/* Embedded Sign Up Spreadsheet */}
+            <div className="mb-10">
+              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Current Peer Tutoring Sign Ups</h3>
+              <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                <iframe
+                  src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0sx2d1VjHsqRNV3CFx71himL_fLMAh8Nv0aBpyW877Pt22ZK3fmrz8EP1q9xfVXvuc9eZIoCLYz2Z/pubhtml?widget=true&headers=false"
+                  title="Peer Tutoring Sign Up Spreadsheet"
+                  className="w-full"
+                  style={{ height: '600px', border: '0' }}
+                />
+              </div>
+            </div>
+
+            {/* Tutor Application Form */}
+            <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200 mb-10">
+              <h3 className="text-2xl font-semibold mb-4 text-yellow-900">Interested in Being a Tutor?</h3>
+              <p className="text-gray-800 mb-4">
+                If you&apos;d like to volunteer as a peer tutor for the program, please fill out the tutor application form so we can learn more about your interests and experience.
               </p>
               <div className="text-center">
-                <a 
-                  href="https://forms.gle/rMw8HBLTdwBXVTrHA" 
-                  target="_blank" 
+                <a
+                  href="https://forms.gle/ECzhYHNghsgwZZnG6"
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="inline-block bg-yellow-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-yellow-600 transition-colors"
                 >
-                  Sign Up Form
+                  Tutor Application Form
                 </a>
               </div>
             </div>
