@@ -1,34 +1,54 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import LoginButton from './LoginButton';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { NoteIcon } from './Icons';
+
+const links = [
+  { to: '/', label: 'Home' },
+  { to: '/equipment', label: 'Equipment' },
+  { to: '/equipment-guides', label: 'Guides' },
+  { to: '/reserve', label: 'Reserve' },
+  { to: '/peer-tutoring', label: 'Peer Tutoring' },
+  { to: '/join', label: 'Join' },
+];
 
 const NavBar: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isMenuOpen]);
 
   return (
-    <nav className="bg-gray-800 text-white p-2">
+    <nav aria-label="Primary" className="sticky top-0 z-50 bg-navy text-white pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-black-ops-one">
-            JamSociety
+        <div className="flex justify-between items-center min-h-12">
+          <Link to="/" className="flex items-center gap-2 min-w-0 text-white hover:text-white py-2">
+            <NoteIcon className="w-6 h-6 shrink-0 text-sky" />
+            <span className="text-xl sm:text-2xl font-display leading-none truncate">JamSociety</span>
           </Link>
-          
-          {/* Mobile menu button */}
-          <button 
-            onClick={toggleMenu}
-            className="md:hidden p-2"
-            aria-label="Toggle menu"
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(open => !open)}
+            className="md:hidden inline-flex items-center justify-center w-11 h-11 -mr-2"
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-nav"
           >
-            <svg 
-              className="w-6 h-6" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               {isMenuOpen ? (
@@ -39,50 +59,48 @@ const NavBar: React.FC = () => {
             </svg>
           </button>
 
-          {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/" className="hover:text-gray-300 font-roboto font-medium">Home</Link>
-            <Link to="/artists" className="hover:text-gray-300 font-roboto font-medium">Artists</Link>
-            <Link to="/equipment" className="hover:text-gray-300 font-roboto font-medium">Equipment</Link>
-            <Link to="/equipment-guides" className="hover:text-gray-300 font-roboto font-medium">Guides</Link>
-            <Link to="/reserve" className="hover:text-gray-300 font-roboto font-medium">Reserve</Link>
-            <Link to="/peer-tutoring" className="hover:text-gray-300 font-roboto font-medium">Peer Tutoring</Link>
-            <Link to="/join" className="hover:text-gray-300 font-roboto font-medium">Join</Link>
-            {!isAuthenticated ? (
-              <LoginButton />
-            ) : (
-              <button
-                onClick={logout}
-                className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
-              >
-                Logout
-              </button>
-            )}
+          <div className="hidden md:flex items-center space-x-5">
+            {links.map(link => {
+              const isCurrent = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  aria-current={isCurrent ? 'page' : undefined}
+                  className={`font-roboto font-medium transition-colors py-3 border-b-2 ${
+                    isCurrent
+                      ? 'text-white border-white'
+                      : 'text-sky hover:text-white border-transparent'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
-        {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 space-y-2">
-            <Link to="/" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link to="/artists" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Artists</Link>
-            <Link to="/equipment" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Equipment</Link>
-            <Link to="/equipment-guides" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Guides</Link>
-            <Link to="/reserve" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Reserve</Link>
-            <Link to="/join" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Join</Link>
-            <Link to="/peer-tutoring" className="block py-2 hover:text-gray-300 font-roboto font-medium" onClick={() => setIsMenuOpen(false)}>Peer Tutoring</Link>
-            <div className="pt-2">
-              {!isAuthenticated ? (
-                <LoginButton />
-              ) : (
-                <button
-                  onClick={logout}
-                  className="w-full bg-red-500 hover:bg-red-600 px-3 py-2 rounded"
+          <div
+            id="mobile-nav"
+            className="md:hidden border-t border-white/20 py-2 max-h-[calc(100svh-var(--jam-nav-height))] overflow-y-auto"
+          >
+            {links.map(link => {
+              const isCurrent = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  aria-current={isCurrent ? 'page' : undefined}
+                  className={`flex items-center min-h-11 py-3 font-roboto font-medium ${
+                    isCurrent ? 'text-white' : 'text-sky hover:text-white'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Logout
-                </button>
-              )}
-            </div>
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

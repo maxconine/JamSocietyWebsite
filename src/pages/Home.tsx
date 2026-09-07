@@ -1,145 +1,111 @@
-import { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import JamSocLogo from '../assets/Jam-Soc-Logo.svg';
 import FAQSection from '../components/FAQSection';
-import { PinIcon, ClockIcon, DoorIcon, InstagramIcon, DiscordIcon } from '../components/Icons';
-import AddEquipmentModal from '../components/AddEquipmentModal';
-import { addEquipment } from '../firebase/db';
+import StaffMelody from '../components/StaffMelody';
+import {
+  AmpIcon,
+  BeamedNoteIcon,
+  DrumsIcon,
+  DiscordIcon,
+  GuitarIcon,
+  InstagramIcon,
+  KeysIcon,
+  NoteIcon,
+} from '../components/Icons';
 
 const images = [
-  { src: '/room0.jpeg', alt: 'Room Photo 1' },
-  { src: '/room1.jpeg', alt: 'Room Photo 2' },
-  { src: '/room2.jpeg', alt: 'Room Photo 3' },
+  { src: '/room0.jpeg', alt: 'Inside a Jam Society space' },
+  { src: '/room1.jpeg', alt: 'Inside a Jam Society space' },
+  { src: '/room2.jpeg', alt: 'Inside a Jam Society space' },
 ];
 
-const description = `Providing a "jam room" for students to use containing instruments, music equipment, stage equipment, and recording equipment. Maintained by students, for students.`;
+const MISSION = `Jam Society is a student-run club that provides Mudders with an opportunity to continue or develop their musical interests while they are on campus, as well as fostering a musical community at Mudd.`;
 
-function isMobile() {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(max-width: 768px)').matches || /Mobi|Android/i.test(navigator.userAgent);
-}
+const CONTACT_EMAIL = 'jamsociety-leadership-l@g.hmc.edu';
+const MAILING_LIST_URL = 'https://groups.google.com/a/g.hmc.edu/g/jamsociety-l';
+const DISCORD_URL = 'https://discord.gg/33ERv9rMmZ';
+const INSTAGRAM_URL = 'https://www.instagram.com/hmcjamsoc/';
+
+// What the club actually does, as tracks on a setlist rather than floating boxes.
+const whatWeDo = [
+  {
+    label: 'EVENTS',
+    Icon: BeamedNoteIcon,
+    body: (
+      <>
+        We host music events like open mics, where anyone can come and play music with friends or
+        strangers. Follow us on{' '}
+        <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="text-jam-blue hover:text-jam-blue-hover underline">
+          Instagram
+        </a>{' '}
+        or join the mailing list to hear about the next one.
+      </>
+    ),
+  },
+  {
+    label: 'TUTORING',
+    Icon: KeysIcon,
+    body: (
+      <>
+        A peer tutoring program we started to connect Mudders with each other — so you can keep
+        learning an instrument, or help someone else pick one up.{' '}
+        <Link to="/peer-tutoring" className="text-jam-blue hover:text-jam-blue-hover underline">
+          Learn more
+        </Link>
+        .
+      </>
+    ),
+  },
+  {
+    label: 'GEAR',
+    Icon: GuitarIcon,
+    body: (
+      <>
+        Our spaces hold drum sets, electric and acoustic guitars, bass guitars, keyboards, microphones,
+        speakers, mixers, and more — free for members to play in the rooms. Running an event? You can
+        also{' '}
+        <Link to="/equipment" className="text-jam-blue hover:text-jam-blue-hover underline">
+          check equipment out
+        </Link>{' '}
+        for it.
+      </>
+    ),
+  },
+];
+
+const jamSpaces = [
+  {
+    name: 'JAM ROOM',
+    Icon: DrumsIcon,
+    location: 'Platt Basement',
+    body: `Home to a recording studio in development, with a brand-new drum kit and production station in progress. Find it in the basement hallway of Platt, east of the Facilities and Maintenance Office. Look for the Jam Society sign.`,
+  },
+  {
+    name: 'JAM LOUNGE',
+    Icon: AmpIcon,
+    location: 'Platt first floor, Music Room B',
+    body: `A great spot for band practices and jam sessions, equipped with a PA system, drum set, guitars, amps, and a keyboard.`,
+  },
+  {
+    name: 'THE PIT',
+    Icon: NoteIcon,
+    location: 'LAC second floor',
+    body: `A cozy stage setup with musical equipment available. Look for some fun events to be hosted here.`,
+  },
+];
 
 export default function Home() {
-  const descRef = useRef<HTMLDivElement>(null);
-  const moreRef = useRef<HTMLDivElement>(null);
-  const [descStyle, setDescStyle] = useState({ opacity: 0, transform: 'translateY(40px)' });
-  const [scrollLocked, setScrollLocked] = useState(!isMobile());
-  const [currentSection, setCurrentSection] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollThreshold = 400;
+  const [missionRevealed, setMissionRevealed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isEnlarged, setIsEnlarged] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
   const [isPresidentEnlarged, setIsPresidentEnlarged] = useState(false);
   const [enlargedPresidentSrc, setEnlargedPresidentSrc] = useState<string | null>(null);
-  const [showAddEquipmentModal, setShowAddEquipmentModal] = useState(false);
-  const [addError, setAddError] = useState<string | null>(null);
 
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-    if (window.scrollY > 0) {
-      setScrollLocked(false);
-    }
-  }, []);
-
+  // The mission fades in on its own once the page is up. It is the first thing
+  // anyone should read, so it is never gated behind scrolling.
   useEffect(() => {
-    // Set mounted to true after initial render
-    setMounted(true);
-    // Only show loading on initial page load
-    if (!mounted) {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-      return () => clearTimeout(timer);
-    } else {
-      setLoading(false);
-    }
-  }, [mounted]);
-
-  // Remove scroll lock on mobile
-  useEffect(() => {
-    if (isMobile()) {
-      setScrollLocked(false);
-    }
-  }, []);
-
-  // Handle scroll snapping and animations (desktop only)
-  useEffect(() => {
-    if (isMobile()) return;
-    let isScrolling = false;
-    let scrollTimeout: number;
-    let accumulatedDelta = 0;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (isScrolling) return;
-      accumulatedDelta += e.deltaY * 0.5;
-      let progress;
-      if (currentSection === 0) {
-        progress = Math.min(Math.max((accumulatedDelta / scrollThreshold) * 100, 0), 100);
-      } else {
-        progress = Math.min(Math.max(100 + (accumulatedDelta / scrollThreshold) * 100, 0), 100);
-      }
-      setDescStyle({
-        opacity: progress / 100,
-        transform: `translateY(${40 * (1 - progress / 100)}px)`
-      });
-      if (Math.abs(accumulatedDelta) >= scrollThreshold) {
-        const direction = accumulatedDelta > 0 ? 1 : -1;
-        const nextSection = Math.max(0, Math.min(1, currentSection + direction));
-        if (nextSection !== currentSection) {
-          isScrolling = true;
-          setCurrentSection(nextSection);
-          accumulatedDelta = 0;
-          window.scrollTo({
-            top: nextSection * window.innerHeight,
-            behavior: 'smooth'
-          });
-          if (nextSection === 1) {
-            setScrollLocked(false);
-          } else {
-            setScrollLocked(true);
-          }
-          scrollTimeout = window.setTimeout(() => {
-            isScrolling = false;
-          }, 1500);
-        }
-      }
-    };
-    if (scrollLocked) {
-      window.addEventListener('wheel', handleWheel, { passive: false });
-    }
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      clearTimeout(scrollTimeout);
-    };
-  }, [currentSection, scrollLocked]);
-
-  // Lock/unlock body scroll based on scrollLocked (desktop only)
-  useEffect(() => {
-    if (isMobile()) return;
-    if (scrollLocked) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [scrollLocked]);
-
-  // Fade in more info after description is visible
-  useEffect(() => {
-    const moreObserver = new window.IntersectionObserver(
-      () => { },
-      { threshold: 0.5 }
-    );
-    if (moreRef.current) moreObserver.observe(moreRef.current);
-    return () => {
-      if (moreRef.current) moreObserver.unobserve(moreRef.current);
-    };
+    const timer = setTimeout(() => setMissionRevealed(true), 150);
+    return () => clearTimeout(timer);
   }, []);
 
   const nextImage = () => {
@@ -163,132 +129,42 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isEnlarged]);
 
-  const handleAddEquipment = async (data: {
-    category: string;
-    name: string;
-    condition: string;
-    value?: string;
-    description?: string;
-    code?: string;
-    owner?: string;
-    labelType?: string;
-  }) => {
-    setAddError(null);
-    try {
-      console.log('Adding equipment:', data);
-      const categoryTypeMap: Record<string, string> = {
-        AMP: 'Amp',
-        AUD: 'Audio equipment',
-        CBL: 'Cable',
-        DRM: 'Drum',
-        INS: 'Instrument',
-        MIC: 'Microphone',
-        PWR: 'Power',
-        STN: 'Stand',
-      };
-      const equipmentData = {
-        checkoutDescription: '',
-        code: data.code!,
-        condition: (data.condition as 'excellent' | 'good' | 'fair' | 'poor' | 'broken') || 'N/A',
-        description: data.description || '',
-        image: '',
-        labelType: data.labelType || 'Unlabeled',
-        lastCheckedOutByEmail: '',
-        lastCheckedOutByName: '',
-        lastCheckedOutDate: '',
-        lastReturnedDate: '',
-        lastReturnedNotes: '',
-        location: '',
-        name: data.name || '',
-        notes: '',
-        owner: data.owner || 'Jam Society',
-        price: data.value ? Number(data.value) : 0,
-        reason: '',
-        status: 'Available' as 'Available',
-        type: categoryTypeMap[data.category] || data.category || '',
-      };
-      await addEquipment(equipmentData);
-    } catch (err: any) {
-      setAddError(err?.message || 'Failed to add equipment.');
-      console.error('Add equipment error:', err);
-      throw err;
-    }
-  };
-
-  if (loading && !mounted) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black">
-        <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-24 w-24 border-b-4 border-yellow-400 mb-8"></div>
-          <h1 className="text-5xl md:text-7xl font-black-ops-one text-yellow-400 mb-4">Loading Jam Society...</h1>
-          <p className="text-white text-xl md:text-2xl">Please wait while we load your experience.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div
-      ref={containerRef}
-      className="w-full bg-black flex flex-col items-center justify-start pt-0 pb-0"
-      style={{
-        height: !isMobile() && scrollLocked ? '200vh' : 'auto',
-        scrollSnapType: !isMobile() && scrollLocked ? 'y mandatory' : 'none'
-      }}
-    >
-      {/* Hero section: fills first viewport */}
+    <div className="w-full bg-white flex flex-col items-center justify-start pt-0 pb-0">
+      {/* Hero: logo, then the mission, front and center */}
       <section
-        className="relative flex flex-col items-center justify-center w-full overflow-hidden"
-        style={{
-          minHeight: '93vh',
-          scrollSnapAlign: !isMobile() ? 'start' : undefined,
-          scrollSnapStop: !isMobile() ? 'always' : undefined,
-          backgroundImage: 'url(/home/home_page_cover.webp)', //change image here
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: isMobile() ? 'scroll' : 'fixed',
-          backgroundRepeat: 'no-repeat',
-          width: '100vw',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          marginTop: '-2rem',
-          padding: 0,
-          position: 'relative',
-          top: 0
-        }}
+        className="jam-hero-home relative flex flex-col items-center justify-center w-full overflow-hidden bg-cover bg-center bg-no-repeat bg-scroll md:bg-fixed"
+        style={{ backgroundImage: 'url(/home/home_page_cover.webp)' }}
       >
-        {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-black/50 z-0 pointer-events-none" />
-        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Scrim only across the lower half, so the photo and logo stay untinted */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-2/3 z-0 pointer-events-none"
+          style={{ background: 'linear-gradient(to top, rgba(11,31,51,0.9), rgba(11,31,51,0))' }}
+        />
+        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
           <img
             src="/Jam-Soc-Logo.svg"
             alt="Jam Society Logo"
-            className="w-[min(90vw,900px)] h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] z-10 mx-auto"
-            style={{ maxWidth: isMobile() ? '90vw' : '900px' }}
+            className="w-[min(82vw,900px)] sm:w-[min(90vw,900px)] max-w-full h-auto mb-6 md:mb-8 drop-shadow-[0_0_25px_rgba(239,68,68,0.3)] mx-auto"
             loading="lazy"
             decoding="async"
           />
-          <div
-            ref={descRef}
-            className="max-w-full sm:max-w-2xl w-full text-center text-white text-base sm:text-lg md:text-2xl font-roboto italic drop-shadow-lg px-3 sm:px-6 py-4 z-10 mx-auto"
+          <p
+            className="max-w-3xl w-full text-center text-white text-base sm:text-xl md:text-2xl font-roboto px-4 sm:px-6 mx-auto"
             style={{
-              opacity: isMobile() ? 1 : descStyle.opacity,
-              transform: isMobile() ? 'none' : descStyle.transform,
-              marginTop: '1.5rem',
+              opacity: missionRevealed ? 1 : 0,
+              transform: missionRevealed ? 'none' : 'translateY(40px)',
               transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
               letterSpacing: '0.01em',
-              fontWeight: 400,
-              fontStyle: 'italic',
+              fontWeight: 300,
             }}
           >
-            {description}
-          </div>
+            {MISSION}
+          </p>
         </div>
-        {!isMobile() && scrollLocked && currentSection === 0 && (
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="text-white text-sm mb-2"></div>
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 hidden md:block">
             <svg
-              className="w-6 h-6 text-white"
+              className="w-6 h-6 text-sky"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -298,154 +174,304 @@ export default function Home() {
             >
               <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
             </svg>
-          </div>
-        )}
+        </div>
       </section>
 
       {/* Content section with white background */}
-      <section
-        style={{
-          minHeight: '100vh',
-          scrollSnapAlign: !isMobile() ? 'start' : undefined,
-          scrollSnapStop: !isMobile() ? 'always' : undefined,
-          backgroundColor: 'white',
-          width: '100%',
-          padding: isMobile() ? '2rem 0' : '4rem 0'
-        }}
-      >
-        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Info row section - 3 sharper, square, side-by-side blocks */}
-          <div className="flex flex-col md:flex-row gap-4 mb-16 md:mb-24">
-            {/* Location Block */}
-            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
-              <style>
-                {`
-                  .cls-1 {
-                    fill: none;
-                    stroke: currentColor;
-                    stroke-width: 2px;
-                  }
-                  .cls-2 {
-                    fill: currentColor;
-                  }
-                `}
-              </style>
-              <PinIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
-              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#000' }}>
-                Location
-              </div>
-              <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-              Located in the Basement hallway of Platt east of the Facilities and Maintenance Office, 340 Foothill Blvd, Claremont, CA 91711. Look for the Jam Society sign! We also provide equipment for the large practice room upstairs.
-              </div>
+      <section className="bg-white w-full py-8 md:py-16">
+        <div className="w-full max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">
+          {/* The pitch */}
+          <StaffMelody>
+            <h2 className="font-display text-navy text-[clamp(1.75rem,8vw,4.5rem)] leading-none w-fit max-w-full">
+              KEEP MUSIC
+              <br />
+              IN YOUR LIFE
+            </h2>
+            <div className="mt-6 max-w-3xl space-y-4 text-base md:text-lg text-copy">
+              <p>
+                If music — performing, producing, recording, or just jamming — is something you&apos;d
+                like to continue pursuing or start learning about during your time at Mudd, we think you
+                should join Jam Society.
+              </p>
+              <p className="relative -top-1">
+                We understand that many Mudders come from afar, and that instruments aren&apos;t always
+                brought with you, but we hope to help keep music in your life even during school.
+              </p>
             </div>
-            {/* Hours Block */}
-            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
-              <ClockIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
-              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4" style={{ fontWeight: 500, color: '#000' }}>
-              Room Hours
-              </div>
-              <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-              Open 24/7 for equipment checkout and other activities. Playing hours are outside of F&M hours (Mon-Fri 8am-5pm) only.
-              </div>
-            </div>
-            {/* Who can use the room Block */}
-            <div className="flex flex-col md:flex-1 items-center shadow-2xl py-16 md:py-24 px-6 md:px-10 border border-gray-300 rounded-lg" style={{ backgroundColor: '#f5f5f5' }}>
-              <DoorIcon className="w-16 h-16 md:w-20 md:h-20 bg-transparent mb-4" style={{ filter: 'invert(0%) brightness(100%)' }} />
-              <div className="font-roboto font-medium text-3xl md:text-5xl mb-4 text-center" style={{ fontWeight: 500, color: '#000' }}>
-                Who can use the room?
-              </div>
-              <div className="text-gray-700 font-roboto italic font-light text-center" style={{ fontWeight: 300, fontStyle: 'italic', fontSize: '16px' }}>
-              All current Mudd students! Go to the Join page and fill out the room entry quiz to get 24/7 swipe access to the room . There's no commitment on your end other than following the rules and respecting the equipment in the room. We have over 400 HMC students involved!
-              </div>
+          </StaffMelody>
+
+          {/* What we do */}
+          <div className="mb-16 md:mb-24">
+            {whatWeDo.map(({ label, Icon, body }, index) => (
+              <article
+                key={label}
+                className={`jam-staff py-8 md:py-10 ${index === whatWeDo.length - 1 ? '' : 'border-b border-hairline'}`}
+              >
+                <div className="flex items-start gap-3 sm:gap-5 md:gap-8">
+                  <Icon className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 shrink-0 text-jam-blue mt-2" />
+                  <div className="min-w-0">
+                    <h2 className="font-display text-navy text-[clamp(2rem,9vw,4.5rem)] leading-none">
+                      {label}
+                    </h2>
+                    <p className="mt-3 max-w-3xl text-base md:text-lg text-copy">{body}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Get involved */}
+          <div className="mb-16 md:mb-24">
+            <h2 className="font-display text-navy text-[clamp(1.75rem,8vw,3.75rem)] leading-none mb-6">
+              GET INVOLVED
+            </h2>
+            <p className="max-w-3xl text-base md:text-lg text-copy mb-8">
+              Any current Mudd student can join. Fill out the{' '}
+              <Link to="/join" className="text-jam-blue hover:text-jam-blue-hover underline">
+                new member form
+              </Link>{' '}
+              on Join — that&apos;s the room-entry quiz — to get 24/7 swipe access to our Jam Spaces.
+              There&apos;s no commitment on your end other than following the rules and respecting the
+              equipment. Over 400 current HMC students are involved.
+            </p>
+
+            <Link to="/join" className="jam-btn jam-btn-primary jam-btn-lg">
+              Join Jam Society
+              <span aria-hidden="true">→</span>
+            </Link>
+
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 border-l border-t border-hairline">
+              <a
+                href={MAILING_LIST_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-r border-b border-hairline bg-mist p-6 hover:bg-sky transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <NoteIcon className="w-7 h-7 text-jam-blue" />
+                  <h3 className="text-lg font-semibold text-ink">Mailing list</h3>
+                </div>
+                <p className="text-sm text-copy">
+                  Stay in the loop on events, tutoring sign-ups, and space improvements.
+                </p>
+              </a>
+              <a
+                href={DISCORD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-r border-b border-hairline bg-mist p-6 hover:bg-sky transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <DiscordIcon className="w-7 h-7 text-jam-blue fill-current" />
+                  <h3 className="text-lg font-semibold text-ink">Discord</h3>
+                </div>
+                <p className="text-sm text-copy">
+                  Connect with other members, find people to jam with, and send us feedback or questions.
+                </p>
+              </a>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-r border-b border-hairline bg-mist p-6 hover:bg-sky transition-colors"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <InstagramIcon className="w-7 h-7 text-jam-blue fill-current" />
+                  <h3 className="text-lg font-semibold text-ink">@hmcjamsoc</h3>
+                </div>
+                <p className="text-sm text-copy">
+                  Follow along for events, new gear, and cool stuff happening in the spaces.
+                </p>
+              </a>
             </div>
           </div>
 
-          {/* Photo Gallery Section */}
-          <div className="mt-16">
-            <h2 className="font-roboto font-semibold text-2xl text-gray-900 mb-6 text-center"></h2>
-            <div className="relative">
-              <img
-                src={images[currentImageIndex].src}
-                alt={images[currentImageIndex].alt}
-                className="w-full h-auto rounded-lg shadow-lg cursor-pointer"
-                onClick={() => setIsEnlarged(true)}
-                loading="lazy"
-                decoding="async"
-              />
-              <button onClick={prevImage} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">←</button>
-              <button onClick={nextImage} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">→</button>
+          {/* Jam Spaces */}
+          <div className="mb-16 md:mb-24">
+            <h2 className="font-display text-navy text-[clamp(1.75rem,8vw,3.75rem)] leading-none mb-6">
+              JAM SPACES
+            </h2>
+            <p className="max-w-3xl text-base md:text-lg text-copy mb-10">
+              We provide access to Jam Spaces around campus, and they&apos;ve been expanded and improved
+              — worth a look whether you&apos;re new to Jam Society or have been a member for a while.
+            </p>
+
+            <div className="border-t border-hairline">
+              {jamSpaces.map(({ name, Icon, location, body }) => (
+                <article key={name} className="border-b border-hairline py-8">
+                  <div className="flex items-start gap-3 sm:gap-5 md:gap-8">
+                    <Icon className="w-9 h-9 md:w-12 md:h-12 shrink-0 text-jam-blue mt-1" />
+                    <div className="min-w-0">
+                      <h3 className="font-display text-navy text-[clamp(1.5rem,7vw,3rem)] leading-none">
+                        {name}
+                      </h3>
+                      <p className="mt-2 font-roboto font-medium text-sm md:text-base uppercase tracking-wide text-jam-blue">
+                        {location}
+                      </p>
+                      <p className="mt-3 max-w-3xl text-base md:text-lg text-copy">{body}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-            {isEnlarged && (
-              <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setIsEnlarged(false)}>
+
+            <p className="mt-6 text-sm md:text-base text-muted max-w-3xl">
+              A note on the Jam Room: it&apos;s open 24/7 for equipment checkout and other activities, but
+              because Facilities and Maintenance is next door, playing hours are outside of F&amp;M hours
+              (Mon–Fri 8am–5pm) only.
+            </p>
+
+            {/* Photo Gallery */}
+            <div className="mt-10">
+              <div className="relative">
                 <img
                   src={images[currentImageIndex].src}
                   alt={images[currentImageIndex].alt}
-                  className="max-w-full max-h-full"
+                  className="w-full h-auto cursor-pointer border border-hairline"
+                  onClick={() => setIsEnlarged(true)}
+                  loading="lazy"
+                  decoding="async"
                 />
+                <button
+                  onClick={prevImage}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-navy/80 hover:bg-jam-blue text-white w-11 h-12 transition-colors"
+                  aria-label="Previous photo"
+                >
+                  ←
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 bg-navy/80 hover:bg-jam-blue text-white w-11 h-12 transition-colors"
+                  aria-label="Next photo"
+                >
+                  →
+                </button>
               </div>
-            )}
-          </div>
-
-          {/* New Section with Black Background */}
-          <div className="mt-8 md:mt-10 bg-white text-black py-8 md:py-12 px-3 md:px-6 rounded-2xl">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment Checkout Policy</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">We have an equipment checkout system in the "Equipment" tab above. Please only check out items for a maximum of 3 days. Make sure you are signed in, and select the items you want to check out. When you are done with the equipment don't forget to go back to the equipment page and return them.</p>
-
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Room Reservations</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">You can reserve the room for a band practice or recording session! Just go to the "Reserve" tab above and select a time on the calendar.</p>
-
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Equipment Guides</h2>
-              <p className="text-black-300 mb-6 md:mb-8 text-sm md:text-base">If you're new to an instrument or equipment, we have equipment guides to help you play and operate the equipment! Go to the equipment page to see equipment guides for instruments (like guitar and drums), as well as equipment (like microphones/mixers).</p>
-
-              <h2 className="font-roboto font-semibold text-xl md:text-2xl mb-3 md:mb-4">Damaged Equipment/New Equipment Request</h2>
-              <p className="text-black-300 text-sm md:text-base">If some equipment gets damaged during normal use, it's okay! Just make sure to fill out our damage report form in the equipment tab. If you think the Jam Room could use a specific new piece of equipment, fill out the New Equipment Request Form found in the Equipment tab.</p>
-
+              {isEnlarged && (
+                <div
+                  className="fixed inset-0 flex items-center justify-center z-50 p-4"
+                  style={{ background: 'rgba(11, 31, 51, 0.9)' }}
+                  onClick={() => setIsEnlarged(false)}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Jam Space photo"
+                >
+                  <img
+                    src={images[currentImageIndex].src}
+                    alt={images[currentImageIndex].alt}
+                    className="max-w-full max-h-[100dvh] object-contain"
+                    onClick={e => e.stopPropagation()}
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] text-white text-3xl font-bold bg-navy/70 hover:bg-jam-blue w-11 h-11 flex items-center justify-center jam-focus-ring-on-navy transition-colors"
+                    onClick={() => setIsEnlarged(false)}
+                    aria-label="Close"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Final Section with Contact Information */}
-          <div className="mt-8 md:mt-10 bg-white py-8 md:py-1 px-3 md:px-6 rounded-2xl">
+          {/* Resources */}
+          <div className="mb-16 md:mb-24">
+            <h2 className="font-display text-navy text-[clamp(1.75rem,8vw,3.75rem)] leading-none mb-8">
+              RESOURCES
+            </h2>
+            <div className="max-w-3xl">
+              <h3 className="font-roboto font-semibold text-xl md:text-2xl text-ink mb-3">Equipment Checkout</h3>
+              <p className="text-copy mb-8 text-sm md:text-base">
+                Playing in the rooms is always free — you only check gear out when you&apos;re taking it
+                somewhere else for an event. Head to the{' '}
+                <Link to="/equipment" className="text-jam-blue hover:text-jam-blue-hover underline">
+                  Equipment
+                </Link>{' '}
+                page and fill out the form before anything leaves a Jam Space. Checkouts are limited to
+                48 hours, and it&apos;s your responsibility to make sure the gear is treated
+                respectfully. The downstairs Jam Room drum kit stays put — only the upstairs Jam Lounge
+                kit can be checked out.
+              </p>
+
+              <h3 className="font-roboto font-semibold text-xl md:text-2xl text-ink mb-3">Room Reservations</h3>
+              <p className="text-copy mb-8 text-sm md:text-base">
+                You can reserve the Jam Room for a band practice or recording session! Just go to the{' '}
+                <Link to="/reserve" className="text-jam-blue hover:text-jam-blue-hover underline">
+                  Reserve
+                </Link>{' '}
+                tab and select a time on the calendar. If you&apos;re taking the upstairs drum set or
+                many items from a Jam Space, reserve that room for the times the equipment will be gone.
+              </p>
+
+              <h3 className="font-roboto font-semibold text-xl md:text-2xl text-ink mb-3">Equipment Guides</h3>
+              <p className="text-copy mb-8 text-sm md:text-base">
+                If you&apos;re new to an instrument or piece of equipment, we have guides to help you play
+                and operate it. The{' '}
+                <Link to="/equipment-guides" className="text-jam-blue hover:text-jam-blue-hover underline">
+                  Guides
+                </Link>{' '}
+                page covers instruments like guitar and drums as well as microphones and mixers.
+              </p>
+
+              <h3 className="font-roboto font-semibold text-xl md:text-2xl text-ink mb-3">
+                Damaged Equipment &amp; New Requests
+              </h3>
+              <p className="text-copy text-sm md:text-base">
+                If some equipment gets damaged during normal use, it&apos;s okay! Just make sure to fill
+                out our damage report form on the Equipment page. If you think a Jam Space could use a
+                specific new piece of equipment, fill out the New Equipment Request Form found there
+                too.
+              </p>
+            </div>
+          </div>
+
+          {/* Presidents */}
+          <div>
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-roboto font-semibold text-2xl md:text-3xl mb-6 md:mb-10">Meet your Jam Society Presidents</h2>
+              <h2 className="font-display text-navy text-[clamp(1.5rem,7vw,3rem)] leading-none mb-8 md:mb-10">
+                MEET YOUR PRESIDENTS
+              </h2>
               <div className="flex flex-col sm:flex-row justify-center gap-6 md:gap-8">
                 <div>
                   <img
                     src="/equipment-images/processed/MaxC_P.webp"
                     alt="Max Conine"
-                    className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
-                    style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
+                    className="w-full max-w-[270px] md:max-w-[378px] aspect-[3/4] object-cover mb-2 mx-auto cursor-pointer border border-hairline hover:opacity-95 transition"
                     onClick={() => { setEnlargedPresidentSrc('/MaxC.jpeg'); setIsPresidentEnlarged(true); }}
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="font-roboto font-semibold text-base md:text-lg">Max Conine</div>
-                  <div className="text-gray-700 text-sm md:text-base">mconine@hmc.edu</div>
+                  <div className="font-roboto font-semibold text-base md:text-lg text-ink">Max Conine</div>
+                  <div className="text-muted text-sm md:text-base break-all">mconine@hmc.edu</div>
                 </div>
                 <div>
                   <img
                     src="/equipment-images/processed/MaxB_P.webp"
                     alt="Max Buchanan"
-                    className="object-cover rounded-lg mb-2 mx-auto cursor-pointer hover:opacity-95 transition"
-                    style={{ width: isMobile() ? 270 : 378, height: isMobile() ? 360 : 513 }}
+                    className="w-full max-w-[270px] md:max-w-[378px] aspect-[3/4] object-cover mb-2 mx-auto cursor-pointer border border-hairline hover:opacity-95 transition"
                     onClick={() => { setEnlargedPresidentSrc('/MaxB.jpeg'); setIsPresidentEnlarged(true); }}
                     loading="lazy"
                     decoding="async"
                   />
-                  <div className="font-roboto font-semibold text-base md:text-lg">Max Buchanan</div>
-                  <div className="text-gray-700 text-sm md:text-base">mabuchanan@hmc.edu</div>
+                  <div className="font-roboto font-semibold text-base md:text-lg text-ink">Max Buchanan</div>
+                  <div className="text-muted text-sm md:text-base break-all">mabuchanan@hmc.edu</div>
                 </div>
               </div>
               {isPresidentEnlarged && enlargedPresidentSrc && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={() => setIsPresidentEnlarged(false)}>
+                <div
+                  className="fixed inset-0 flex items-center justify-center z-50 p-4"
+                  style={{ background: 'rgba(11, 31, 51, 0.9)' }}
+                  onClick={() => setIsPresidentEnlarged(false)}
+                >
                   <img
                     src={enlargedPresidentSrc}
                     alt="President Fullscreen"
-                    className="max-w-full max-h-full rounded shadow-lg"
+                    className="max-w-full max-h-[100dvh] object-contain"
                     onClick={e => e.stopPropagation()}
                   />
                   <button
-                    className="absolute top-4 right-4 text-white text-3xl font-bold bg-black bg-opacity-60 rounded-full px-3 py-1 hover:bg-opacity-90 focus:outline-none"
+                    className="absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] text-white text-3xl font-bold bg-navy/70 hover:bg-jam-blue w-11 h-11 flex items-center justify-center jam-focus-ring-on-navy transition-colors"
                     onClick={() => setIsPresidentEnlarged(false)}
                     aria-label="Close"
                   >
@@ -453,78 +479,53 @@ export default function Home() {
                   </button>
                 </div>
               )}
-              <p className="text-black-300 py-4 text-sm md:text-base">Hi, we're Max and Max and we're happy to be your 2025-2026 Jam Society Presidents. We take care of the room, manage the equipment, and plan events. We're happy to talk about any ideas you have to improve the room or if there's any events you would like us to plan. Please don't hesitate to reach out!</p>
-              
-              {/* Social Media and Join Section */}
-              <div className="flex flex-col items-center justify-center gap-4 mt-6">
-                <p className="text-black-300 text-sm md:text-base mb-2">Stay tuned for updates on live events and room improvements! Follow us on social media and join our community!</p>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <a 
-                    href="https://www.instagram.com/hmcjamsoc/" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-black hover:text-blue-600 transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <InstagramIcon className="w-12 h-12 inline-block" />
-                    <span className="text-lg font-medium">@hmcjamsoc</span>
-                  </a>
-                  <a 
-                    href="https://discord.gg/33ERv9rMmZ" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-black hover:text-indigo-600 transition-colors duration-300 flex items-center gap-2"
-                  >
-                    <DiscordIcon className="w-12 h-12 inline-block" />
-                    <span className="text-lg font-medium">Discord</span>
-                  </a>
-                  <Link 
-                    to="/join" 
-                    className="text-black hover:text-green-600 transition-colors duration-300 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg"
-                  >
-                    <span className="text-lg font-medium">Join Jam Society</span>
-                  </Link>
-                </div>
-              </div>
+              <p className="text-copy py-6 text-sm md:text-base">
+                Hi, we&apos;re Max and Max and we&apos;re happy to be your 2025-2027 Jam Society
+                Presidents. We take care of the Jam Spaces, manage the equipment, and plan events.
+                We&apos;re happy to talk about any ideas you have to improve the spaces or any events you
+                would like us to plan. Please don&apos;t hesitate to reach out!
+              </p>
+              <p className="text-copy text-sm md:text-base">See you around the Jam Spaces!</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Support Jam Society Section */}
-      <div className="bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold mb-8 text-center">Want to support the Jam Society?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="bg-white py-12 w-full">
+        <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display text-navy text-[clamp(1.5rem,7vw,3rem)] leading-none mb-8 text-center">
+            SUPPORT THE CLUB
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 border-l border-t border-hairline">
             {/* Donate Section */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold mb-4">Donate</h3>
-              <p className="font-roboto font-light text-gray-700 mb-2">
-                Reach out to <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a> if you are interested in supporting our club or reach out to the Office of Advancement at HMC.
+            <div className="border-r border-b border-hairline bg-mist p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <BeamedNoteIcon className="w-8 h-8 text-jam-blue" />
+                <h3 className="text-xl font-semibold text-ink">Donate</h3>
+              </div>
+              <p className="font-roboto font-light text-copy">
+                Reach out to{' '}
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-jam-blue hover:text-jam-blue-hover underline break-all">
+                  {CONTACT_EMAIL}
+                </a>{' '}
+                if you are interested in supporting our club, or reach out to the Office of Advancement
+                at HMC.
               </p>
             </div>
-            {/* Add New Equipment Section */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow">
-              <h3 className="text-xl font-semibold mb-4">Add New Equipment</h3>
-              <p className="font-roboto font-light text-gray-700 mb-4">
-                If you have musical equipment you would like to donate to the Jam Society, click the add equipment button below and place the equipment in the room. If you have any questions, contact us at <a href="mailto:jamsociety-leadership-l@g.hmc.edu" className="text-blue-600 underline">jamsociety-leadership-l@g.hmc.edu</a>.
+            {/* Donate Equipment Section */}
+            <div className="border-r border-b border-hairline bg-mist p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <GuitarIcon className="w-8 h-8 text-jam-blue" />
+                <h3 className="text-xl font-semibold text-ink">Donate Equipment</h3>
+              </div>
+              <p className="font-roboto font-light text-copy mb-4">
+                Have musical equipment you&apos;d like to donate to the Jam Society? Email us and
+                we&apos;ll arrange getting it into a Jam Space and labeled.
               </p>
-              <button
-                className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition-colors"
-                onClick={() => setShowAddEquipmentModal(true)}
-              >
-                Add Equipment
-              </button>
-              <AddEquipmentModal
-                isOpen={showAddEquipmentModal}
-                onClose={() => setShowAddEquipmentModal(false)}
-                onSubmit={async (data) => {
-                  try {
-                    await handleAddEquipment(data);
-                    setShowAddEquipmentModal(false);
-                  } catch { }
-                }}
-                error={addError}
-              />
+              <a href={`mailto:${CONTACT_EMAIL}`} className="jam-btn jam-btn-primary">
+                Email Us About a Donation
+              </a>
             </div>
           </div>
         </div>

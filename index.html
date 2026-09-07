@@ -9,7 +9,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/faviconLogo.png" />
     <link rel="shortcut icon" href="/faviconLogo.png" />
     
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#102A43" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="manifest" href="/manifest.json" />
     <link
         rel="stylesheet"
@@ -19,16 +22,13 @@
     <!-- Primary Meta Tags -->
     <title>HMC Jam Society - Harvey Mudd College Music Club</title>
     <meta name="title" content="HMC Jam Society - Harvey Mudd College Music Club">
-    <meta name="description" content="Harvey Mudd College Jam Society - A student-run music club providing a jam room with instruments, equipment, and recording facilities for HMC students. Join our community of musicians!" />
+    <meta name="description" content="Jam Society is a student-run club that gives Mudders the chance to continue or develop their musical interests on campus, and fosters a musical community at Harvey Mudd. Open mics, peer tutoring, equipment checkout, and Jam Spaces around campus." />
     <meta name="keywords" content="HMC Jam Society, Harvey Mudd College, HMC, Jam Society, hmc music club, hmc jam room, harvey mudd jam room, hmc music equipment, hmc recording studio, HMC, college music club, student music organization, music practice room, college recording studio" />
     <meta name="author" content="Max Conine" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
     <meta name="revisit-after" content="7 days" />
-    
-    <!-- Google Search Console Verification -->
-    <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
-    
+
     <!-- Preload critical assets -->
     <link rel="preload" href="/Jam-Soc-Logo.svg" as="image" type="image/svg+xml" />
     
@@ -36,7 +36,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://jamsoc.com/" />
     <meta property="og:title" content="HMC Jam Society - Harvey Mudd College Music Club" />
-    <meta property="og:description" content="Harvey Mudd College Jam Society - A student-run music club providing a jam room with instruments, equipment, and recording facilities for HMC students. Join our community of musicians!" />
+    <meta property="og:description" content="A student-run club that gives Mudders the chance to continue or develop their musical interests on campus, and fosters a musical community at Harvey Mudd. Open mics, peer tutoring, equipment checkout, and Jam Spaces around campus." />
     <meta property="og:image" content="https://jamsoc.com/mamakStage.jpeg" />
     <meta property="og:site_name" content="HMC Jam Society" />
 
@@ -44,7 +44,7 @@
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://jamsoc.com/" />
     <meta property="twitter:title" content="HMC Jam Society - Harvey Mudd College Music Club" />
-    <meta property="twitter:description" content="Harvey Mudd College Jam Society - A student-run music club providing a jam room with instruments, equipment, and recording facilities for HMC students. Join our community of musicians!" />
+    <meta property="twitter:description" content="A student-run club that gives Mudders the chance to continue or develop their musical interests on campus, and fosters a musical community at Harvey Mudd. Open mics, peer tutoring, equipment checkout, and Jam Spaces around campus." />
     <meta property="twitter:image" content="https://jamsoc.com/mamakStage.jpeg" />
 
     <!-- Canonical URL -->
@@ -58,7 +58,7 @@
       "name": "HMC Jam Society",
       "url": "https://jamsoc.com",
       "logo": "https://jamsoc.com/faviconLogo.png",
-      "description": "Harvey Mudd College Jam Society - A student-run music club providing a jam room with instruments, equipment, and recording facilities for HMC students.",
+      "description": "Jam Society is a student-run club that provides Mudders with an opportunity to continue or develop their musical interests while they are on campus, as well as fostering a musical community at Harvey Mudd College.",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Claremont",
@@ -66,8 +66,7 @@
         "addressCountry": "US"
       },
       "sameAs": [
-        "https://www.instagram.com/hmcjamsociety/",
-        "https://www.facebook.com/hmcjamsociety"
+        "https://www.instagram.com/hmcjamsoc/"
       ]
     }
     </script>
@@ -76,19 +75,6 @@
 <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-    </script>
 </body>
 
 </html>

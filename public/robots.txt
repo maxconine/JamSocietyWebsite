@@ -3,7 +3,3 @@ Allow: /
 
 # Sitemap location
 Sitemap: https://jamsoc.com/sitemap.xml
-
-# Disallow admin routes
-Disallow: /admin
-Disallow: /admin/* 

@@ -1,29 +1,287 @@
-/* import your fonts first */
-@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,400&display=swap");
+/* Fonts: Black Ops One for display type, Roboto for everything you read */
+@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap");
 
-/* import Tailwind via its v4 plugin */
 @import "tailwindcss";
 
-/* Ensure Black Ops One is applied */
+/*
+ * Jam Society design tokens.
+ * Blue and white only, square edges, two type families.
+ */
+@theme {
+  --font-display: "Black Ops One", cursive;
+  --font-roboto: "Roboto", "Helvetica Neue", Arial, sans-serif;
+
+  --color-navy: #102a43;
+  --color-navy-deep: #0b1f33;
+  --color-navy-line: #1b3a57;
+  --color-jam-blue: #2563eb;
+  --color-jam-blue-hover: #1d4ed8;
+  --color-jam-blue-deep: #1e3a8a;
+  --color-sky: #dbeafe;
+  --color-mist: #f4f8fc;
+  --color-hairline: #d9e2ec;
+  --color-staff: #bfdbfe;
+  --color-ink: #102a43;
+  --color-copy: #334e68;
+  --color-muted: #627d98;
+
+  /* Square edges: zero out the whole radius scale so every rounded-* is flat */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+}
+
+@layer base {
+  :root {
+    --jam-nav-height: calc(3.25rem + env(safe-area-inset-top, 0px));
+  }
+
+  :root,
+  html,
+  body {
+    background-color: #fff;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-roboto);
+    color: var(--color-copy);
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+  }
+
+  #root {
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  iframe {
+    max-width: 100%;
+  }
+
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+  }
+}
+
+/* Legacy alias: display type used to be spelled out as its font name */
 .font-black-ops-one {
-  font-family: 'Black Ops One', cursive;
+  font-family: var(--font-display);
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  background-color: white;
+/*
+ * Staff lines. Used as structure behind display type and setlist rows
+ * instead of shadowed floating cards.
+ */
+.jam-staff {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 21px,
+    var(--color-staff) 21px,
+    var(--color-staff) 22px
+  );
+  background-size: 100% 110px;
+  background-repeat: repeat;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: white;
+@media (prefers-reduced-motion: reduce) {
+  .jam-staff-flurry {
+    display: none;
+  }
 }
 
-html {
-  background-color: white;
+.jam-staff-navy {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 21px,
+    var(--color-navy-line) 21px,
+    var(--color-navy-line) 22px
+  );
+  background-size: 100% 110px;
+  background-repeat: repeat;
+}
+
+/* Buttons: corners stay at 0, hover is a color shift */
+.jam-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0;
+  font-family: var(--font-roboto);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.jam-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.jam-btn:focus-visible {
+  outline: 2px solid var(--color-jam-blue);
+  outline-offset: 2px;
+}
+
+.jam-focus-ring:focus-visible {
+  outline: 2px solid var(--color-jam-blue);
+  outline-offset: 2px;
+}
+
+.jam-focus-ring-on-navy:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.jam-btn-primary {
+  background-color: var(--color-jam-blue);
+  color: #fff;
+}
+
+.jam-btn-primary:hover:not(:disabled) {
+  background-color: var(--color-jam-blue-hover);
+  color: #fff;
+}
+
+.jam-btn-secondary {
+  background-color: #fff;
+  color: var(--color-navy);
+  border-color: var(--color-navy);
+}
+
+.jam-btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-mist);
+  color: var(--color-navy);
+}
+
+/* Outline button for use on the navy chrome (nav bar, footer) */
+.jam-btn-onnavy {
+  background-color: transparent;
+  color: #fff;
+  border-color: #fff;
+}
+
+.jam-btn-onnavy:hover:not(:disabled) {
+  background-color: #fff;
+  color: var(--color-navy);
+}
+
+.jam-btn-lg {
+  min-height: 48px;
+  padding: 0.75rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Form fields: square, hairline border, blue focus ring */
+.jam-field {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--color-hairline);
+  border-radius: 0;
+  background-color: #fff;
+  font-family: var(--font-roboto);
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+
+.jam-field:focus {
+  outline: 2px solid var(--color-jam-blue);
+  outline-offset: 0;
+  border-color: var(--color-jam-blue);
+}
+
+.jam-field::placeholder {
+  color: var(--color-muted);
+}
+
+/* Field variant for the dark nav bar */
+.jam-field-onnavy {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+
+.jam-field-onnavy::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.jam-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+/* Quiet bordered panel: replaces shadowed cards */
+.jam-panel {
+  border: 1px solid var(--color-hairline);
+  background-color: var(--color-mist);
+}
+
+/* Callout: sky fill with a blue rule on the leading edge */
+.jam-callout {
+  background-color: var(--color-sky);
+  border-left: 4px solid var(--color-jam-blue);
+  padding: 1.25rem 1.5rem;
+  color: var(--color-ink);
+}
+
+/* Home hero fills the visible iPhone screen (svh), not the oversized vh toolbar */
+.jam-hero-home {
+  min-height: calc(100vh - var(--jam-nav-height));
+  min-height: calc(100svh - var(--jam-nav-height));
+}
+
+@media (max-width: 640px) {
+  .jam-callout {
+    padding: 1rem;
+  }
+
+  .jam-btn-lg {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (pointer: coarse) {
+  .jam-btn {
+    min-height: 44px;
+  }
+
+  a,
+  button {
+    touch-action: manipulation;
+  }
 }

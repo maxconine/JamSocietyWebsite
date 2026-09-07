@@ -1,5 +1,6 @@
 import React from 'react';
 import GuideGrid from '../components/GuideGrid';
+import PageHero from '../components/PageHero';
 
 const guides = [
     {
@@ -79,57 +80,21 @@ const guides = [
 const EquipmentGuides: React.FC = () => {
     return (
         <div className="min-h-screen font-roboto">
-            {/* Hero Section */}
-            <section
-                style={{
-                    width: '100vw',
-                    height: '400px',
-                    backgroundImage: 'url(/equipment-images/processed/Guides_P.webp)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    position: 'relative',
-                    zIndex: 1,
-                    marginLeft: 'calc(-50vw + 50%)',
-                    marginRight: 'calc(-50vw + 50%)',
-                    marginTop: -32,
-                }}
-            >
-                <div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'rgba(0,0,0,0.5)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                        height: '100%',
-                        zIndex: 2,
-                    }}
-                >
-                    <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-bold text-center px-2">
-                        Equipment Guides
-                    </h1>
-                </div>
-            </section>
+            <PageHero image="/equipment-images/processed/Guides_P.webp" title="GUIDES" />
 
-            {/* Main Content */}
-            <div className="max-w-8xl mx-auto px-4">
-                <div className="bg-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <p className="font-roboto font-light text-gray-700 mt-8 mb-8">
-                            This page is filled with resources to teach you how to use equipment in the Jam Room. Each guide has instructions, video tutorials, and links to equipment manuals. This page is a work in progress. If you want to <span className="font-bold">help build this page</span> email me at <a href="mailto:mconine@g.hmc.edu">mconine@g.hmc.edu</a> and I can help you get you started. I'll also make it so anyone can edit these documents so feel free to fill them in.
-                        </p>
+            <div className="bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <p className="font-roboto text-copy mt-8 mb-8 max-w-3xl">
+                        This page is filled with resources to teach you how to use equipment in the Jam Room. Each guide has instructions, video tutorials, and links to equipment manuals. This page is a work in progress. If you want to <span className="font-semibold">help build this page</span>, email me at <a href="mailto:mconine@hmc.edu" className="text-jam-blue hover:text-jam-blue-hover underline break-all">mconine@hmc.edu</a> and I can help you get started. I'll also make it so anyone can edit these documents, so feel free to fill them in.
+                    </p>
+
+                    <div className="mt-8 pb-12">
+                        <GuideGrid guides={guides} />
                     </div>
-                </div>
-
-                <div className="mt-8">
-                    <GuideGrid guides={guides} />
                 </div>
             </div>
         </div>
     );
 };
 
-export default EquipmentGuides; 
+export default EquipmentGuides;

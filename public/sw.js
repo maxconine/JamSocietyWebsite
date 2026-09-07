@@ -1,78 +1,55 @@
-const CACHE_NAME = 'jam-society-cache-v2';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/assets/',
-];
+const CACHE_NAME = 'jam-society-cache-v3';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
-  );
-  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
+  event.waitUntil(caches.open(CACHE_NAME));
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames
+          .filter((cacheName) => cacheName !== CACHE_NAME)
+          .map((cacheName) => caches.delete(cacheName))
+      )
+    ).then(() => self.clients.claim())
   );
-  // Take control of all pages immediately
-  self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
-  // Use network-first strategy for HTML pages to ensure fresh content
-  if (event.request.destination === 'document') {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          // If network request succeeds, update cache and return response
-          if (response.status === 200) {
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-          }
-          return response;
-        })
-        .catch(() => {
-          // If network fails, try cache
-          return caches.match(event.request);
-        })
-    );
-  } else {
-    // Use cache-first strategy for assets
-    event.respondWith(
-      caches.match(event.request)
-        .then((response) => {
-          if (response) {
-            return response;
-          }
-          return fetch(event.request)
-            .then((response) => {
-              if (!response || response.status !== 200 || response.type !== 'basic') {
-                return response;
-              }
-              const responseToCache = response.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, responseToCache);
-                });
-              return response;
-            });
-        })
-    );
+function shouldBypassCache(request) {
+  if (request.method !== 'GET') return true;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return true;
+
+  const path = url.pathname;
+  if (path.startsWith('/src/') || path.startsWith('/@') || path.includes('@react-refresh')) {
+    return true;
   }
-}); 
+
+  const dest = request.destination;
+  return dest === 'document' || dest === 'script' || dest === 'worker' || path.endsWith('.js');
+}
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  if (shouldBypassCache(request)) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  if (request.method !== 'GET') return;
+
+  event.respondWith(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const cached = await cache.match(request);
+      if (cached) return cached;
+
+      const response = await fetch(request);
+      if (response && response.status === 200 && response.type === 'basic') {
+        cache.put(request, response.clone());
+      }
+      return response;
+    })
+  );
+});

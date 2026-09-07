@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jam Society Style Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Motif drawings: Lucide-style stroke icons (ISC). Clef path from Lucide clef-treble. -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="icon-clef" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.586 21.414a2 2 0 0 0 3.378-1.791L11.036 4.377a2 2 0 1 1 3.378 1.037C12.414 7.414 7 8 7 13a5 5 0 0 0 5 5 5 4 0 0 0 5-4 3 3 0 0 0-3-3 3 2 0 0 0-3 2"/>
+      </g>
+    </symbol>
+    <symbol id="icon-note" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8" cy="18" r="3.5"/>
+        <path d="M11.5 18V3"/>
+        <path d="M11.5 3c6.2 1 9.2 5.2 7.8 11"/>
+      </g>
+    </symbol>
+    <symbol id="icon-beamed" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13"/>
+        <circle cx="6" cy="18" r="3"/>
+        <circle cx="18" cy="16" r="3"/>
+      </g>
+    </symbol>
+    <symbol id="icon-guitar" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m11.9 12.1 4.514-4.514"/>
+        <path d="M20.1 2.3a1 1 0 0 0-1.4 0l-1.114 1.114A2 2 0 0 0 17 4.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 17.828 7h1.344a2 2 0 0 0 1.414-.586L21.7 5.3a1 1 0 0 0 0-1.4z"/>
+        <path d="m6 16 2 2"/>
+        <path d="M8.23 9.85A3 3 0 0 1 11 8a5 5 0 0 1 5 5 3 3 0 0 1-1.85 2.77l-.92.38A2 2 0 0 0 12 18a4 4 0 0 1-4 4 6 6 0 0 1-6-6 4 4 0 0 1 4-4 2 2 0 0 0 1.85-1.23z"/>
+      </g>
+    </symbol>
+    <symbol id="icon-drums" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m2 2 8 8"/>
+        <path d="m22 2-8 8"/>
+        <ellipse cx="12" cy="9" rx="10" ry="5"/>
+        <path d="M7 13.4v7.9"/>
+        <path d="M12 14v8"/>
+        <path d="M17 13.4v7.9"/>
+        <path d="M2 9v8a10 5 0 0 0 20 0V9"/>
+      </g>
+    </symbol>
+    <symbol id="icon-amp" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="16" height="20" x="4" y="2"/>
+        <path d="M12 6h.01"/>
+        <circle cx="12" cy="14" r="4"/>
+        <path d="M12 14h.01"/>
+      </g>
+    </symbol>
+    <symbol id="icon-keys" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18.5 8c-1.4 0-2.6-.8-3.2-2A6.87 6.87 0 0 0 2 9v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8.5C22 9.6 20.4 8 18.5 8"/>
+        <path d="M2 14h20"/>
+        <path d="M6 14v4"/>
+        <path d="M10 14v4"/>
+        <path d="M14 14v4"/>
+        <path d="M18 14v4"/>
+      </g>
+    </symbol>
+    <symbol id="icon-sharp" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 9h16"/>
+        <path d="M4 15h16"/>
+        <path d="M10 3 8 21"/>
+        <path d="M16 3 14 21"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top">
+        <svg class="brand-note" aria-hidden="true"><use href="#icon-note"/></svg>
+        <span class="brand-mark">JamSociety</span>
+      </a>
+      <nav class="header-nav" aria-label="Style guide sections">
+        <a href="#principles">Principles</a>
+        <a href="#color">Color</a>
+        <a href="#type">Type</a>
+        <a href="#motif">Motif</a>
+        <a href="#buttons">Buttons</a>
+        <a href="#home-info">Home</a>
+        <a href="#apply">Apply</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-staff" aria-hidden="true"></div>
+      <svg class="hero-clef" aria-hidden="true"><use href="#icon-clef"/></svg>
+      <svg class="hero-float note-a" aria-hidden="true"><use href="#icon-beamed"/></svg>
+      <svg class="hero-float note-b" aria-hidden="true"><use href="#icon-note"/></svg>
+      <h1 class="hero-display">
+        <span>JAM</span>
+        <span>SOCIETY</span>
+      </h1>
+      <p class="hero-kicker">STYLE GUIDE</p>
+      <p class="lede">
+        Blue and white. Square edges. Big Black Ops One in odd places.
+        Home facts sit on a staff like a setlist — not in floating boxes.
+      </p>
+    </section>
+
+    <section id="principles" class="section">
+      <h2 class="display-title">PRINCIPLES</h2>
+      <ol class="principle-list">
+        <li>
+          <span class="principle-beat">1</span>
+          <div>
+            <h3>Blue and white only</h3>
+            <p>White pages. Navy chrome. Action blue for buttons and links. Gray is for body type, not for bars.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-beat">2</span>
+          <div>
+            <h3>Go huge with the weird font</h3>
+            <p>Black Ops One is not a 24px nav-only lockup. Slam it on section titles, home labels, and empty corners. Roboto handles the reading.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-beat">3</span>
+          <div>
+            <h3>Square and sharp</h3>
+            <p>No pills, no rounded cards. The room is amps and cases. Hover is a color shift.</p>
+          </div>
+        </li>
+        <li>
+          <span class="principle-beat">4</span>
+          <div>
+            <h3>It should feel like music</h3>
+            <p>Staff lines, notes, clefs, guitars, drums. Use them as structure, not sticker-bombed clipart.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="color" class="section">
+      <h2 class="display-title">COLOR</h2>
+      <p class="section-lead">Copied from the live site, then reduced to one blue family. Click a swatch to copy the hex.</p>
+
+      <div class="swatch-row">
+        <button class="swatch" data-copy="#102A43" style="--swatch:#102A43;--ink:#fff">
+          <span class="swatch-name">Navy</span>
+          <span class="swatch-hex">#102A43</span>
+          <span class="swatch-use">Nav, footer, giant type</span>
+        </button>
+        <button class="swatch" data-copy="#2563EB" style="--swatch:#2563EB;--ink:#fff">
+          <span class="swatch-name">Action blue</span>
+          <span class="swatch-hex">#2563EB</span>
+          <span class="swatch-use">Buttons, notes, links</span>
+        </button>
+        <button class="swatch" data-copy="#1D4ED8" style="--swatch:#1D4ED8;--ink:#fff">
+          <span class="swatch-name">Hover blue</span>
+          <span class="swatch-hex">#1D4ED8</span>
+          <span class="swatch-use">Button hover</span>
+        </button>
+        <button class="swatch" data-copy="#DBEAFE" style="--swatch:#DBEAFE;--ink:#102A43">
+          <span class="swatch-name">Sky</span>
+          <span class="swatch-hex">#DBEAFE</span>
+          <span class="swatch-use">Staff lines, selection</span>
+        </button>
+        <button class="swatch" data-copy="#F4F8FC" style="--swatch:#F4F8FC;--ink:#102A43">
+          <span class="swatch-name">Mist</span>
+          <span class="swatch-hex">#F4F8FC</span>
+          <span class="swatch-use">Quiet bands, tables</span>
+        </button>
+        <button class="swatch" data-copy="#FFFFFF" style="--swatch:#FFFFFF;--ink:#102A43">
+          <span class="swatch-name">White</span>
+          <span class="swatch-hex">#FFFFFF</span>
+          <span class="swatch-use">Page background</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="type" class="section">
+      <h2 class="display-title">TYPE</h2>
+      <p class="section-lead">Black Ops One for the loud parts. Roboto for everything you actually read.</p>
+
+      <div class="type-blast">
+        <p class="type-blast-label">Use this huge, and in weird places</p>
+        <p class="type-blast-sample">WHERE</p>
+        <p class="type-blast-sample ghost">HOURS</p>
+        <p class="type-blast-sample ghost">WHO</p>
+      </div>
+
+      <div class="type-reading">
+        <p><strong>Page title · Roboto 700 / 36px</strong> Join the Jam Society!</p>
+        <p><strong>Body · Roboto 400 / 16px</strong> Providing a jam room for students to use containing instruments, music equipment, stage equipment, and recording equipment.</p>
+        <p class="italic"><strong>Caption · Roboto 300 italic</strong> Open 24/7 for checkout. Playing hours are outside of F&amp;M hours only.</p>
+      </div>
+    </section>
+
+    <section id="motif" class="section">
+      <h2 class="display-title">MOTIF</h2>
+      <p class="section-lead">A small kit of marks. Same stroke weight, same blue. Drop them next to giant type or on a staff — don’t float them in circles.</p>
+      <div class="motif-row">
+        <figure>
+          <svg><use href="#icon-clef"/></svg>
+          <figcaption>Clef</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-note"/></svg>
+          <figcaption>Eighth</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-beamed"/></svg>
+          <figcaption>Beamed</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-guitar"/></svg>
+          <figcaption>Guitar</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-drums"/></svg>
+          <figcaption>Drums</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-amp"/></svg>
+          <figcaption>Amp</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-keys"/></svg>
+          <figcaption>Keys</figcaption>
+        </figure>
+        <figure>
+          <svg><use href="#icon-sharp"/></svg>
+          <figcaption>Sharp</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="buttons" class="section">
+      <h2 class="display-title">BUTTONS</h2>
+      <p class="section-lead">Corners stay at 0. No pills on checkout or carousel controls.</p>
+      <div class="demo-board">
+        <div class="demo-row">
+          <button class="btn btn-primary">Add Equipment</button>
+          <button class="btn btn-primary" disabled>Add Equipment</button>
+        </div>
+        <div class="demo-row">
+          <button class="btn btn-secondary">Cancel</button>
+          <button class="btn btn-ghost">Login</button>
+        </div>
+        <div class="demo-row on-navy">
+          <button class="btn btn-on-navy">Login</button>
+          <button class="btn btn-logout">Logout</button>
+        </div>
+        <div class="demo-row">
+          <a class="btn btn-primary btn-lg" href="#apply">Join Now</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="home-info" class="section">
+      <h2 class="display-title">HOME INFO</h2>
+      <p class="section-lead">
+        Kill the three floating boxes. Treat Location / Hours / Who like tracks on a setlist:
+        a music mark, a giant Black Ops One label, and a short line of Roboto. Staff lines do the dividing.
+      </p>
+
+      <div class="setlist" aria-label="Proposed home information">
+        <article class="setlist-track">
+          <svg class="setlist-mark" aria-hidden="true"><use href="#icon-guitar"/></svg>
+          <h3>WHERE</h3>
+          <p>Basement hallway of Platt, east of the Facilities and Maintenance Office. 340 Foothill Blvd, Claremont, CA 91711. Look for the Jam Society sign. We also cover the large practice room upstairs.</p>
+        </article>
+        <article class="setlist-track">
+          <svg class="setlist-mark" aria-hidden="true"><use href="#icon-note"/></svg>
+          <h3>HOURS</h3>
+          <p>Open 24/7 for equipment checkout. Playing hours are outside of F&amp;M hours only — Monday through Friday, 8am to 5pm.</p>
+        </article>
+        <article class="setlist-track navy">
+          <svg class="setlist-mark" aria-hidden="true"><use href="#icon-drums"/></svg>
+          <h3>WHO</h3>
+          <p>All current Mudd students. Fill out the room entry quiz on Join to get 24/7 swipe access. No extra commitment beyond the rules and respecting the gear. 400+ HMC students are already in.</p>
+        </article>
+      </div>
+
+      <p class="note">Current site: three <code>rounded-lg shadow-2xl</code> cards on <code>#f5f5f5</code>. Proposed: no cards, no shadows — a setlist on staff lines, navy band on the last track so the giant type shows up in a weird place.</p>
+    </section>
+
+    <section id="forms" class="section">
+      <h2 class="display-title">FORMS</h2>
+      <form class="form-demo" onsubmit="event.preventDefault()">
+        <label>
+          School ID
+          <input type="text" placeholder="Enter School ID #" value="12345678" />
+        </label>
+        <label>
+          Equipment name
+          <input type="text" placeholder="Fender Princeton Reverb" />
+        </label>
+        <label>
+          Condition
+          <select>
+            <option>Excellent</option>
+            <option selected>Good</option>
+            <option>Fair</option>
+            <option>Poor</option>
+          </select>
+        </label>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Check out</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="components" class="section">
+      <h2 class="display-title">REST</h2>
+
+      <h3 class="subhead">Navigation</h3>
+      <div class="nav-demo" role="navigation" aria-label="Proposed navigation">
+        <span class="brand-mark">JamSociety</span>
+        <div class="nav-demo-links">
+          <a href="#">Home</a>
+          <a href="#">Artists</a>
+          <a href="#">Equipment</a>
+          <a href="#">Guides</a>
+          <a href="#">Reserve</a>
+          <a href="#">Join</a>
+          <button class="btn btn-on-navy" type="button">Login</button>
+        </div>
+      </div>
+
+      <h3 class="subhead">Equipment table</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Code</th>
+              <th>Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" checked /></td>
+              <td>Fender Princeton Reverb</td>
+              <td>AMP-014</td>
+              <td>Amp</td>
+              <td><span class="badge badge-available">Available</span></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" /></td>
+              <td>Shure SM58</td>
+              <td>MIC-003</td>
+              <td>Microphone</td>
+              <td><span class="badge badge-out">Checked out</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="demo-row" style="margin-top: 1rem">
+        <button class="btn btn-primary">Check out</button>
+        <button class="btn btn-secondary">Return</button>
+      </div>
+
+      <h3 class="subhead">FAQ</h3>
+      <div class="faq">
+        <details open>
+          <summary>Can I get swipe access to the Jam Room?</summary>
+          <p>Yes. Harvey Mudd students can fill out the membership form on Join.</p>
+        </details>
+        <details>
+          <summary>How do I report damaged equipment?</summary>
+          <p>Use the broken equipment form, or email <a href="mailto:jamsociety-leadership-l@g.hmc.edu">jamsociety-leadership-l@g.hmc.edu</a>.</p>
+        </details>
+      </div>
+
+      <footer class="footer-demo">
+        <svg class="footer-note" aria-hidden="true"><use href="#icon-note"/></svg>
+        <p>© 2026 Jam Society</p>
+        <a href="mailto:jamsociety-leadership-l@g.hmc.edu">jamsociety-leadership-l@g.hmc.edu</a>
+      </footer>
+    </section>
+
+    <section id="apply" class="section">
+      <h2 class="display-title">APPLY</h2>
+      <pre class="code-block"><code>:root {
+  --navy: #102A43;
+  --blue: #2563EB;
+  --blue-hover: #1D4ED8;
+  --sky: #DBEAFE;
+  --mist: #F4F8FC;
+  --radius: 0;
+}
+
+.font-display { font-family: "Black Ops One", cursive; }
+/* Home info: no cards. Giant label + body on a staff. */</code></pre>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Surface</th>
+            <th>Current</th>
+            <th>Proposed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Home facts</td>
+            <td>Three shadowed rounded cards</td>
+            <td>Setlist rows. Black Ops One labels. No boxes.</td>
+          </tr>
+          <tr>
+            <td>Section titles</td>
+            <td>Roboto 24–32px</td>
+            <td>Black Ops One, huge, leftover space is fine</td>
+          </tr>
+          <tr>
+            <td>Buttons</td>
+            <td><code>rounded</code> / pills / black</td>
+            <td><code>rounded-none bg-blue-600</code></td>
+          </tr>
+          <tr>
+            <td>Nav / footer</td>
+            <td>gray-800 / black</td>
+            <td>Navy <code>#102A43</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden>Copied</div>
+  <script src="guide.js"></script>
+</body>
+</html>

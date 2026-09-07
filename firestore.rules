@@ -2,28 +2,12 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow anyone to read data (for public viewing)
+    // The site is read-only from the client; there is no sign-in flow, so
+    // request.auth is always null for web visitors. Writes come from the
+    // Admin SDK (Cloud Functions), which bypasses these rules.
     match /{document=**} {
       allow read: if true;
       allow write: if request.auth != null;
-    }
-    
-    // Specific rules for artists collection
-    match /artists/{artistId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null;
-    }
-    
-    // Specific rules for equipment collection
-    match /equipment/{equipmentId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null;
-    }
-    
-    // Specific rules for users collection
-    match /users/{userId} {
-      allow read: if true;
-      allow create, update, delete: if request.auth != null && request.auth.uid == userId;
     }
   }
 }

@@ -31,19 +31,19 @@ class ErrorBoundary extends Component<Props, State> {
             }
 
             return (
-                <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                    <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
+                <div className="min-h-screen flex items-center justify-center bg-mist font-roboto">
+                    <div className="max-w-md w-full space-y-8 p-8 bg-white border border-hairline">
                         <div className="text-center">
-                            <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                                Oops! Something went wrong
+                            <h2 className="mt-6 font-display text-3xl text-navy">
+                                OFF KEY
                             </h2>
-                            <p className="mt-2 text-sm text-gray-600">
+                            <p className="mt-2 text-sm text-muted">
                                 {this.state.error?.message || 'An unexpected error occurred'}
                             </p>
                             <div className="mt-6">
                                 <button
                                     onClick={() => window.location.reload()}
-                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    className="jam-btn jam-btn-primary"
                                 >
                                     Refresh Page
                                 </button>

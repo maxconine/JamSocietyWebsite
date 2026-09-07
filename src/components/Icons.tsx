@@ -52,4 +52,99 @@ export const JamSocLogo: React.FC<IconProps> = ({ className, style }) => (
     loading="lazy"
     decoding="async"
   />
-); 
+);
+
+/*
+ * Music motif. One stroke weight across the whole kit so the marks read as a
+ * set. Drop them next to display type or on a staff — never floating in circles.
+ */
+const strokeProps = {
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.75,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+};
+
+export const ClefIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path
+      {...strokeProps}
+      d="M10.586 21.414a2 2 0 0 0 3.378-1.791L11.036 4.377a2 2 0 1 1 3.378 1.037C12.414 7.414 7 8 7 13a5 5 0 0 0 5 5 5 4 0 0 0 5-4 3 3 0 0 0-3-3 3 2 0 0 0-3 2"
+    />
+  </svg>
+);
+
+export const NoteIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle {...strokeProps} cx="8" cy="18" r="3.5" />
+    <path {...strokeProps} d="M11.5 18V3" />
+    <path {...strokeProps} d="M11.5 3c6.2 1 9.2 5.2 7.8 11" />
+  </svg>
+);
+
+export const BeamedNoteIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path {...strokeProps} d="M9 18V5l12-2v13" />
+    <circle {...strokeProps} cx="6" cy="18" r="3" />
+    <circle {...strokeProps} cx="18" cy="16" r="3" />
+  </svg>
+);
+
+export const GuitarIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path {...strokeProps} d="m11.9 12.1 4.514-4.514" />
+    <path
+      {...strokeProps}
+      d="M20.1 2.3a1 1 0 0 0-1.4 0l-1.114 1.114A2 2 0 0 0 17 4.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 17.828 7h1.344a2 2 0 0 0 1.414-.586L21.7 5.3a1 1 0 0 0 0-1.4z"
+    />
+    <path {...strokeProps} d="m6 16 2 2" />
+    <path
+      {...strokeProps}
+      d="M8.23 9.85A3 3 0 0 1 11 8a5 5 0 0 1 5 5 3 3 0 0 1-1.85 2.77l-.92.38A2 2 0 0 0 12 18a4 4 0 0 1-4 4 6 6 0 0 1-6-6 4 4 0 0 1 4-4 2 2 0 0 0 1.85-1.23z"
+    />
+  </svg>
+);
+
+export const DrumsIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path {...strokeProps} d="m2 2 8 8" />
+    <path {...strokeProps} d="m22 2-8 8" />
+    <ellipse {...strokeProps} cx="12" cy="9" rx="10" ry="5" />
+    <path {...strokeProps} d="M7 13.4v7.9" />
+    <path {...strokeProps} d="M12 14v8" />
+    <path {...strokeProps} d="M17 13.4v7.9" />
+    <path {...strokeProps} d="M2 9v8a10 5 0 0 0 20 0V9" />
+  </svg>
+);
+
+export const AmpIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect {...strokeProps} x="4" y="2" width="16" height="20" />
+    <path {...strokeProps} d="M12 6h.01" />
+    <circle {...strokeProps} cx="12" cy="14" r="4" />
+  </svg>
+);
+
+export const KeysIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path
+      {...strokeProps}
+      d="M18.5 8c-1.4 0-2.6-.8-3.2-2A6.87 6.87 0 0 0 2 9v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8.5C22 9.6 20.4 8 18.5 8"
+    />
+    <path {...strokeProps} d="M2 14h20" />
+    <path {...strokeProps} d="M6 14v4" />
+    <path {...strokeProps} d="M10 14v4" />
+    <path {...strokeProps} d="M14 14v4" />
+    <path {...strokeProps} d="M18 14v4" />
+  </svg>
+);
+
+export const SharpIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg className={className} style={style} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path {...strokeProps} d="M4 9h16" />
+    <path {...strokeProps} d="M4 15h16" />
+    <path {...strokeProps} d="M10 3 8 21" />
+    <path {...strokeProps} d="M16 3 14 21" />
+  </svg>
+);

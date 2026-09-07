@@ -76,10 +76,16 @@ const GuideCard: React.FC<GuideCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         transition: 'transform 0.2s',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 3
-        }
+          '&:hover': {
+            transform: 'none',
+            boxShadow: 'none',
+          },
+          '@media (hover: hover)': {
+            '&:hover': {
+              transform: 'translateY(-4px)',
+              boxShadow: 3,
+            },
+          },
       }}
     >
       <Box
@@ -120,7 +126,7 @@ const GuideCard: React.FC<GuideCardProps> = ({
             href={manualUrl}
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ flex: 1, minWidth: '120px' }}
+            sx={{ flex: 1, minWidth: '100%', minHeight: 44 }}
           >
             View Manual
           </Button>
@@ -130,7 +136,7 @@ const GuideCard: React.FC<GuideCardProps> = ({
               color="primary"
               onClick={handleVideoClick}
               startIcon={<PlayArrowIcon />}
-              sx={{ flex: 1, minWidth: '120px' }}
+              sx={{ flex: 1, minWidth: '100%', minHeight: 44 }}
             >
               Watch Video
             </Button>

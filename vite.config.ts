@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcssPostcss from '@tailwindcss/postcss'
 import autoprefixer from 'autoprefixer'
-import { resolve } from 'path'
 
 /**
  * Vite Configuration for Jam Society Website
@@ -17,6 +16,10 @@ import { resolve } from 'path'
 export default defineConfig({
   // React plugin for JSX support and fast refresh
   plugins: [react()],
+
+  resolve: {
+    dedupe: ['react', 'react-dom', '@emotion/react', '@emotion/styled'],
+  },
   
   // CSS processing with Tailwind and Autoprefixer
   css: {
@@ -38,9 +41,8 @@ export default defineConfig({
       output: {
         // Manual chunk splitting for better caching
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],     // Core React libraries
-          'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'], // Firebase services
-          'ui': ['@headlessui/react', '@heroicons/react']          // UI component libraries
+          vendor: ['react', 'react-dom', 'react-router-dom', '@emotion/react', '@emotion/styled'],
+          ui: ['@headlessui/react', '@heroicons/react'],
         }
       }
     },

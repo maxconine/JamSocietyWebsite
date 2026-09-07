@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Container, Dialog, DialogContent, IconButton } from '@mui/material';
+import { Grid, Container, Dialog, DialogContent, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import GuideCard from './GuideCard';
 import { Guide } from '../types/guide';
@@ -10,6 +10,8 @@ interface GuideGridProps {
 
 const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
   const [selectedVideos, setSelectedVideos] = useState<string[] | null>(null);
+  const theme = useTheme();
+  const isPhone = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
 
   const handleVideoClick = (urls: string[]) => {
     setSelectedVideos(urls);
@@ -20,10 +22,10 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" disableGutters>
       <Grid 
         container 
-        spacing={3} 
+        spacing={{ xs: 2, sm: 3 }} 
         sx={{ 
           justifyContent: 'center',
           alignItems: 'stretch'
@@ -69,11 +71,13 @@ const GuideGrid: React.FC<GuideGridProps> = ({ guides }) => {
         onClose={handleCloseVideos}
         maxWidth="md"
         fullWidth
+        fullScreen={isPhone}
       >
-        <DialogContent>
+        <DialogContent sx={{ pt: 6, px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
           <IconButton
             onClick={handleCloseVideos}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
+            aria-label="Close videos"
+            sx={{ position: 'absolute', right: 8, top: 8, width: 44, height: 44 }}
           >
             <CloseIcon />
           </IconButton>
