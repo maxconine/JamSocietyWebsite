@@ -416,6 +416,9 @@ function MelodyLayer({
 export default function StaffMelody({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)').matches : true
+  );
   const reduced = useReducedMotion() ?? false;
 
   const { scrollYProgress } = useScroll({
@@ -424,20 +427,31 @@ export default function StaffMelody({ children }: { children: ReactNode }) {
   });
 
   useLayoutEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)');
+    const updateMobile = () => setIsMobile(media.matches);
+    updateMobile();
+    media.addEventListener('change', updateMobile);
+
     const el = ref.current;
-    if (!el) return;
-    const update = () => setSize({ w: el.clientWidth, h: el.clientHeight });
-    update();
-    const ro = new ResizeObserver(update);
+    if (!el) {
+      return () => media.removeEventListener('change', updateMobile);
+    }
+    const updateSize = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    updateSize();
+    const ro = new ResizeObserver(updateSize);
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => {
+      media.removeEventListener('change', updateMobile);
+      ro.disconnect();
+    };
   }, []);
 
   const layout = landingLayout(size.w || 800);
+  const showNotes = size.w > 0 && !isMobile;
 
   return (
     <div ref={ref} className="jam-staff relative pt-4 pb-10 mb-16 md:mb-24 overflow-visible">
-      {size.w > 0 && (
+      {showNotes && (
         <svg
           className="jam-staff-flurry absolute inset-0 z-0 w-full h-full pointer-events-none overflow-visible text-black"
           viewBox={`0 0 ${size.w} ${size.h}`}
@@ -457,7 +471,7 @@ export default function StaffMelody({ children }: { children: ReactNode }) {
 
       <div className="relative z-10">{children}</div>
 
-      {size.w > 0 && (
+      {showNotes && (
         <div className="absolute inset-0 z-20 pointer-events-none">
           <MelodyLayer
             width={size.w}

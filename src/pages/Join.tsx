@@ -83,7 +83,7 @@ const Join: React.FC = () => {
               <div className="min-w-0">
                 <p className="text-base md:text-lg">
                   <span className="font-semibold">Harvey Mudd students</span> get 24/7 swipe access to
-                  the Jam Spaces after filling out the new member form. That form is the room-entry
+                  the Jam Room after filling out the new member form. That form is the room-entry
                   quiz — complete it and we&apos;ll add you to the swipe list. Students from other 5Cs
                   cannot get swipe access; F&amp;M cannot issue it outside Mudd.
                 </p>

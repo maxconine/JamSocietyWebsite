@@ -78,7 +78,8 @@ const jamSpaces = [
     name: 'JAM ROOM',
     Icon: DrumsIcon,
     location: 'Platt Basement',
-    body: `Home to a recording studio in development, with a brand-new drum kit and production station in progress. Find it in the basement hallway of Platt, east of the Facilities and Maintenance Office. Look for the Jam Society sign.`,
+    body: `Our main jam room. Home to a recording studio in development, with a brand-new drum kit and production station. Find it in the basement hallway of Platt, east of the Facilities and Maintenance Office. Look for the Jam Society sign.`,
+    notice: `A note on the Jam Room: it's open 24/7 for equipment checkout and other activities, but because Facilities and Maintenance is next door, playing hours are outside of F&M hours (Mon–Fri 8am–5pm) only.`,
   },
   {
     name: 'JAM LOUNGE',
@@ -292,12 +293,11 @@ export default function Home() {
               JAM SPACES
             </h2>
             <p className="max-w-3xl text-base md:text-lg text-copy mb-10">
-              We provide access to Jam Spaces around campus, and they&apos;ve been expanded and improved
-              — worth a look whether you&apos;re new to Jam Society or have been a member for a while.
+              We provide access to Jam Spaces around campus, and we're constantly expanding and improving them.
             </p>
 
             <div className="border-t border-hairline">
-              {jamSpaces.map(({ name, Icon, location, body }) => (
+              {jamSpaces.map(({ name, Icon, location, body, notice }) => (
                 <article key={name} className="border-b border-hairline py-8">
                   <div className="flex items-start gap-3 sm:gap-5 md:gap-8">
                     <Icon className="w-9 h-9 md:w-12 md:h-12 shrink-0 text-jam-blue mt-1" />
@@ -309,17 +309,14 @@ export default function Home() {
                         {location}
                       </p>
                       <p className="mt-3 max-w-3xl text-base md:text-lg text-copy">{body}</p>
+                      {notice && (
+                        <p className="mt-3 max-w-3xl text-sm text-muted">{notice}</p>
+                      )}
                     </div>
                   </div>
                 </article>
               ))}
             </div>
-
-            <p className="mt-6 text-sm md:text-base text-muted max-w-3xl">
-              A note on the Jam Room: it&apos;s open 24/7 for equipment checkout and other activities, but
-              because Facilities and Maintenance is next door, playing hours are outside of F&amp;M hours
-              (Mon–Fri 8am–5pm) only.
-            </p>
 
             {/* Photo Gallery */}
             <div className="mt-10">
