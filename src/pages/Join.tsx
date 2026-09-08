@@ -5,7 +5,7 @@ const MEMBER_FORM_URL = 'https://forms.gle/dziWupCVz6AqfL5t8';
 const CHECKOUT_FORM_URL = 'https://forms.gle/VabtTosoY881NGt26';
 
 const rules = [
-  <>Please only practice outside of F&amp;M Hours, which are 8:00 am to 5:00 pm Monday–Friday.</>,
+  <>Please only practice in the downstairs Jam Room outside of F&amp;M Hours, which are 8:00 am to 5:00 pm Monday–Friday.</>,
   <>
     Play the gear in the rooms as much as you like. If you need to take equipment out of a Jam Space
     for an event,{' '}
